@@ -66,8 +66,24 @@ namespace ManagedBass.Midi
             }
         }
 
+        /// <summary>
+        /// Initializes a MIDI input device.
+        /// </summary>
+        /// <param name="Device">The device to use... 0 = first. <see cref="InGetDeviceInfo(int,out MidiDeviceInfo)" /> can be used to enumerate the available devices.</param>
+        /// <param name="Procedure">Callback delegate to receive MIDI data from the device.</param>
+        /// <param name="User">User instance data to pass to the callback delegate.</param>
+        /// <returns>If the device was successfully initialized, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>This function must be successfully called before using any MIDI input functions.</para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>MIDI input is not available on Android.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Device">The device number specified is invalid.</exception>
+        /// <exception cref="Errors.Already">The device has already been initialized. You must call <see cref="InFree" /> before you can initialize it again.</exception>
+        /// <exception cref="Errors.NotAvailable">The device is not available.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_InInit")]
-        public static extern bool InInit(int device, MidiInProcedure proc, IntPtr user = default(IntPtr));
+        public static extern bool InInit(int Device, MidiInProcedure Procedure, IntPtr User = default(IntPtr));
         
 		/// <summary>
 		/// Starts a MIDI input device.

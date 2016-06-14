@@ -13,9 +13,9 @@ namespace ManagedBass.Wasapi
         int chans;
         WasapiFormat format;
         int buflen;
-        int volmax;
-        int volmin;
-        int volstep;
+        float volmax;
+        float volmin;
+        float volstep;
 
         /// <summary>
 		/// The flags parameter of the <see cref="BassWasapi.Init" /> call.
@@ -45,17 +45,17 @@ namespace ManagedBass.Wasapi
         /// <summary>
         /// The maximum volume setting in dB.
         /// </summary>
-        public int MaxVolume => volmax;
+        public float MaxVolume => volmax;
 
         /// <summary>
         /// The minimum volume setting in dB.
         /// </summary>
-        public int MinVolume => volmin;
+        public float MinVolume => volmin;
 
         /// <summary>
         /// The volume step size in dB. 
         /// </summary>
-        public int VolumeStep => volstep;
+        public float VolumeStep => volstep;
 
         /// <summary>
 		/// Is the device used in event-driven mode?

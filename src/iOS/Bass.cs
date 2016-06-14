@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace ManagedBass
 {
@@ -18,12 +19,17 @@ namespace ManagedBass
             add
             {
                 if (_iosnotify == null)
-                    Configure(Configuration.IOSNotify,
-                              Marshal.GetFunctionPointerForDelegate(iosnproc));
+                    Configure(Configuration.IOSNotify, Marshal.GetFunctionPointerForDelegate(iosnproc));
 
                 _iosnotify += value;
             }
-            remove { _iosnotify -= value; }
+            remove
+            {
+                _iosnotify -= value;
+
+                if (_iosnotify == null)
+                    Configure(Configuration.IOSNotify, IntPtr.Zero);
+            }
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace ManagedBass
             set { Configure(Configuration.IOSSpeaker, value); }
         }
 
-        const int BASS_DEVICE_AIRPLAY = 0x1000000;
+        const int BassDeviceAirplay = 0x1000000;
 
         /// <summary>
 		/// Retrieves information on an Airplay Receiver.
@@ -77,7 +83,7 @@ namespace ManagedBass
         /// </para>
 		/// </remarks>
         /// <exception cref="Errors.Device">The device number specified is invalid.</exception>
-        public static bool GetDeviceInfoAirplay(int Device, out DeviceInfo Info) => GetDeviceInfo(Device | BASS_DEVICE_AIRPLAY, out Info);
+        public static bool GetDeviceInfoAirplay(int Device, out DeviceInfo Info) => GetDeviceInfo(Device | BassDeviceAirplay, out Info);
 
         /// <summary>
         /// Retrieves information on an Airplay Receiver.
@@ -94,7 +100,7 @@ namespace ManagedBass
         /// </para>
         /// </remarks>
         /// <exception cref="Errors.Device">The device number specified is invalid.</exception>
-        public static DeviceInfo GetDeviceInfoAirplay(int Device) => GetDeviceInfo(Device | BASS_DEVICE_AIRPLAY);
+        public static DeviceInfo GetDeviceInfoAirplay(int Device) => GetDeviceInfo(Device | BassDeviceAirplay);
 
     }
 }

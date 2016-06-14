@@ -16,8 +16,14 @@ namespace ManagedBass.Cd
         byte res2;
         int lba;
 
+        /// <summary>
+        /// ADR
+        /// </summary>
         public byte ADR => (byte)(adrcon >> 4 & 15);
 
+        /// <summary>
+        /// Control
+        /// </summary>
         public TOCControlFlags Control => (TOCControlFlags)(byte)(adrcon & 15);
 
 		/// <summary>
@@ -25,10 +31,19 @@ namespace ManagedBass.Cd
 		/// </summary>
         public byte Track => track;
 
+        /// <summary>
+        /// Logical Block Address.
+        /// </summary>
         public int LBA => lba;
 
+        /// <summary>
+        /// The address in time form (frame part).
+        /// </summary>
         public byte Frame => (byte)(lba & 15);
 
+        /// <summary>
+        /// The Address in Time format.
+        /// </summary>
         public TimeSpan Address => new TimeSpan(lba >> 24 & 15, lba >> 16 & 15, lba >> 8 & 15);
     }
 }

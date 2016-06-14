@@ -376,11 +376,40 @@ namespace ManagedBass.Wasapi
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_GetDeviceLevel")]
         public static extern float GetDeviceLevel(int Device, int Channel = -1);
 
+        /// <summary>
+        /// Retrieves the current volume level.
+        /// </summary>
+        /// <param name="Curve">Volume curve to use.</param>
+        /// <returns>If successful, the volume level is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Session volume always uses <see cref="WasapiVolumeTypes.WindowsHybridCurve"/>.
+        /// <para>When using multiple devices, the current thread's device setting (as set with <see cref="CurrentDevice" />) determines which device this function call applies to.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.NotAvailable">There is no volume control available.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_GetVolume")]
-        public static extern float GetVolume(WasapiVolumeTypes curve = WasapiVolumeTypes.Device);
+        public static extern float GetVolume(WasapiVolumeTypes Curve = WasapiVolumeTypes.Device);
 
+        /// <summary>
+        /// Sets the volume of the current Wasapi device/driver (endpoint).
+        /// </summary>
+        /// <param name="Curve">Volume curve to use.</param>
+        /// <param name="Volume">The new volume to set between 0.0 (silent) and 1.0 (maximum) if linear, or else a dB level.</param>
+        /// <returns>Returns <see langword="true" /> on success, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Session volume only affects the current process, so other users of the device are unaffected.
+        /// It has no effect on exclusive mode output, and maps to the device volume with input devices (so does affect other users).
+        /// Session volume always uses <see cref="WasapiVolumeTypes.WindowsHybridCurve"/>.
+        /// If you need to control the volume of the stream only, you need to apply that directly within the <see cref="WasapiProcedure" /> yourself.
+        /// <para>When using multiple devices, the current thread's device setting (as set with <see cref="CurrentDevice" />) determines which device this function call applies to.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.NotAvailable">There is no volume control available.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Volume" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_SetVolume")]
-        public static extern bool SetVolume(WasapiVolumeTypes curve, float volume);
+        public static extern bool SetVolume(WasapiVolumeTypes Curve, float Volume);
 
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_Init")]
         public static extern bool Init(int Device,

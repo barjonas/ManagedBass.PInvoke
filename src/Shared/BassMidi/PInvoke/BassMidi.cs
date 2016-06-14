@@ -10,12 +10,64 @@ namespace ManagedBass.Midi
     /// </summary>
     public static partial class BassMidi
     {
-        const int BASS_MIDI_FONT_EX = 0x1000000;
+        const int BassMidiFontEx = 0x1000000;
 
-        public const int ChorusChannel = -1,
-                         ReverbChannel = -2,
-                         UserFXChannel = -3;
-        
+        /// <summary>
+        /// Chorus Mix Channel.
+        /// </summary>
+        public const int ChorusChannel = -1;
+
+        /// <summary>
+        /// Reverb Mix Channel.
+        /// </summary>
+        public const int ReverbChannel = -2;
+
+        /// <summary>
+        /// User FX Channel.
+        /// </summary>
+        public const int UserFXChannel = -3;
+
+        /// <summary>
+        /// Creates a sample stream to render real-time MIDI events.
+        /// </summary>
+        /// <param name="Channels">The number of MIDI channels: 1 (min) - 128 (max).</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
+        /// <param name="Frequency">Sample rate (in Hz) to render/play the MIDI at (0 = the rate specified in the <see cref="Bass.Init" /> call; 1 = the device's current output rate or the <see cref="Bass.Init"/> rate if that is not available).</param>
+        /// <returns>If successful, the new stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// This function creates a stream solely for real-time MIDI events.
+        /// As it's not based on any file, the stream has no predetermined length and is never-ending.
+        /// Seeking isn't possible, but it is possible to reset everything, including playback buffer, by calling <see cref="Bass.ChannelPlay" /> (Restart = <see langword="true" />) or <see cref="Bass.ChannelSetPosition" /> (Position = 0).
+        /// </para>
+        /// <para>
+        /// MIDI events are applied using the <see cref="StreamEvent" /> function.
+        /// If the stream is being played (it's not a decoding channel), then there will be some delay in the effect of the events being heard. 
+        /// This latency can be reduced by making use of the <see cref="Bass.PlaybackBufferLength" /> and <see cref="Bass.UpdatePeriod" /> options.
+        /// </para>
+        /// <para>
+        /// If a stream has 16 MIDI channels, then channel 10 defaults to percussion/drums and the rest melodic, otherwise they are all melodic.
+        /// That can be changed using <see cref="StreamEvent" /> and <see cref="MidiEventType.Drums"/>.
+        /// </para>
+        /// <para>
+        /// Soundfonts provide the sounds that are used to render a MIDI stream.
+        /// A default soundfont configuration is applied initially to the new MIDI stream, which can subsequently be overriden using <see cref="StreamSetFonts(int,MidiFont[],int)" />.
+        /// </para>
+        /// <para>To play a MIDI file, use <see cref="CreateStream(string,long,long,BassFlags,int)" />.</para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>
+        /// On Android and iOS, sinc interpolation requires a NEON-supporting CPU; the <see cref="BassFlags.SincInterpolation"/> flag will otherwise be ignored.
+        /// Sinc interpolation is not available on Windows CE.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Bass.Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.NotAvailable">Only decoding channels (<see cref="BassFlags.Decode"/>) are allowed when using the <see cref="Bass.NoSoundDevice"/>. The <see cref="BassFlags.AutoFree"/> flag is also unavailable to decoding channels.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Channels" /> is not valid.</exception>
+        /// <exception cref="Errors.SampleFormat">The sample format is not supported by the device/drivers. If the stream is more than stereo or the <see cref="BassFlags.Float"/> flag is used, it could be that they are not supported.</exception>
+        /// <exception cref="Errors.Speaker">The specified Speaker flags are invalid. The device/drivers do not support them, they are attempting to assign a stereo stream to a mono speaker or 3D functionality is enabled.</exception>
+        /// <exception cref="Errors.Memory">There is insufficient memory.</exception>
+        /// <exception cref="Errors.No3D">Could not initialize 3D support.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamCreate")]
         public static extern int CreateStream(int Channels, BassFlags Flags = BassFlags.Default, int Frequency = 0);
 
@@ -25,6 +77,7 @@ namespace ManagedBass.Midi
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamEvent")]
         public static extern bool StreamEvent(int Handle, int chan, MidiEventType Event, int param);
 
+        #region StreamEvents
         [DllImport(DllName, EntryPoint= "BASS_MIDI_StreamEvents")]
         public static extern int StreamEvents(int Handle, MidiEventsMode Mode, IntPtr Events, int Length);
 
@@ -43,12 +96,54 @@ namespace ManagedBass.Midi
         {
             return BASS_MIDI_StreamEvents(Handle, MidiEventsMode.Raw | Mode, Raw, Length == 0 ? Raw.Length : Length);
         }
+        #endregion
 
+        /// <summary>
+        /// Gets a HSTREAM handle for a MIDI channel (e.g. to set DSP/FX on individual MIDI channels).
+        /// </summary>
+        /// <param name="Handle">The midi stream to get a channel from.</param>
+        /// <param name="Channel">The MIDI channel... 0 = channel 1. Or one of the following special channels:
+        /// <para><see cref="ChorusChannel"/> = Chorus mix channel. The default chorus processing is replaced by the stream's processing.</para>
+        /// <para><see cref="ReverbChannel"/> = Reverb mix channel. The default reverb processing is replaced by the stream's processing.</para>
+        /// <para><see cref="UserFXChannel"/> = User effect mix channel.</para>
+        /// </param>
+        /// <returns>If successful, the channel handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// By default, MIDI channels do not have streams assigned to them;
+        /// a MIDI channel only gets a stream when this function is called, which it then keeps until the MIDI stream is freed. 
+        /// MIDI channel streams can also be freed before then via <see cref="Bass.StreamFree" />.
+        /// Each MIDI channel stream increases the CPU usage slightly, even if there are no DSP/FX set on them, so for optimal performance they should not be activated when unnecessary.
+        /// </para>
+        /// <para>
+        /// The MIDI channel streams have a different path to the final mix than the BASSMIDI reverb/chorus processing, which means that the reverb/chorus will not be present in the data received by any DSP/FX set on the streams and nor will the reverb/chorus be applied to the DSP/FX output; 
+        /// the reverb/chorus processing will use the channel's original data.
+        /// </para>
+        /// <para>
+        /// The MIDI channel streams can only be used to set DSP/FX on the channels. 
+        /// They cannot be used with <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> or <see cref="Bass.ChannelGetLevel(int)" /> to visualise the channels, for example, 
+        /// but that could be achieved via a DSP function instead.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable"><paramref name="Channel" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetChannel")]
-        public static extern int StreamGetChannel(int handle, int chan);
+        public static extern int StreamGetChannel(int Handle, int Channel);
 
+        /// <summary>
+        /// Retrieves the current value of an event in a MIDI stream channel.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to retrieve the event from (as returned by <see cref="CreateStream(int,BassFlags,int)"/>.</param>
+        /// <param name="Channel">The MIDI channel to get the event value from... 0 = channel 1.</param>
+        /// <param name="Event">
+        /// The event value to retrieve.
+        /// With the drum key events (<see cref="MidiEventType.DrumCutOff"/>/etc) and the <see cref="MidiEventType.Note"/> and <see cref="MidiEventType.ScaleTuning"/> events, the HIWORD can be used to specify which key/note to get the value from.</param>
+        /// <returns>The event parameter if successful - else -1 (use <see cref="Bass.LastError" /> to get the error code).</returns>
+        /// <remarks>SYNCs can be used to be informed of when event values change.</remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter">One of the other parameters is invalid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetEvent")]
-        public static extern int StreamGetEvent(int handle, int chan, MidiEventType Event);
+        public static extern int StreamGetEvent(int Handle, int Channel, MidiEventType Event);
 
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetEvents")]
         public static extern int StreamGetEvents(int handle, int track, int filter, [In, Out] MidiEvent[] events);
@@ -78,7 +173,7 @@ namespace ManagedBass.Midi
         
         public static int StreamGetFonts(int handle, MidiFontEx[] fonts, int count)
         {
-            return BASS_MIDI_StreamGetFonts(handle, fonts, count | BASS_MIDI_FONT_EX);
+            return BASS_MIDI_StreamGetFonts(handle, fonts, count | BassMidiFontEx);
         }
 
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetMark")]
@@ -126,7 +221,7 @@ namespace ManagedBass.Midi
 
         public static int StreamSetFonts(int handle, MidiFontEx[] fonts, int count)
         {
-            return BASS_MIDI_StreamSetFonts(handle, fonts, count | BASS_MIDI_FONT_EX);
+            return BASS_MIDI_StreamSetFonts(handle, fonts, count | BassMidiFontEx);
         }
     }
 }

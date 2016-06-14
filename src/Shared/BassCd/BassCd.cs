@@ -15,6 +15,9 @@ namespace ManagedBass.Cd
     {
         static IntPtr _cddbServer;
         
+        /// <summary>
+        /// Gets the <see cref="Plugin"/> instance for <see cref="BassCd"/>.
+        /// </summary>
         public static readonly Plugin Plugin = new Plugin(DllName);
 
         /// <summary>

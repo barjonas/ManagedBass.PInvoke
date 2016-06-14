@@ -8,7 +8,7 @@ namespace ManagedBass.Midi
 		/// <summary>
 		/// Compact a soundfont's memory usage.
 		/// </summary>
-		/// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string, BassFlags)" />)... 0 = all soundfonts.</param>
+		/// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string)" />)... 0 = all soundfonts.</param>
 		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
 		/// <remarks>
         /// Compacting involves freeing any samples that are currently loaded but unused.
@@ -21,7 +21,7 @@ namespace ManagedBass.Midi
 		/// <summary>
 		/// Frees a soundfont.
 		/// </summary>
-		/// <param name="Handle">The soundfont handle to free (e.g. as returned by <see cref="FontInit(string, BassFlags)" />).</param>
+		/// <param name="Handle">The soundfont handle to free (e.g. as returned by <see cref="FontInit(string)" />).</param>
 		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
 		/// <remarks>When a soundfont is freed, it is automatically removed from any MIDI streams that are using it.</remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
@@ -31,7 +31,7 @@ namespace ManagedBass.Midi
         /// <summary>
         /// Retrieves information on a soundfont.
         /// </summary>
-        /// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string, BassFlags)" />).</param>
+        /// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string)" />).</param>
         /// <param name="Info">An instance of <see cref="MidiFontInfo"/> structure to store the information into.</param>
         /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
@@ -41,7 +41,7 @@ namespace ManagedBass.Midi
         /// <summary>
         /// Retrieves information on a soundfont.
         /// </summary>
-        /// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string, BassFlags)" />).</param>
+        /// <param name="Handle">The soundfont to get info on (e.g. as returned by <see cref="FontInit(string)" />).</param>
         /// <returns>An instance of <see cref="MidiFontInfo"/> structure is returned. Throws <see cref="BassException"/> on Error.</returns>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         public static MidiFontInfo FontGetInfo(int Handle)
@@ -96,10 +96,7 @@ namespace ManagedBass.Midi
 
             var ret = new int[info.Presets];
             
-            if (FontGetPresets(Handle, ret))
-                return ret;
-
-            return null;
+            return FontGetPresets(Handle, ret) ? ret : null;
         }
         
 		/// <summary>
@@ -113,13 +110,7 @@ namespace ManagedBass.Midi
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_MIDI_FontInit(string File, BassFlags flags = BassFlags.Unicode);
-
-        [Obsolete("Use overload without BassFlags")]
-        public static int FontInit(string file, BassFlags flags)
-        {
-            return BASS_MIDI_FontInit(file, flags | BassFlags.Unicode);
-        }
-
+        
         /// <summary>
         /// Initializes a soundfont from a file (unicode).
         /// </summary>
@@ -139,7 +130,7 @@ namespace ManagedBass.Midi
         /// <para>If a soundfont is initialized multiple times, each instance will have its own handle but share the same sample/etc data.</para>
         /// <para>
         /// Soundfonts use PCM sample data as standard, but BASSMIDI can accept any format that is supported by BASS or its add-ons.
-        /// The <see cref="FontPack" /> function can be used to compress the sample data in SF2 files.
+        /// The FontPack function can be used to compress the sample data in SF2 files.
         /// SFZ samples are in separate files and can be compressed using standard encoding tools.
         /// </para>
         /// <para>Using soundfonts that are located somewhere other than the file system is possible via <see cref="FontInit(FileProcedures,IntPtr,BassFlags)" />.</para>
@@ -270,11 +261,30 @@ namespace ManagedBass.Midi
         public static extern bool FontUnload(int Handle, int Preset, int Bank);
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
-        static extern bool BASS_MIDI_FontUnpack(int handle, string outfile, BassFlags flags);
-
-        public static bool FontUnpack(int handle, string outfile, BassFlags flags)
-        {
-            return BASS_MIDI_FontUnpack(handle, outfile, flags | BassFlags.Unicode);
-        }
+        static extern bool BASS_MIDI_FontUnpack(int handle, string outfile, BassFlags flags = BassFlags.Unicode);
+        
+        /// <summary>
+        /// Produces a decompressed version of a packed soundfont.
+        /// </summary>
+        /// <param name="Handle">The soundfont to unpack.</param>
+        /// <param name="OutFile">Filename for the unpacked soundfont.</param>
+        /// <returns>If successful, the <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// To unpack a soundfont, the appropriate BASS add-on needs to be loaded (via <see cref="Bass.PluginLoad" />) to decode the samples. 
+        /// For example, if the samples are FLAC encoded, BASSFLAC would need to be loaded. 
+        /// BASS also needs to have been initialized, using <see cref="Bass.Init" />. 
+        /// For just unpacking a soundfont, the <see cref="Bass.NoSoundDevice"/> could be used.
+        /// <para>
+        /// A soundfont should not be unpacked while it is being used to render any MIDI streams, as that could delay the rendering.
+        /// <see cref="FontGetInfo(int,out MidiFontInfo)" /> can be used to check if a soundfont is packed.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The soundfont is not packed.</exception>
+        /// <exception cref="Errors.Init"><see cref="Bass.Init" /> has not been successfully called - it needs to be to decode the samples.</exception>
+        /// <exception cref="Errors.Codec">The appropriate add-on to decode the samples is not loaded.</exception>
+        /// <exception cref="Errors.Create">Couldn't create the output file, <paramref name="OutFile" />.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static bool FontUnpack(int Handle, string OutFile) => BASS_MIDI_FontUnpack(Handle, OutFile);
     }
 }

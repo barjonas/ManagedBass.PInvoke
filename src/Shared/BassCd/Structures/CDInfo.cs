@@ -37,6 +37,9 @@ namespace ManagedBass.Cd
         /// </summary>
         public string Revision => Marshal.PtrToStringAnsi(rev);
 
+        /// <summary>
+        /// Gets the real-time Speed Multiplier = <see cref="MaxSpeed"/> / 176.4.
+        /// </summary>
         public int SpeedMultiplier => (int)(maxspeed / 176.4);
 
         /// <summary>

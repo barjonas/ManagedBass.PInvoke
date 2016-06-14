@@ -201,6 +201,29 @@ namespace ManagedBass.Enc
         [DllImport(DllName, EntryPoint = "BASS_Encode_SetChannel")]
         public static extern bool EncodeSetChannel(int Handle, int Channel);
 
+        /// <summary>
+        /// Sets a callback function on an encoder (or all encoders on a channel) to receive notifications about its status.
+        /// </summary>
+        /// <param name="Handle">The encoder or channel handle... a HENCODE, HSTREAM, HMUSIC, or HRECORD.</param>
+        /// <param name="Procedure">Callback function to receive the notifications... <see langword="null" /> = no callback.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// When setting a notification callback on a channel, it only applies to the encoders that are currently set on the channel.
+        /// Subsequent encoders will not automatically have the notification callback set on them, this function will have to be called again to set them up.
+        /// </para>
+        /// <para>
+        /// An encoder can only have one notification callback set.
+        /// Subsequent calls of this function can be used to change the callback function, or disable notifications (<paramref name="Procedure"/> = <see langword="null" />).
+        /// </para>
+        /// <para>
+        /// The status of an encoder and its cast connection (if it has one) is checked when data is sent to the encoder or server, and by <see cref="EncodeIsActive" />.
+        /// That means an encoder's death will not be detected automatically, and so no notification given, while no data is being encoded.
+        /// </para>
+        /// <para>If the encoder is already dead when setting up a notification callback, the callback will be triggered immediately.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_SetNotify")]
         public static extern bool EncodeSetNotify(int Handle, EncodeNotifyProcedure Procedure, IntPtr User = default(IntPtr));
         
@@ -418,11 +441,7 @@ namespace ManagedBass.Enc
 
         [DllImport(DllName)]
         static extern bool BASS_Encode_CastSendMeta(int handle, EncodeMetaDataType type, byte[] data, int length);
-
-        [Obsolete("Use other overloads.")]
-        [DllImport(DllName, EntryPoint = "BASS_Encode_CastSendMeta")]
-        public static extern bool CastSendMeta(int handle, EncodeMetaDataType type, IntPtr data, int length);
-
+        
         /// <summary>
         /// Sends metadata to a Shoutcast 2 server.
         /// </summary>

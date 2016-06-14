@@ -1,14 +1,17 @@
 ﻿namespace ManagedBass
 {
+    /// <summary>
+    /// The Notification used by <see cref="IOSNotifyProcedure"/>.
+    /// </summary>
     public enum IOSNotify
     {
         /// <summary>
-        /// Interruption Started
+        /// iOS Audio Session Interruption Started.
         /// </summary>
         Interrupt = 1,
 
         /// <summary>
-        /// Interruption Ended
+        /// iOS Audio Session Interruption Ended.
         /// </summary>
         InterruptEnd = 2
     }

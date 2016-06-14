@@ -2,6 +2,9 @@
 
 namespace ManagedBass.Flac
 {
+    /// <summary>
+    /// Flac Cuesheet tag Track Index structure.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public class FlacCueTrackIndex
     {        

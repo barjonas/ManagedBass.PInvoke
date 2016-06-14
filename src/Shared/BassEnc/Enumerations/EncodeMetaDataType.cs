@@ -1,7 +1,7 @@
 ﻿namespace ManagedBass.Enc
 {
     /// <summary>
-    /// To be used with <see cref="BassEnc.CastSendMeta" /> to define the type of metadata to send.
+    /// To be used with <see cref="BassEnc.CastSendMeta(int,EncodeMetaDataType,byte[])" /> to define the type of metadata to send.
     /// </summary>
     public enum EncodeMetaDataType
     {

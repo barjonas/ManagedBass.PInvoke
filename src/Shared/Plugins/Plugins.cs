@@ -1876,7 +1876,13 @@ namespace ManagedBass{
 #if WINDOWS || LINUX || __ANDROID__
 
 namespace ManagedBass{
-        public static partial class BassMp4
+    	/// <summary>
+    /// BassAac support for Mp4
+    /// </summary> 
+    /// <remarks>
+    /// 
+    /// </remarks>
+	    public static partial class BassMp4
     {
 #if __IOS__
         const string DllName = "__internal";

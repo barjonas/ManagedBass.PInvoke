@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace ManagedBass.Flac
 {
+    /// <summary>
+    /// Flac Picture tag structure.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public class FlacPictureTag
     {
@@ -70,6 +73,9 @@ namespace ManagedBass.Flac
 		/// </summary>
         public string URL => Mime == "-->" ? null : Marshal.PtrToStringAnsi(data);
 
+        /// <summary>
+        /// Read the tag at an <param name="Index"/> from a <param name="Channel"/>.
+        /// </summary>
         public static FlacPictureTag Read(int Channel, int Index)
         {
             return (FlacPictureTag)Marshal.PtrToStructure(Bass.ChannelGetTags(Channel, TagType.FlacPicture + Index), typeof(FlacPictureTag));

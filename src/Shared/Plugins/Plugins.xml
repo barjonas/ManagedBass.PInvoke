@@ -80,6 +80,7 @@
           IsPartial="true"
           Condition="WINDOWS || LINUX || __ANDROID__"/>
   <Plugin ID="MP4"
+          DocSummary="BassAac support for Mp4"
           DllName="bass_aac"
           IsPartial="true"
           Condition="WINDOWS || LINUX || __ANDROID__"/>

@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linux.PInvoke", "Linux\Linux.PInvoke.csproj", "{5836FB0C-47B9-4370-B523-6E3B01A63F86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linux", "Linux\Linux.csproj", "{5836FB0C-47B9-4370-B523-6E3B01A63F86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac.PInvoke", "Mac\Mac.PInvoke.csproj", "{1E6370CD-B475-4FDC-9F6F-8A5ECFC9538C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac", "Mac\Mac.csproj", "{1E6370CD-B475-4FDC-9F6F-8A5ECFC9538C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows.PInvoke", "Windows\Windows.PInvoke.csproj", "{57C787D9-351E-4C61-9ABB-619F6F6AA03A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows", "Windows\Windows.csproj", "{57C787D9-351E-4C61-9ABB-619F6F6AA03A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOS.PInvoke", "iOS\iOS.PInvoke.csproj", "{B07F0848-A4FB-406E-98D6-620CDAE881D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOS", "iOS\iOS.csproj", "{B07F0848-A4FB-406E-98D6-620CDAE881D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android.PInvoke", "Android\Android.PInvoke.csproj", "{AD2F2FC0-636D-45B3-A400-94D579CF143F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android", "Android\Android.csproj", "{AD2F2FC0-636D-45B3-A400-94D579CF143F}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{EC57D38F-2B7C-4547-9012-3F1AAD7E8BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hybrid.PInvoke", "Hybrid\Hybrid.PInvoke.csproj", "{1AAB26ED-862E-42DD-A5B2-A6BFA67B8FB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hybrid", "Hybrid\Hybrid.csproj", "{1AAB26ED-862E-42DD-A5B2-A6BFA67B8FB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "Shared\Plugins\Plugins.csproj", "{4D392CD1-E5ED-4973-B08E-D2337B2253D8}"
 EndProject

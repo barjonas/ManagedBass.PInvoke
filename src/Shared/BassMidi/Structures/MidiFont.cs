@@ -20,7 +20,7 @@ namespace ManagedBass.Midi
     public struct MidiFont
     {
         /// <summary>
-        /// Soundfont handle, previously inititialized with <see cref="BassMidi.FontInit(string,BassFlags)" />.
+        /// Soundfont handle, previously inititialized with <see cref="BassMidi.FontInit(string)" />.
         /// </summary>
         public int Handle;
 

@@ -84,6 +84,9 @@ namespace ManagedBass
                                Num & 0xff);
         }
         
+        /// <summary>
+        /// Returns a string representation for given number of channels.
+        /// </summary>
         public static string ChannelCountToString(int Channels)
         {
             switch (Channels)
@@ -109,13 +112,16 @@ namespace ManagedBass
             }
         }
 
-        public static string[] ExtractMultiStringAnsi(IntPtr ptr)
+        /// <summary>
+        /// Extract an array of strings from a pointer to ANSI null-terminated string ending with a double null.
+        /// </summary>
+        public static string[] ExtractMultiStringAnsi(IntPtr Ptr)
         {
             var l = new List<string>();
 
             while (true)
             {
-                var str = PtrToStringAnsi(ptr);
+                var str = PtrToStringAnsi(Ptr);
 
                 if (string.IsNullOrEmpty(str))
                     break;
@@ -123,57 +129,63 @@ namespace ManagedBass
                 l.Add(str);
 
                 // char '\0'
-                ptr += str.Length + 1;
+                Ptr += str.Length + 1;
             }
 
             return l.ToArray();
         }
 
-        public static string[] ExtractMultiStringUtf8(IntPtr ptr)
+        /// <summary>
+        /// Extract an array of strings from a pointer to UTF-8 null-terminated string ending with a double null.
+        /// </summary>
+        public static string[] ExtractMultiStringUtf8(IntPtr Ptr)
         {
             var l = new List<string>();
 
             while (true)
             {
                 int size;
-                var str = PtrToStringUtf8(ptr, out size);
+                var str = PtrToStringUtf8(Ptr, out size);
 
                 if (string.IsNullOrEmpty(str))
                     break;
  
                 l.Add(str);
 
-                ptr += size + 1;
+                Ptr += size + 1;
             }
 
             return l.ToArray();
         }
 
-        static unsafe string PtrToStringUtf8(IntPtr ptr, out int size)
+        static unsafe string PtrToStringUtf8(IntPtr Ptr, out int Size)
         {
-            size = 0;
+            Size = 0;
 
-            if (ptr == IntPtr.Zero)
+            if (Ptr == IntPtr.Zero)
                 return null;
 
-            var bytes = (byte*)ptr.ToPointer();
+            var bytes = (byte*)Ptr.ToPointer();
             
-            while (bytes[size] != 0)
-                ++size;
+            while (bytes[Size] != 0)
+                ++Size;
 
-            if (size == 0)
+            if (Size == 0)
                 return null;
 
-            var buffer = new byte[size];
-            Copy(ptr, buffer, 0, size);
+            var buffer = new byte[Size];
+            Copy(Ptr, buffer, 0, Size);
             
             return Encoding.UTF8.GetString(buffer, 0, buffer.Length);
         }
 
-        public static string PtrToStringUtf8(IntPtr ptr)
+        /// <summary>
+        /// Returns a Unicode string from a pointer to a Utf-8 string.
+        /// </summary>
+        public static string PtrToStringUtf8(IntPtr Ptr)
         {
             int size;
-            return PtrToStringUtf8(ptr, out size);
+            return PtrToStringUtf8(Ptr, out size);
         }
     }
 }
