@@ -470,6 +470,17 @@ namespace ManagedBass.Cd
         [DllImport(DllName)]
         static extern IntPtr BASS_CD_GetID(int Drive, CDID ID);
 
+        /// <summary>
+        /// Retrieves identification info from the CD in a drive.
+        /// </summary>
+        /// <param name="Drive">The drive... 0 = the first drive.</param>
+        /// <param name="ID">The identification to retrieve. For <see cref="CDID.Text"/> use <see cref="GetIDText"/>.</param>
+        /// <returns>The identication info on success, else<see langword="null" />. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <exception cref="Errors.Device"><paramref name="Drive" /> is invalid.</exception>
+        /// <exception cref="Errors.NoCD">There's no CD in the drive.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="ID" /> is invalid.</exception>
+        /// <exception cref="Errors.NotAvailable">The CD does not have a UPC, ISRC or CD-TEXT info, or the CDDB Read entry number is not valid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static string GetID(int Drive, CDID ID)
         {
             var ptr = BASS_CD_GetID(Drive, ID);
@@ -489,6 +500,23 @@ namespace ManagedBass.Cd
             }
         }
 
+        /// <summary>
+        /// Retrieves CD-Text identification info from the CD in a drive.
+        /// </summary>
+        /// <param name="Drive">The drive... 0 = the first drive.</param>
+        /// <returns>
+        /// If an error occurs, <see langword="null" /> is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// If successful, a string array of all CD-Text tags is returned in the form of "tag=text".
+        /// </returns>
+        /// <remarks>
+        /// The returned identification string will remain in memory until the next call to this function, when it'll be overwritten by the next result.
+        /// If you need to keep the contents of an identification string, then you should copy it before calling this function again.
+        /// </remarks>
+        /// <exception cref="Errors.Device"><paramref name="Drive" /> is invalid.</exception>
+        /// <exception cref="Errors.NoCD">There's no CD in the drive.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Drive" /> is invalid.</exception>
+        /// <exception cref="Errors.NotAvailable">The CD does not have a UPC, ISRC or CD-TEXT info.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static string[] GetIDText(int Drive) => Extensions.ExtractMultiStringAnsi(BASS_CD_GetID(Drive, CDID.Text));
 
         /// <summary>

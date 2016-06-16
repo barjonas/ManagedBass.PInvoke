@@ -150,6 +150,28 @@ namespace ManagedBass.Wma
         public static extern bool EncodeWrite(int Handle, float[] Buffer, int Length);
         #endregion
 
+        /// <summary>
+        /// Initializes WMA encoding to a user defined function.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/></param>
+        /// <param name="Bitrate">The encoding bitrate (in bits per second, e.g. 128000), or VBR quality (100 or less).</param>
+        /// <param name="Procedure">The user defined function to receive the encoded data (see <see cref="WMEncodeProcedure" />).</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>Encoding to a user defined function allows any storage or delivery method to be used for the encoded WMA data. For example, encoding to memory.</para>
+        /// <para>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// Use <see cref="EncodeGetRates" /> to retrieve a list of the encoding bitrates available for a specific sample format.
+        /// </para>
+        /// <para>Use <see cref="EncodeSetTag(int,IntPtr,IntPtr,WMATagFormat)" /> for each tag you wish to set.</para>
+        /// <para>Use <see cref="EncodeWrite(int,IntPtr,int)" /> to encode sample data, and <see cref="EncodeClose" /> to finish encoding.</para>
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WMA_EncodeOpen")]
         public static extern int EncodeOpen(int Frequency, int Channels, WMAEncodeFlags Flags, int Bitrate, WMEncodeProcedure Procedure, IntPtr User = default(IntPtr));
 

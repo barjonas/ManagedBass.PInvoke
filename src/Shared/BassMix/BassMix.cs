@@ -223,18 +223,143 @@ namespace ManagedBass.Mix
         #endregion
 
         #region Channel Get Data
+        /// <summary>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Buffer">Location to write the data as an <see cref="IntPtr" /> (can be <see cref="IntPtr.Zero" /> when handle is a recording channel (HRECORD), to discard the requested amount of data from the recording buffer).</param>
+        /// <param name="Length">Number of bytes wanted, and/or <see cref="DataFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetData(int,IntPtr,int)" />, but it gets the data from the channel's buffer instead of decoding it from the channel, which means that the mixer doesn't miss out on any data.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// <para>
+        /// If the mixer is a decoding channel, then the channel's most recent data will be returned.
+        /// Otherwise, the data will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, IntPtr Buffer, int Length);
 
+        /// <summary>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Buffer">byte[] to write the data to.</param>
+        /// <param name="Length">Number of bytes wanted, and/or <see cref="DataFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetData(int,byte[],int)" />, but it gets the data from the channel's buffer instead of decoding it from the channel, which means that the mixer doesn't miss out on any data.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// <para>
+        /// If the mixer is a decoding channel, then the channel's most recent data will be returned.
+        /// Otherwise, the data will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] byte[] Buffer, int Length);
 
+        /// <summary>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Buffer">short[] to write the data to.</param>
+        /// <param name="Length">Number of bytes wanted, and/or <see cref="DataFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetData(int,short[],int)" />, but it gets the data from the channel's buffer instead of decoding it from the channel, which means that the mixer doesn't miss out on any data.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// <para>
+        /// If the mixer is a decoding channel, then the channel's most recent data will be returned.
+        /// Otherwise, the data will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] short[] Buffer, int Length);
 
+        /// <summary>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Buffer">int[] to write the data to.</param>
+        /// <param name="Length">Number of bytes wanted, and/or <see cref="DataFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetData(int,int[],int)" />, but it gets the data from the channel's buffer instead of decoding it from the channel, which means that the mixer doesn't miss out on any data.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// <para>
+        /// If the mixer is a decoding channel, then the channel's most recent data will be returned.
+        /// Otherwise, the data will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] int[] Buffer, int Length);
 
+        /// <summary>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Buffer">float[] to write the data to.</param>
+        /// <param name="Length">Number of bytes wanted, and/or <see cref="DataFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. 
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetData(int,float[],int)" />, but it gets the data from the channel's buffer instead of decoding it from the channel, which means that the mixer doesn't miss out on any data.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// <para>
+        /// If the mixer is a decoding channel, then the channel's most recent data will be returned.
+        /// Otherwise, the data will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] float[] Buffer, int Length);
         #endregion
@@ -295,6 +420,27 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetMixer")]
         public static extern int ChannelGetMixer(int Handle);
 
+        /// <summary>
+        /// Sets a channel's mixing matrix, if it has one.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand)</param>
+        /// <param name="Matrix">The 2-dimensional array (float[,]) of the mixing matrix.</param>
+        /// <returns>If successful, a <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// Normally when mixing channels, the source channels are sent to the output in the same order - the left input is sent to the left output, and so on.
+        /// Sometimes something a bit more complex than that is required.
+        /// For example, if the source has more channels than the output, you may want to "downmix" the source so that all channels are present in the output.
+        /// Equally, if the source has fewer channels than the output, you may want to "upmix" it so that all output channels have sound.
+        /// Or you may just want to rearrange the channels. Matrix mixing allows all of these.
+        /// </para>
+        /// <para>
+        /// A matrix mixer is created on a per-source basis (you can mix'n'match normal and matrix mixing), by using the <see cref="BassFlags.MixerMatrix" /> and/or <see cref="BassFlags.MixerDownMix" /> flag when calling <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" />. 
+        /// The matrix itself is a 2-dimensional array of floating-point mixing levels, with the source channels on one axis, and the output channels on the other.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel is not using matrix mixing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetMatrix")]
         public static extern bool ChannelSetMatrix(int Handle, float[,] Matrix);
         
@@ -314,6 +460,22 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetMatrixEx")]
         public static extern bool ChannelSetMatrix(int Handle, float[,] Matrix, float Time);
 
+        /// <summary>
+        /// Retrieves the playback position of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Mode">Position mode... default = <see cref="PositionFlags.Bytes"/>.</param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. If successful, the position is returned.</returns>
+        /// <remarks>
+        /// This function is like the standard <see cref="Bass.ChannelGetPosition" />, but it compensates for the mixer's buffering to return the source channel position that is currently being heard.
+        /// So when used with a decoding channel (eg. a mixer source channel), this method will return the current decoding position.
+        /// But if the mixer output is being played, then there is a playback buffer involved.
+        /// This function compensates for that, to return the position that is currently being heard. 
+        /// If the mixer itself is a decoding channel, then this function is identical to using <see cref="Bass.ChannelGetPosition" />.
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The requested position is not available.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetPosition")]
         public static extern long ChannelGetPosition(int Handle, PositionFlags Mode = PositionFlags.Bytes);
 

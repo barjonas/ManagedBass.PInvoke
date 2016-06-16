@@ -75,7 +75,12 @@ namespace ManagedBass.Midi
         public static extern int CreateStream(MidiEvent[] events, int ppqn, BassFlags flags = BassFlags.Default, int freq = 0);
         
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamEvent")]
-        public static extern bool StreamEvent(int Handle, int chan, MidiEventType Event, int param);
+        public static extern bool StreamEvent(int Handle, int Channel, MidiEventType Event, int Parameter);
+
+        public static bool StreamEvent(int Handle, int Channel, MidiEventType Event, byte LowParameter, byte HighParameter)
+        {
+            return StreamEvent(Handle, Channel, Event, BitHelper.MakeLong(LowParameter, HighParameter));
+        }
 
         #region StreamEvents
         [DllImport(DllName, EntryPoint= "BASS_MIDI_StreamEvents")]
