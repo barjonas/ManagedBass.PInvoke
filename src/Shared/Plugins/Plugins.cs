@@ -15,7 +15,7 @@ namespace ManagedBass.Ape
 	    public static  class BassApe
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_ape";
 #endif
@@ -126,7 +126,7 @@ namespace ManagedBass.Flac
 	    public static  class BassFlac
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassflac";
 #endif
@@ -236,7 +236,7 @@ namespace ManagedBass{
 	    public static  class BassOpus
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassopus";
 #endif
@@ -346,7 +346,7 @@ namespace ManagedBass{
 	    public static  class BassSpx
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_spx";
 #endif
@@ -456,7 +456,7 @@ namespace ManagedBass{
 	    public static  class BassTta
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_tta";
 #endif
@@ -566,7 +566,7 @@ namespace ManagedBass{
 	    public static  class BassWv
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "basswv";
 #endif
@@ -676,7 +676,7 @@ namespace ManagedBass{
 	    public static  class BassMpc
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_mpc";
 #endif
@@ -786,7 +786,7 @@ namespace ManagedBass{
 	    public static partial class BassAc3
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_ac3";
 #endif
@@ -896,7 +896,7 @@ namespace ManagedBass{
 	    public static  class BassHls
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "basshls";
 #endif
@@ -1007,7 +1007,7 @@ namespace ManagedBass.Dsd
 	    public static partial class BassDsd
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassdsd";
 #endif
@@ -1112,7 +1112,7 @@ namespace ManagedBass.Midi
         public static partial class BassMidi
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassmidi";
 #endif
@@ -1218,7 +1218,7 @@ namespace ManagedBass.Wma
         public static partial class BassWma
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "basswma";
 #endif
@@ -1330,7 +1330,7 @@ namespace ManagedBass.Adx
 	    public static  class BassAdx
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_adx";
 #endif
@@ -1441,7 +1441,7 @@ namespace ManagedBass{
 	    public static  class BassAix
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_aix";
 #endif
@@ -1552,7 +1552,7 @@ namespace ManagedBass{
 	    public static  class BassOfr
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_ofr";
 #endif
@@ -1663,7 +1663,7 @@ namespace ManagedBass{
 	    public static  class BassAlac
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassalac";
 #endif
@@ -1774,7 +1774,7 @@ namespace ManagedBass{
 	    public static partial class BassAac
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_aac";
 #endif
@@ -1885,7 +1885,7 @@ namespace ManagedBass{
 	    public static partial class BassMp4
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_aac";
 #endif
@@ -1989,7 +1989,7 @@ namespace ManagedBass{
         public static partial class Bass
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass";
 #endif
@@ -2409,7 +2409,7 @@ namespace ManagedBass.Fx
         public static partial class BassFx
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_fx";
 #endif
@@ -2453,7 +2453,7 @@ namespace ManagedBass.Cd
         public static partial class BassCd
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "basscd";
 #endif
@@ -2496,7 +2496,7 @@ namespace ManagedBass.Enc
         public static partial class BassEnc
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassenc";
 #endif
@@ -2539,7 +2539,7 @@ namespace ManagedBass.Mix
         public static partial class BassMix
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassmix";
 #endif
@@ -2583,7 +2583,7 @@ namespace ManagedBass.Asio
         public static partial class BassAsio
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bassasio";
 #endif
@@ -2627,7 +2627,7 @@ namespace ManagedBass.Wasapi
         public static partial class BassWasapi
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "basswasapi";
 #endif
@@ -2671,7 +2671,7 @@ namespace ManagedBass.Winamp
         public static partial class BassWinamp
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "bass_winamp";
 #endif

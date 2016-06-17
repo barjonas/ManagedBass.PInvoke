@@ -11,7 +11,7 @@
     public static <#= IsPartial ? "partial" : "" #> class <#= LibraryName #>
     {
 #if __IOS__
-        const string DllName = "__internal";
+        const string DllName = "__Internal";
 #else
         const string DllName = "<#= DllName #>";
 #endif
