@@ -41,13 +41,13 @@ namespace ManagedBass.Midi
         /// Seeking isn't possible, but it is possible to reset everything, including playback buffer, by calling <see cref="Bass.ChannelPlay" /> (Restart = <see langword="true" />) or <see cref="Bass.ChannelSetPosition" /> (Position = 0).
         /// </para>
         /// <para>
-        /// MIDI events are applied using the <see cref="StreamEvent" /> function.
+        /// MIDI events are applied using the <see cref="StreamEvent(int,int,MidiEventType,int)" /> function.
         /// If the stream is being played (it's not a decoding channel), then there will be some delay in the effect of the events being heard. 
         /// This latency can be reduced by making use of the <see cref="Bass.PlaybackBufferLength" /> and <see cref="Bass.UpdatePeriod" /> options.
         /// </para>
         /// <para>
         /// If a stream has 16 MIDI channels, then channel 10 defaults to percussion/drums and the rest melodic, otherwise they are all melodic.
-        /// That can be changed using <see cref="StreamEvent" /> and <see cref="MidiEventType.Drums"/>.
+        /// That can be changed using <see cref="StreamEvent(int,int,MidiEventType,int)" /> and <see cref="MidiEventType.Drums"/>.
         /// </para>
         /// <para>
         /// Soundfonts provide the sounds that are used to render a MIDI stream.
@@ -73,10 +73,61 @@ namespace ManagedBass.Midi
 
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamCreateEvents")]
         public static extern int CreateStream(MidiEvent[] events, int ppqn, BassFlags flags = BassFlags.Default, int freq = 0);
-        
+
+        /// <summary>
+        /// Applies an event to a MIDI stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to apply the event to (as returned by <see cref="CreateStream(int,BassFlags,int)" />).</param>
+        /// <param name="Channel">The MIDI channel to apply the event to... 0 = channel 1.</param>
+        /// <param name="Event">The event to apply (see <see cref="MidiEventType" /> for details).</param>
+        /// <param name="Parameter">The event parameter (see <see cref="MidiEventType" /> for details).</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>Apart from the "global" events, all events apply only to the specified MIDI channel.</para>
+        /// <para>
+        /// Except for the "non-MIDI" events, events applied to a MIDI file stream can subsequently be overridden by events in the file itself, and will also be overridden when seeking or looping.
+        /// That can be avoided by using additional channels, allocated via the <see cref="ChannelAttribute.MidiChannels"/> attribute.
+        /// </para>
+        /// <para>
+        /// Event syncs (see <see cref="SyncFlags" />) are not triggered by this function.
+        /// If sync triggering is wanted, <see cref="StreamEvents(int,MidiEventsMode,MidiEvent[],int)" /> can be used instead.
+        /// </para>
+        /// <para>
+        /// If the MIDI stream is being played (it's not a decoding channel), then there will be some delay in the effect of the event being heard. 
+        /// This latency can be reduced by making use of the <see cref="Bass.PlaybackBufferLength"/> and <see cref="Bass.UpdatePeriod"/> config options when creating the stream.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter">One of the other parameters is invalid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamEvent")]
         public static extern bool StreamEvent(int Handle, int Channel, MidiEventType Event, int Parameter);
 
+        /// <summary>
+        /// Applies an event to a MIDI stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to apply the event to (as returned by <see cref="CreateStream(int,BassFlags,int)" />).</param>
+        /// <param name="Channel">The MIDI channel to apply the event to... 0 = channel 1.</param>
+        /// <param name="Event">The event to apply (see <see cref="MidiEventType" /> for details).</param>
+        /// <param name="LowParameter">The event parameter (LOBYTE), (see <see cref="MidiEventType" /> for details).</param>
+        /// <param name="HighParameter">The event parameter (HIBYTE), (see <see cref="MidiEventType" /> for details).</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>Apart from the "global" events, all events apply only to the specified MIDI channel.</para>
+        /// <para>
+        /// Except for the "non-MIDI" events, events applied to a MIDI file stream can subsequently be overridden by events in the file itself, and will also be overridden when seeking or looping.
+        /// That can be avoided by using additional channels, allocated via the <see cref="ChannelAttribute.MidiChannels"/> attribute.
+        /// </para>
+        /// <para>
+        /// Event syncs (see <see cref="SyncFlags" />) are not triggered by this function.
+        /// If sync triggering is wanted, <see cref="StreamEvents(int,MidiEventsMode,MidiEvent[],int)" /> can be used instead.
+        /// </para>
+        /// <para>
+        /// If the MIDI stream is being played (it's not a decoding channel), then there will be some delay in the effect of the event being heard. 
+        /// This latency can be reduced by making use of the <see cref="Bass.PlaybackBufferLength"/> and <see cref="Bass.UpdatePeriod"/> config options when creating the stream.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter">One of the other parameters is invalid.</exception>
         public static bool StreamEvent(int Handle, int Channel, MidiEventType Event, byte LowParameter, byte HighParameter)
         {
             return StreamEvent(Handle, Channel, Event, BitHelper.MakeLong(LowParameter, HighParameter));

@@ -10,7 +10,7 @@ namespace ManagedBass.Midi
 	/// <para>
     /// When using an individual preset from a soundfont, BASSMIDI will first look for the exact <see cref="SoundFontPreset"/> and <see cref="SoundFontBank"/> match, but if that is not present, the first preset from the soundfont will be used.
     /// This is useful for single preset soundfonts.
-    /// Individual presets can be assigned to program numbers beyond the standard 127 limit, up to 65535, which can then be accessed via <see cref="BassMidi.StreamEvent" />.
+    /// Individual presets can be assigned to program numbers beyond the standard 127 limit, up to 65535, which can then be accessed via <see cref="BassMidi.StreamEvent(int,int,MidiEventType,int)" />.
     /// </para>
 	/// <para>
     /// When using all presets from all banks in a soundfont, the <see cref="DestinationBank"/> member is a base number that is added to the soundfont's banks.

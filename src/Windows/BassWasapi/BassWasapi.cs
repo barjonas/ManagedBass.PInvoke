@@ -144,8 +144,32 @@ namespace ManagedBass.Wasapi
             }
         }
 
+        /// <summary>
+        /// Checks if a particular sample format is supported by a device (endpoint).
+        /// </summary>
+        /// <param name="Device">The device to use... 0 = first device, -1 = default device, -2 = default input device. <see cref="GetDeviceInfo(int,out WasapiDeviceInfo)" /> can be used to enumerate the available devices.</param>
+        /// <param name="Frequency">The sample rate to check.</param>
+        /// <param name="Channels">The number of channels to check... 1 = mono, 2 = stereo, etc.</param>
+        /// <param name="Flags">
+        /// Any combination of <see cref="WasapiInitFlags.Shared"/> and <see cref="WasapiInitFlags.Exclusive"/>.
+        /// The HIWORD can be used to limit the sample formats that are checked in exclusive mode.
+        /// The default is to check 32-bit floating-point, 32-bit integer, 24-bit integer, 16-bit integer, 8-bit integer, in that order.
+        /// A <see cref="WasapiFormat"/> value can be used to bypass the formats that precede it in that list.
+        /// </param>
+        /// <returns>If the sample format is supported, the maximum supported resolution (a <see cref="WasapiFormat" /> value) is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Call this method prior to <see cref="Init" /> in order to make sure the requested format is supported by the Wasapi output device/driver (endpoint).
+        /// <para>
+        /// Shared and exclusive modes may have different sample formats available.
+        /// Only the "mix format" (available from <see cref="GetDeviceInfo(int,out WasapiDeviceInfo)" />) is generally supported in shared mode.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Wasapi">WASAPI is not available.</exception>
+        /// <exception cref="Errors.Device">The <paramref name="Device" /> number specified is invalid.</exception>
+        /// <exception cref="Errors.Driver">The driver could not be initialized.</exception>
+        /// <exception cref="Errors.SampleFormat">Unsupported sample format or number of channels.</exception>
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_CheckFormat")]
-        public static extern WasapiFormat CheckFormat(int device, int freq, int chans, WasapiInitFlags flags);
+        public static extern WasapiFormat CheckFormat(int Device, int Frequency, int Channels, WasapiInitFlags Flags);
         
         #region GetInfo
 		/// <summary>

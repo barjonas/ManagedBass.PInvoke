@@ -174,12 +174,6 @@ namespace ManagedBass
         #endregion
 
         #region Config
-        public static bool MFDisable
-        {
-            get { return GetConfigBool(Configuration.MFDisable); }
-            set { Configure(Configuration.MFDisable, value); }
-        }
-
         /// <summary>
         /// Enable DirectSound's true play position mode on Windows Vista and newer? (default is true).
         /// </summary>
@@ -278,7 +272,7 @@ namespace ManagedBass
         }
 
         /// <summary>
-        /// Disables Bass from setting system timer resolution.
+        /// UNDOCUMENTED: Disables Bass from setting system timer resolution.
         /// </summary>
         public static bool NoTimerResolution
         {

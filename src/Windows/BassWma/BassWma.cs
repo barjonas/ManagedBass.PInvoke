@@ -151,23 +151,20 @@ namespace ManagedBass.Wma
         #endregion
 
         /// <summary>
-        /// Initializes WMA encoding to a user defined function.
+        /// Initializes WMA encoding to a UserName defined function.
         /// </summary>
         /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
         /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
         /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/></param>
         /// <param name="Bitrate">The encoding bitrate (in bits per second, e.g. 128000), or VBR quality (100 or less).</param>
-        /// <param name="Procedure">The user defined function to receive the encoded data (see <see cref="WMEncodeProcedure" />).</param>
-        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <param name="Procedure">The UserName defined function to receive the encoded data (see <see cref="WMEncodeProcedure" />).</param>
+        /// <param name="User">User instance data to Password to the callback function.</param>
         /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <remarks>
-        /// <para>Encoding to a user defined function allows any storage or delivery method to be used for the encoded WMA data. For example, encoding to memory.</para>
+        /// <para>Encoding to a UserName defined function allows any storage or delivery method to be used for the encoded WMA data. For example, encoding to memory.</para>
         /// <para>
         /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
-        /// Use <see cref="EncodeGetRates" /> to retrieve a list of the encoding bitrates available for a specific sample format.
         /// </para>
-        /// <para>Use <see cref="EncodeSetTag(int,IntPtr,IntPtr,WMATagFormat)" /> for each tag you wish to set.</para>
-        /// <para>Use <see cref="EncodeWrite(int,IntPtr,int)" /> to encode sample data, and <see cref="EncodeClose" /> to finish encoding.</para>
         /// </remarks>
         /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
         /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
@@ -178,31 +175,136 @@ namespace ManagedBass.Wma
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_WMA_EncodeOpenFile(int freq, int chans, WMAEncodeFlags flags, int bitrate, string file);
 
-        public static int EncodeOpenFile(int freq, int chans, WMAEncodeFlags flags, int bitrate, string file)
+        /// <summary>
+        /// Initializes WMA encoding to a file.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/>.</param>
+        /// <param name="Bitrate">The encoding bitrate (in bits per second, e.g. 128000), or VBR quality (100 or less).</param>
+        /// <param name="File">The filename to write.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.Create">Could not create the file to write the WMA stream.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeOpenFile(int Frequency, int Channels, WMAEncodeFlags Flags, int Bitrate, string File)
         {
-            return BASS_WMA_EncodeOpenFile(freq, chans, flags | WMAEncodeFlags.Unicode, bitrate, file);
+            return BASS_WMA_EncodeOpenFile(Frequency, Channels, Flags | WMAEncodeFlags.Unicode, Bitrate, File);
         }
 
+        /// <summary>
+        /// Initializes WMA encoding to the network.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/>.</param>
+        /// <param name="Bitrate">The encoding bitrate (in bits per second, e.g. 128000), or VBR quality (100 or less).</param>
+        /// <param name="Port">The port number for clients to conenct to... 0 = let the system choose a port.</param>
+        /// <param name="Clients">The maximum number of clients (up to 50) that can be connected.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>If you chose to let the system select a port, you can retrieve the port number using <see cref="EncodeGetPort" />.</para>
+        /// <para>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// VBR encoding is not recommended for network encoding.
+        /// </para>
+        /// <para>The <see cref="WMAEncodeFlags.Queue"/> flag is not necessary with this function as the data is always queued and fed to the encoder asynchronously.</para>
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Clients" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WMA_EncodeOpenNetwork")]
-        public static extern int EncodeOpenNetwork(int freq, int chans, WMAEncodeFlags flags, int bitrate, int port, int clients);
+        public static extern int EncodeOpenNetwork(int Frequency, int Channels, WMAEncodeFlags Flags, int Bitrate, int Port, int Clients);
 
+        /// <summary>
+        /// Initializes WMA encoding to the network, using multiple bitrates.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/>.</param>
+        /// <param name="Bitrates">Array of encoding bitrates (in bits per second, e.g. 128000) to use, terminated with a 0 element (so the number of elements in the array must be one more than the effective bitrates used).</param>
+        /// <param name="Port">The port number for clients to conenct to... 0 = let the system choose a port.</param>
+        /// <param name="Clients">The maximum number of clients (up to 50) that can be connected.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function is identical to <see cref="EncodeOpenNetwork(int,int,WMAEncodeFlags,int,int,int)" />, but with the additional ability to specify multiple bitrates.
+        /// <para>When encoding/broadcasting in multiple bitrates, the UserName will automatically get the best available bitrate for their bandwidth.</para>
+        /// <para>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// VBR encoding is not recommended for network encoding.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Clients" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WMA_EncodeOpenNetworkMulti")]
-        public static extern int EncodeOpenNetwork(int freq, int chans, WMAEncodeFlags flags, int[] bitrate, int port, int clients);
+        public static extern int EncodeOpenNetwork(int Frequency, int Channels, WMAEncodeFlags Flags, int[] Bitrates, int Port, int Clients);
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_WMA_EncodeOpenPublish(int freq, int chans, WMAEncodeFlags flags, int bitrate, string url, string user, string pass);
 
-        public static int EncodeOpenPublish(int freq, int chans, WMAEncodeFlags flags, int bitrate, string url, string user, string pass)
+        /// <summary>
+        /// Initializes WMA encoding to a publishing point on a Windows Media server.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/>.</param>
+        /// <param name="Bitrate">The encoding bitrate (in bits per second, e.g. 128000), or VBR quality (100 or less).</param>
+        /// <param name="Url">URL of the publishing point on the Windows Media server.</param>
+        /// <param name="UserName">Username to use in connecting to the server... if either this or Password is <see langword="null" />, then no username/password is sent to the server.</param>
+        /// <param name="Password">Password to use in connecting to the server.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// VBR encoding is not recommended for network encoding.</para>
+        /// <para>The <see cref="WMAEncodeFlags.Queue"/> flag is not necessary with this function as the data is always queued and fed to the encoder asynchronously.</para>
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.FileOpen">Could not connect to the server.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.WmaAccesDenied">Access was denied. Check the <paramref name="UserName" /> and <paramref name="Password" />.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeOpenPublish(int Frequency, int Channels, WMAEncodeFlags Flags, int Bitrate, string Url, string UserName, string Password)
         {
-            return BASS_WMA_EncodeOpenPublish(freq, chans, flags | WMAEncodeFlags.Unicode, bitrate, url, user, pass);
+            return BASS_WMA_EncodeOpenPublish(Frequency, Channels, Flags | WMAEncodeFlags.Unicode, Bitrate, Url, UserName, Password);
         }
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_WMA_EncodeOpenPublishMulti(int freq, int chans, WMAEncodeFlags flags, int[] bitrate, string url, string user, string pass);
 
-        public static int EncodeOpenPublish(int freq, int chans, WMAEncodeFlags flags, int[] bitrate, string url, string user, string pass)
+        /// <summary>
+        /// Initializes WMA encoding to a publishing point on a Windows Media server, using multiple bitrates.
+        /// </summary>
+        /// <param name="Frequency">The sample rate in Hz, or a BASS channel handle if the <see cref="WMAEncodeFlags.Source"/> flag is specified.</param>
+        /// <param name="Channels">The number of channels (1=mono, 2=stereo, etc.).</param>
+        /// <param name="Flags">A combination of <see cref="WMAEncodeFlags"/>.</param>
+        /// <param name="Bitrates">Array of encoding bitrates to use, terminated with a 0 (in bits per second, e.g. 128000).</param>
+        /// <param name="Url">URL of the publishing point on the Windows Media server.</param>
+        /// <param name="UserName">Username to use in connecting to the server... if either this or Password is <see langword="null" />, then no username/password is sent to the server.</param>
+        /// <param name="Password">Password to use in connecting to the server.</param>
+        /// <returns>If succesful, the new encoder's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function is identical to <see cref="EncodeOpenPublish(int,int,WMAEncodeFlags,int,string,string,string)"/>, but with the additional ability to specify multiple bitrates.
+        /// <para>When encoding/broadcasting in multiple bitrates, the user will automatically get the best available bitrate for their bandwidth.</para>
+        /// <para>
+        /// The WMA codec expects 16-bit or 24-bit sample data depending on the <see cref="WMAEncodeFlags.Encode24Bit"/> flag, but BASSWMA will accept 8-bit, 16-bit or floating-point data, and convert it to the appropriate format.
+        /// VBR encoding is not recommended for network encoding.</para>
+        /// </remarks>
+        /// <exception cref="Errors.WM9">The Windows Media modules (v9 or above) are not installed.</exception>
+        /// <exception cref="Errors.FileOpen">Could not connect to the server.</exception>
+        /// <exception cref="Errors.NotAvailable">No codec could be found to support the specified sample format and bitrate.</exception>
+        /// <exception cref="Errors.WmaAccesDenied">Access was denied. Check the <paramref name="UserName" /> and <paramref name="Password" />.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeOpenPublish(int Frequency, int Channels, WMAEncodeFlags Flags, int[] Bitrates, string Url, string UserName, string Password)
         {
-            return BASS_WMA_EncodeOpenPublishMulti(freq, chans, flags | WMAEncodeFlags.Unicode, bitrate, url, user, pass);
+            return BASS_WMA_EncodeOpenPublishMulti(Frequency, Channels, Flags | WMAEncodeFlags.Unicode, Bitrates, Url, UserName, Password);
         }
         
 		/// <summary>
@@ -210,7 +312,7 @@ namespace ManagedBass.Wma
 		/// </summary>
 		/// <param name="Handle">The encoder handle.</param>
 		/// <param name="Procedure">User defined notification function... <see langword="null" /> = disable notifications.</param>
-		/// <param name="User">User instance data to pass to the callback function.</param>
+		/// <param name="User">User instance data to Password to the callback function.</param>
 		/// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
 		/// <remarks>A previously set notification callback can be changed (or removed) at any time, by calling this function again.</remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>

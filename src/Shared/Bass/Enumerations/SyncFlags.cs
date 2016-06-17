@@ -171,10 +171,10 @@ namespace ManagedBass
         MidiText = 65539,
 
         /// <summary>
-        /// MIDI add-on: Sync when a Type of event is processed, in either a MIDI file or <see cref="BassMidi.StreamEvent"/>.
+        /// MIDI add-on: Sync when a Type of event is processed, in either a MIDI file or <see cref="BassMidi.StreamEvent(int,int,MidiEventType,int)"/>.
         /// param : event Type (0 = all types).
         /// data : LOWORD = event parameter, HIWORD = channel (high 8 bits contain the event Type when syncing on all types).
-        /// See <see cref="BassMidi.StreamEvent"/> for a list of event types and their parameters.
+        /// See <see cref="BassMidi.StreamEvent(int,int,MidiEventType,int)"/> for a list of event types and their parameters.
         /// </summary>
         MidiEvent = 65540,
 

@@ -9,8 +9,58 @@ namespace ManagedBass.Mix
     public static partial class BassMix
     {
         #region Split
+        /// <summary>
+        /// Creates a splitter stream (adds a reader channel to a decoding source channel).
+        /// </summary>
+        /// <param name="Channel">The handle of the decoding source channel to split... a HMUSIC, HSTREAM or HRECORD.</param>
+        /// <param name="Flags">The channel falgs to be used to create the reader channel.</param>
+        /// <param name="ChannelMap">The target (readers) channel mapping definition, which is an array of source channel index values (0=1st channel, 1=2nd channel, 2=3rd channel, 3=4th channel etc.) ending with a final -1 element (use <see langword="null" /> to create a 1:1 reader).</param>
+        /// <returns>If successful, the new reader stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// A "splitter" basically does the opposite of a mixer: it splits a single source into multiple streams rather then mixing multiple sources into a single stream.
+        /// Like mixer sources, splitter sources must be decoding channels.
+        /// <para>
+        /// The splitter stream will have the same sample rate and resolution as its source, but it can have a different number of channels, as dictated by the mapping parameter.
+        /// Even when the number of channels is different (and so the amount of data produced is different), <see cref="Bass.ChannelGetLength" /> will give the source length, and <see cref="Bass.ChannelGetPosition" /> will give the source position that is currently being output by the splitter stream.
+        /// </para>
+        /// <para>
+        /// All splitter streams with the same source share a buffer to access its sample data.
+        /// The length of the buffer is determined by the <see cref="SplitBufferLength"/> config option;
+        /// the splitter streams should not be allowed to drift apart beyond that, otherwise those left behind will suffer buffer overflows. 
+        /// A splitter stream's buffer state can be reset via <see cref="SplitStreamReset(int)" />;
+        /// that can also be used to reset a splitter stream that has ended, so that it can be played again.
+        /// </para>
+        /// <para>
+        /// If the <see cref="BassFlags.SplitSlave"/> flag is used, the splitter stream will only receive data from the buffer and will not request more data from the source, so it can only receive data that has already been received by another splitter stream with the same source.
+        /// The <see cref="BassFlags.SplitSlave"/> flag can be toggled at any time via <see cref="Bass.ChannelFlags" />.
+        /// </para>
+        /// <para>
+        /// When <see cref="Bass.ChannelSetPosition" /> is used on a splitter stream, its source will be set to the requested position and the splitter stream's buffer state will be reset so that it immediately receives data from the new position. 
+        /// The position change will affect all of the source's splitter streams, but the others will not have their buffer state reset;
+        /// they will continue to receive any buffered data before reaching the data from the new position. 
+        /// <see cref="SplitStreamReset(int)" /> can be used to reset the buffer state.
+        /// </para>
+        /// <para>
+        /// Use <see cref="Bass.StreamFree"/> with a splitter channel to remove it from the source.
+        /// When a source is freed, all of its splitter streams are automatically freed.
+        /// </para>
+        /// <para>
+        /// The <paramref name="ChannelMap" /> array defines the channel number to be created for the reader as well as which source channels should be used for each.
+        /// This enables you to create a reader stream which extract certain source channels (e.g. create a mono reader based on a stereo source), remaps the channel order (e.g. swap left and right in the reader) or even contains more channels than the source (e.g. create a 5.1 reader based on a stereo source).
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Bass.Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.Handle">The <paramref name="Channel" /> is not valid.</exception>
+        /// <exception cref="Errors.Decode">The <paramref name="Channel" /> is not a decoding channel.</exception>
+        /// <exception cref="Errors.Parameter">The <paramref name="ChannelMap" /> contains an invalid channel index.</exception>
+        /// <exception cref="Errors.NotAvailable">Only decoding streams (<see cref="BassFlags.Decode"/>) are allowed when using the <see cref="Bass.NoSoundDevice"/>. The <see cref="BassFlags.AutoFree"/> flag is also unavailable to decoding channels.</exception>
+        /// <exception cref="Errors.SampleFormat">The sample format is not supported by the device/drivers. If the stream is more than stereo or the <see cref="BassFlags.Float"/> flag is used, it could be that they are not supported (ie. no WDM drivers).</exception>
+        /// <exception cref="Errors.Speaker">The device/drivers do not support the requested speaker(s), or you're attempting to assign a stereo stream to a mono speaker.</exception>
+        /// <exception cref="Errors.Memory">There is insufficent memory.</exception>
+        /// <exception cref="Errors.No3D">Couldn't initialize 3D support for the stream.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamCreate")]
-        public static extern int CreateSplitStream(int channel, BassFlags Flags, int[] chanmap);
+        public static extern int CreateSplitStream(int Channel, BassFlags Flags, int[] ChannelMap);
         
 		/// <summary>
 		/// Retrieves the amount of buffered data available to a splitter stream, or the amount of data in a splitter source buffer.
@@ -479,6 +529,22 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetPosition")]
         public static extern long ChannelGetPosition(int Handle, PositionFlags Mode = PositionFlags.Bytes);
 
+        /// <summary>
+        /// Retrieves the playback position of a mixer source channel, optionally accounting for some latency.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Mode">Position mode.</param>
+        /// <param name="Delay">How far back (in bytes) in the mixer output to get the source channel's position from.</param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code. If successful, the channel's position is returned.</returns>
+        /// <remarks>
+        /// <see cref="ChannelGetPosition(int,PositionFlags)" /> compensates for the mixer's playback buffering to give the position that is currently being heard, but if the mixer is feeding some other output system, it will not know how to compensate for that.
+        /// This function fills that gap by allowing the latency to be specified in the call.
+        /// This functionality requires the mixer to keep a record of its sources' position going back some time, and that is enabled via the <see cref="BassFlags.MixerPositionEx" /> flag when a mixer is created, with the <see cref="MixerPositionEx" /> config option determining how far back the position record goes.
+        /// If the mixer is not a decoding channel (not using the <see cref="BassFlags.Decode" /> flag), then it will automatically have a position record at least equal to its playback buffer length.
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The requested position is not available, or delay goes beyond where the mixer has record of the source channel's position.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetPositionEx")]
         public static extern long ChannelGetPosition(int Handle, PositionFlags Mode, int Delay);
 
