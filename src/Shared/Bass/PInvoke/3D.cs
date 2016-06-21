@@ -40,7 +40,7 @@ namespace ManagedBass
         /// <seealso cref="Set3DFactors"/>
         [DllImport(DllName, EntryPoint = "BASS_Get3DFactors")]
         public static extern bool Get3DFactors(ref float Distance, ref float RollOff, ref float Doppler);
-        
+
         /// <summary>
         /// Sets the factors that affect the calculations of 3D sound.
         /// </summary>
@@ -75,7 +75,7 @@ namespace ManagedBass
         /// <seealso cref="Get3DFactors"/>
         [DllImport(DllName, EntryPoint = "BASS_Set3DFactors")]
         public static extern bool Set3DFactors(float Distance, float RollOff, float Doppler);
-        
+
         /// <summary>
         /// Retrieves the position, velocity, and orientation of the listener.
         /// </summary>
@@ -166,7 +166,7 @@ namespace ManagedBass
         /// <seealso cref="ChannelAttribute.EaxMix"/>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGet3DAttributes")]
         public static extern bool ChannelGet3DAttributes(int Handle, ref Mode3D Mode, ref float Min, ref float Max, ref int iAngle, ref int oAngle, ref float OutVol);
-        
+
         /// <summary>
         /// Sets the 3D attributes of a sample, stream, or MOD music channel with 3D functionality.
         /// </summary>

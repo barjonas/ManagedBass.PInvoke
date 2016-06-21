@@ -36,13 +36,13 @@ namespace ManagedBass
         public static extern bool RecordInit(int Device = DefaultDevice);
 
         /// <summary>
-		/// Frees all resources used by the recording device.
-		/// </summary>
-		/// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// <para>This function should be called for all initialized recording devices before your program exits.</para>
-		/// <para>When using multiple recording devices, the current thread's device setting (as set with <see cref="CurrentRecordingDevice" />) determines which device this function call applies to.</para>
-		/// </remarks>
+        /// Frees all resources used by the recording device.
+        /// </summary>
+        /// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>This function should be called for all initialized recording devices before your program exits.</para>
+        /// <para>When using multiple recording devices, the current thread's device setting (as set with <see cref="CurrentRecordingDevice" />) determines which device this function call applies to.</para>
+        /// </remarks>
         /// <exception cref="Errors.Init"><see cref="RecordInit" /> has not been successfully called - there are no initialized devices.</exception>
         [DllImport(DllName, EntryPoint = "BASS_RecordFree")]
         public static extern bool RecordFree();
@@ -106,25 +106,25 @@ namespace ManagedBass
 
             return h;
         }
-        
+
         /// <summary>
-		/// Starts recording.
-		/// </summary>
-		/// <param name="Frequency">The sample rate to record at.</param>
-		/// <param name="chans">The number of channels... 1 = mono, 2 = stereo.</param>
-		/// <param name="flags">Any combination of <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Float"/> and <see cref="BassFlags.RecordPause"/>.</param>
-		/// <param name="period">
+        /// Starts recording.
+        /// </summary>
+        /// <param name="Frequency">The sample rate to record at.</param>
+        /// <param name="chans">The number of channels... 1 = mono, 2 = stereo.</param>
+        /// <param name="flags">Any combination of <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Float"/> and <see cref="BassFlags.RecordPause"/>.</param>
+        /// <param name="period">
         /// Set the period (in milliseconds) between calls to the callback function (<see cref="RecordProcedure" />).
         /// The minimum period is 5ms, the maximum the maximum is half the <see cref="RecordingBufferLength"/> setting.
         /// If the period specified is outside this range, it is automatically capped. The default is 100ms.
         /// </param>
-		/// <param name="proc">The user defined function to receive the recorded sample data... can be <see langword="null" /> if you do not wish to use a callback.</param>
-		/// <param name="user">User instance data to pass to the callback function.</param>
-		/// <returns>If successful, the new recording's handle is returned, else <see langword="false" /> is returned. Use <see cref="LastError"/> to get the error code.</returns>
+        /// <param name="proc">The user defined function to receive the recorded sample data... can be <see langword="null" /> if you do not wish to use a callback.</param>
+        /// <param name="user">User instance data to pass to the callback function.</param>
+        /// <returns>If successful, the new recording's handle is returned, else <see langword="false" /> is returned. Use <see cref="LastError"/> to get the error code.</returns>
         public static int RecordStart(int Frequency, int chans, BassFlags flags, int period, RecordProcedure proc, IntPtr user)
-		{
-			return RecordStart(Frequency, chans, (BassFlags)BitHelper.MakeLong((short)flags, (short)period), proc, user);
-		}
+        {
+            return RecordStart(Frequency, chans, (BassFlags)BitHelper.MakeLong((short)flags, (short)period), proc, user);
+        }
         #endregion
 
         #region Current Recording Device
@@ -135,66 +135,66 @@ namespace ManagedBass
         static extern bool BASS_RecordSetDevice(int Device);
 
         /// <summary>
-		/// Gets or Sets the recording device setting in the current thread... 0 = first recording device.
-		/// </summary>
+        /// Gets or Sets the recording device setting in the current thread... 0 = first recording device.
+        /// </summary>
         /// <remarks>
         /// <para>A value of -1 indicates error. Use <see cref="LastError" /> to get the error code.  Throws <see cref="BassException"/> on Error while setting value.</para>
-		/// <para>Simultaneously using multiple devices is supported in the BASS API via a context switching system - instead of there being an extra "device" parameter in the function calls, the device to be used is set prior to calling the functions. The device setting is local to the current thread, so calling functions with different devices simultaneously in multiple threads is not a problem.</para>
-		/// <para>The functions that use the recording device selection are the following: 
-		/// <see cref="RecordFree" />, <see cref="RecordGetInfo(out RecordInfo)" />, <see cref="RecordGetInput(int, out float)" />, <see cref="RecordGetInputName(int)" />, <see cref="RecordSetInput(int, InputFlags, float)" />, <see cref="RecordStart(int, int, BassFlags, RecordProcedure, IntPtr)" />.</para>
-		/// <para>When one of the above functions is called, BASS will check the current thread's recording device setting, and if no device is selected (or the selected device is not initialized), BASS will automatically select the lowest device that is initialized. 
-		/// This means that when using a single device, there is no need to use this function - BASS will automatically use the device that's initialized. 
-		/// Even if you free the device, and initialize another, BASS will automatically switch to the one that is initialized.</para>
-		/// </remarks>
+        /// <para>Simultaneously using multiple devices is supported in the BASS API via a context switching system - instead of there being an extra "device" parameter in the function calls, the device to be used is set prior to calling the functions. The device setting is local to the current thread, so calling functions with different devices simultaneously in multiple threads is not a problem.</para>
+        /// <para>The functions that use the recording device selection are the following:
+        /// <see cref="RecordFree" />, <see cref="RecordGetInfo(out RecordInfo)" />, <see cref="RecordGetInput(int, out float)" />, <see cref="RecordGetInputName(int)" />, <see cref="RecordSetInput(int, InputFlags, float)" />, <see cref="RecordStart(int, int, BassFlags, RecordProcedure, IntPtr)" />.</para>
+        /// <para>When one of the above functions is called, BASS will check the current thread's recording device setting, and if no device is selected (or the selected device is not initialized), BASS will automatically select the lowest device that is initialized.
+        /// This means that when using a single device, there is no need to use this function - BASS will automatically use the device that's initialized.
+        /// Even if you free the device, and initialize another, BASS will automatically switch to the one that is initialized.</para>
+        /// </remarks>
         /// <exception cref="Errors.Init"><see cref="RecordInit" /> has not been successfully called - there are no initialized.</exception>
         /// <exception cref="Errors.Device">Specified device number is invalid.</exception>
         /// <seealso cref="RecordInit"/>
         public static int CurrentRecordingDevice
         {
             get { return BASS_RecordGetDevice(); }
-            set 
+            set
             {
                 if (!BASS_RecordSetDevice(value))
-                    throw new BassException(); 
+                    throw new BassException();
             }
         }
         #endregion
 
         #region Record Get Device Info
         /// <summary>
-		/// Retrieves information on a recording device.
-		/// </summary>
-		/// <param name="Device">The device to get the information of... 0 = first.</param>
-		/// <param name="Info">A <see cref="DeviceInfo" /> object to retreive the information into.</param>
-		/// <returns>
+        /// Retrieves information on a recording device.
+        /// </summary>
+        /// <param name="Device">The device to get the information of... 0 = first.</param>
+        /// <param name="Info">A <see cref="DeviceInfo" /> object to retreive the information into.</param>
+        /// <returns>
         /// If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned.
         /// Use <see cref="LastError" /> to get the error code.
         /// </returns>
-		/// <remarks>
-		/// This function can be used to enumerate the available recording devices for a setup dialog.
-		/// <para><b>Platform-specific</b></para>
-		/// <para>
+        /// <remarks>
+        /// This function can be used to enumerate the available recording devices for a setup dialog.
+        /// <para><b>Platform-specific</b></para>
+        /// <para>
         /// Recording support requires DirectX 5 (or above) on Windows.
         /// On Linux, a "Default" device is hardcoded to device number 0, which uses the default input set in the ALSA config.
         /// </para>
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Device">The device number specified is invalid.</exception>
         /// <exception cref="Errors.DirectX">A sufficient version of DirectX is not installed.</exception>
         [DllImport(DllName, EntryPoint = "BASS_RecordGetDeviceInfo")]
         public static extern bool RecordGetDeviceInfo(int Device, out DeviceInfo Info);
 
         /// <summary>
-		/// Retrieves information on a recording device.
-		/// </summary>
-		/// <param name="Device">The device to get the information of... 0 = first.</param>
-		/// <returns>An instance of the <see cref="DeviceInfo" /> structure is returned.A value of -1 indicates error. Use <see cref="LastError" /> to get the error code. Throws <see cref="BassException"/> on Error.</returns>
-		/// <remarks>
-		/// <para><b>Platform-specific</b></para>
-		/// <para>
+        /// Retrieves information on a recording device.
+        /// </summary>
+        /// <param name="Device">The device to get the information of... 0 = first.</param>
+        /// <returns>An instance of the <see cref="DeviceInfo" /> structure is returned.A value of -1 indicates error. Use <see cref="LastError" /> to get the error code. Throws <see cref="BassException"/> on Error.</returns>
+        /// <remarks>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>
         /// Recording support requires DirectX 5 (or above) on Windows.
         /// On Linux, a "Default" device is hardcoded to device number 0, which uses the default input set in the ALSA config.
         /// </para>
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Device">The device number specified is invalid.</exception>
         /// <exception cref="Errors.DirectX">A sufficient version of DirectX is not installed.</exception>
         public static DeviceInfo RecordGetDeviceInfo(int Device)
@@ -207,24 +207,24 @@ namespace ManagedBass
         #endregion
 
         #region Record Get Info
-	    /// <summary>
-		/// Retrieves information on the recording device being used.
-		/// </summary>
-		/// <param name="info">A <see cref="RecordInfo" /> object to retrieve the information into.</param>
-		/// <returns>
+        /// <summary>
+        /// Retrieves information on the recording device being used.
+        /// </summary>
+        /// <param name="info">A <see cref="RecordInfo" /> object to retrieve the information into.</param>
+        /// <returns>
         /// If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned.
         /// Use <see cref="LastError" /> to get the error code.
         /// </returns>
         /// <exception cref="Errors.Init"><see cref="RecordInit" /> has not been successfully called - there are no initialized devices.</exception>
         [DllImport(DllName, EntryPoint = "BASS_RecordGetInfo")]
         public static extern bool RecordGetInfo(out RecordInfo info);
-        
-		/// <summary>
-		/// Retrieves information on the recording device being used.
-		/// </summary>
-		/// <returns>An instance of the <see cref="RecordInfo" /> structure is returned. Throws <see cref="BassException"/> on Error.</returns>
+
+        /// <summary>
+        /// Retrieves information on the recording device being used.
+        /// </summary>
+        /// <returns>An instance of the <see cref="RecordInfo" /> structure is returned. Throws <see cref="BassException"/> on Error.</returns>
         /// <exception cref="Errors.Init"><see cref="RecordInit" /> has not been successfully called - there are no initialized devices.</exception>
-		public static RecordInfo RecordingInfo
+        public static RecordInfo RecordingInfo
         {
             get
             {
@@ -277,7 +277,7 @@ namespace ManagedBass
         /// <param name="Input">The input to get the settings of... 0 = first, -1 = master.</param>
         /// <param name="Volume">Reference to a variable to receive the current volume.</param>
         /// <returns>
-        /// If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
+        /// If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
         /// If successful, then the settings are returned.
         /// The <see cref="InputFlags.Off"/> flag will be set if the input is disabled, otherwise the input is enabled.
         /// The type of input (see <see cref="InputTypeFlags" />) is also indicated in the high 8-bits.
@@ -308,7 +308,7 @@ namespace ManagedBass
         /// </summary>
         /// <param name="Input">The input to get the settings of... 0 = first, -1 = master.</param>
         /// <returns>
-        /// If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
+        /// If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
         /// If successful, then the settings are returned.
         /// The <see cref="InputFlags.Off"/> flag will be set if the input is disabled, otherwise the input is enabled.
         /// The type of input (see <see cref="InputTypeFlags" />) is also indicated in the high 8-bits.

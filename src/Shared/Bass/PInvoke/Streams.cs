@@ -28,7 +28,7 @@ namespace ManagedBass
         /// <exception cref="Errors.NotAvailable">The requested file position/status is not available.</exception>
         [DllImport(DllName, EntryPoint = "BASS_StreamGetFilePosition")]
         public static extern long StreamGetFilePosition(int Handle, FileStreamPosition Mode = FileStreamPosition.Current);
-        
+
         #region StreamProcedure
         [DllImport(DllName)]
         static extern int BASS_StreamCreate(int Frequency, int Channels, BassFlags Flags, StreamProcedure Procedure, IntPtr User);
@@ -48,7 +48,7 @@ namespace ManagedBass
         /// If you wish to play a sample format that BASS does not support, then you can create a stream and decode the sample data into it.
         /// </para>
         /// <para>
-        /// Bass can automatically stream MP3, MP2, MP1, OGG, WAV and AIFF files, using <see cref="CreateStream(string,long,long,BassFlags)" />, and also from HTTP and FTP servers, 
+        /// Bass can automatically stream MP3, MP2, MP1, OGG, WAV and AIFF files, using <see cref="CreateStream(string,long,long,BassFlags)" />, and also from HTTP and FTP servers,
         /// using <see cref="CreateStream(string,int,BassFlags,DownloadProcedure,IntPtr)" />, <see cref="CreateStream(StreamSystem,BassFlags,FileProcedures,IntPtr)" /> allows streaming from other sources too.
         /// </para>
         /// <para>However, the callback method must deliver PCM sample data as specified, so opening an MP3 file and just passing that file data will not work here.</para>
@@ -56,8 +56,6 @@ namespace ManagedBass
         /// Unlike Bass.Net, a reference to <paramref name="Procedure"/> doesn't need to be held by you manually.
         /// ManagedBass automatically holds a reference and frees it when the Channel is freed.
         /// </para>
-        /// <para><b>Platform-specific</b></para>
-        /// <para>Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary. The BassFlags.FX flag is also ignored.</para>
         /// </remarks>
         /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
         /// <exception cref="Errors.NotAvailable">Only decoding channels (<see cref="BassFlags.Decode"/>) are allowed when using the <see cref="NoSoundDevice"/> device. The <see cref="BassFlags.AutoFree"/> flag is also unavailable to decoding channels.</exception>
@@ -90,11 +88,9 @@ namespace ManagedBass
         /// <param name="ProcedureType">The type of stream.</param>
         /// <returns>If successful, the new stream's handle is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
-        /// A dummy stream doesn't have any sample data of its own, but a decoding dummy stream (with <see cref="BassFlags.Decode"/> flag) can be used to apply DSP/FX processing to any sample data, 
-        /// by setting DSP/FX on the stream and feeding the data through <see cref="ChannelGetData(int,IntPtr,int)" />. 
+        /// A dummy stream doesn't have any sample data of its own, but a decoding dummy stream (with <see cref="BassFlags.Decode"/> flag) can be used to apply DSP/FX processing to any sample data,
+        /// by setting DSP/FX on the stream and feeding the data through <see cref="ChannelGetData(int,IntPtr,int)" />.
         /// <para>The dummy stream should have the same sample format as the data being fed through it.</para>
-        /// <para><b>Platform-specific</b></para>
-        /// <para>Away from Windows, all mixing is done in software (by Bass), so the BassFlags.SoftwareMixing flag is unnecessary. The BassFlags.FX flag is also ignored.</para>
         /// </remarks>
         /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
         /// <exception cref="Errors.NotAvailable">Only decoding channels (<see cref="BassFlags.Decode"/>) are allowed when using the <see cref="NoSoundDevice"/> device. The <see cref="BassFlags.AutoFree"/> flag is also unavailable to decoding channels.</exception>
@@ -119,7 +115,7 @@ namespace ManagedBass
         /// <returns>If successful, the amount of queued data is returned, else -1 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played. 
+        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played.
         /// With a decoding channel, there is no playback buffer, so all data is queued in that case.
         /// There is no limit to the amount of data that can be queued, besides available memory.
         /// The queue buffer will be automatically enlarged as required to hold the data, but it can also be enlarged in advance.
@@ -128,8 +124,8 @@ namespace ManagedBass
         /// <para>DSP/FX are applied when the data reaches the playback buffer, or the <see cref="ChannelGetData(int,IntPtr,int)" /> call in the case of a decoding channel.</para>
         /// <para>
         /// Data should be provided at a rate sufficent to sustain playback.
-        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided. 
-        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled. 
+        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided.
+        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled.
         /// A <see cref="SyncFlags.Stalled"/> sync can also be set via <see cref="ChannelSetSync" />, to be triggered upon playback stalling or resuming.
         /// </para>
         /// </remarks>
@@ -150,7 +146,7 @@ namespace ManagedBass
         /// <returns>If successful, the amount of queued data is returned, else -1 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played. 
+        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played.
         /// With a decoding channel, there is no playback buffer, so all data is queued in that case.
         /// There is no limit to the amount of data that can be queued, besides available memory.
         /// The queue buffer will be automatically enlarged as required to hold the data, but it can also be enlarged in advance.
@@ -159,8 +155,8 @@ namespace ManagedBass
         /// <para>DSP/FX are applied when the data reaches the playback buffer, or the <see cref="ChannelGetData(int,IntPtr,int)" /> call in the case of a decoding channel.</para>
         /// <para>
         /// Data should be provided at a rate sufficent to sustain playback.
-        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided. 
-        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled. 
+        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided.
+        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled.
         /// A <see cref="SyncFlags.Stalled"/> sync can also be set via <see cref="ChannelSetSync" />, to be triggered upon playback stalling or resuming.
         /// </para>
         /// </remarks>
@@ -181,7 +177,7 @@ namespace ManagedBass
         /// <returns>If successful, the amount of queued data is returned, else -1 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played. 
+        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played.
         /// With a decoding channel, there is no playback buffer, so all data is queued in that case.
         /// There is no limit to the amount of data that can be queued, besides available memory.
         /// The queue buffer will be automatically enlarged as required to hold the data, but it can also be enlarged in advance.
@@ -190,8 +186,8 @@ namespace ManagedBass
         /// <para>DSP/FX are applied when the data reaches the playback buffer, or the <see cref="ChannelGetData(int,IntPtr,int)" /> call in the case of a decoding channel.</para>
         /// <para>
         /// Data should be provided at a rate sufficent to sustain playback.
-        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided. 
-        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled. 
+        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided.
+        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled.
         /// A <see cref="SyncFlags.Stalled"/> sync can also be set via <see cref="ChannelSetSync" />, to be triggered upon playback stalling or resuming.
         /// </para>
         /// </remarks>
@@ -212,7 +208,7 @@ namespace ManagedBass
         /// <returns>If successful, the amount of queued data is returned, else -1 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played. 
+        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played.
         /// With a decoding channel, there is no playback buffer, so all data is queued in that case.
         /// There is no limit to the amount of data that can be queued, besides available memory.
         /// The queue buffer will be automatically enlarged as required to hold the data, but it can also be enlarged in advance.
@@ -221,8 +217,8 @@ namespace ManagedBass
         /// <para>DSP/FX are applied when the data reaches the playback buffer, or the <see cref="ChannelGetData(int,IntPtr,int)" /> call in the case of a decoding channel.</para>
         /// <para>
         /// Data should be provided at a rate sufficent to sustain playback.
-        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided. 
-        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled. 
+        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided.
+        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled.
         /// A <see cref="SyncFlags.Stalled"/> sync can also be set via <see cref="ChannelSetSync" />, to be triggered upon playback stalling or resuming.
         /// </para>
         /// </remarks>
@@ -243,7 +239,7 @@ namespace ManagedBass
         /// <returns>If successful, the amount of queued data is returned, else -1 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played. 
+        /// As much data as possible will be placed in the stream's playback buffer, and any remainder will be queued for when more space becomes available, ie. as the buffered data is played.
         /// With a decoding channel, there is no playback buffer, so all data is queued in that case.
         /// There is no limit to the amount of data that can be queued, besides available memory.
         /// The queue buffer will be automatically enlarged as required to hold the data, but it can also be enlarged in advance.
@@ -252,8 +248,8 @@ namespace ManagedBass
         /// <para>DSP/FX are applied when the data reaches the playback buffer, or the <see cref="ChannelGetData(int,IntPtr,int)" /> call in the case of a decoding channel.</para>
         /// <para>
         /// Data should be provided at a rate sufficent to sustain playback.
-        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided. 
-        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled. 
+        /// If the buffer gets exhausted, Bass will automatically stall playback of the stream, until more data is provided.
+        /// <see cref="ChannelGetData(int,IntPtr,int)" /> (<see cref="DataFlags.Available"/>) can be used to check the buffer level, and <see cref="ChannelIsActive" /> can be used to check if playback has stalled.
         /// A <see cref="SyncFlags.Stalled"/> sync can also be set via <see cref="ChannelSetSync" />, to be triggered upon playback stalling or resuming.
         /// </para>
         /// </remarks>

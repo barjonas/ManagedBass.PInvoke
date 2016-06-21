@@ -146,12 +146,117 @@ namespace ManagedBass.Mix
         }
         #endregion
 
+        /// <summary>
+        /// Creates a mixer stream.
+        /// </summary>
+        /// <param name="Frequency">The sample rate of the mixer output (e.g. 44100).</param>
+        /// <param name="Channels">The number of channels... 1 = mono, 2 = stereo, 4 = quadraphonic, 6 = 5.1, 8 = 7.1. More than stereo requires WDM drivers (or the <see cref="BassFlags.Decode"/> flag) in Windows, and the Speaker flags are ignored.</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/>..</param>
+        /// <returns>If successful, the new stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// Source channels are "plugged" into a mixer using the <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> functions, and "unplugged" using the <see cref="MixerRemoveChannel" /> function.
+        /// Sources can be added and removed at any time, so a mixer does not have a predetermined length and <see cref="Bass.ChannelGetLength" /> is not applicable.
+        /// Likewise, seeking is not possible, except to position 0, as described below.
+        /// </para>
+        /// <para>
+        /// If the mixer output is being played (it is not a decoding channel), then there will be some delay in the effect of adding/removing source channels or changing their attributes being heard.
+        /// This latency can be reduced by making use of the <see cref="Bass.PlaybackBufferLength" /> and <see cref="Bass.UpdatePeriod" /> config options.
+        /// The playback buffer can be flushed by calling <see cref="Bass.ChannelPlay" /> (Restart = true) or <see cref="Bass.ChannelSetPosition" /> (Position = 0).
+        /// That can also be done to restart a mixer that has ended.
+        /// </para>
+        /// <para>
+        /// Unless the <see cref="BassFlags.MixerEnd"/> flag is specified, a mixer stream will never end.
+        /// When there are no sources (or the sources have ended/stalled), it'll produce no output until there's an active source. 
+        /// That's unless the <see cref="BassFlags.MixerNonStop"/> flag is used, in which case it will produce silent output while there are no active sources.
+        /// The <see cref="BassFlags.MixerEnd"/> and <see cref="BassFlags.MixerNonStop"/> flags can be toggled at any time, using <see cref="Bass.ChannelFlags" />.
+        /// </para>
+        /// <para>
+        /// Besides mixing channels, a mixer stream can be used as a resampler.
+        /// In that case the freq parameter would be set the new sample rate, and the source channel's attributes would be left at their defaults. 
+        /// A mixer stream can also be used to downmix, upmix and generally rearrange channels, set using the <see cref="ChannelSetMatrix(int,float[,])"/>.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Bass.Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.NotAvailable">Only decoding streams (<see cref="BassFlags.Decode"/>) are allowed when using the <see cref="Bass.NoSoundDevice"/>.</exception>
+        /// <exception cref="Errors.SampleRate"><paramref name="Frequency"/> is out of range. See <see cref="BassInfo.MinSampleRate"/> and <see cref="BassInfo.MaxSampleRate"/> members.</exception>
+        /// <exception cref="Errors.SampleFormat">The sample format is not supported by the device/drivers. If the stream is more than stereo or the <see cref="BassFlags.Float"/> flag is used, it could be that they are not supported (ie. no WDM drivers).</exception>
+        /// <exception cref="Errors.Speaker">The device/drivers do not support the requested speaker(s), or you're attempting to assign a stereo stream to a mono speaker.</exception>
+        /// <exception cref="Errors.Memory">There is insufficent memory.</exception>
+        /// <exception cref="Errors.No3D">Couldn't initialize 3D support for the stream.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_StreamCreate")]
         public static extern int CreateMixerStream(int Frequency, int Channels, BassFlags Flags);
 
+        /// <summary>
+        /// Plugs a channel into a mixer.
+        /// </summary>
+        /// <param name="Handle">The mixer handle (created with <see cref="CreateMixerStream" />).</param>
+        /// <param name="Channel">The handle of the channel to plug into the mixer... a HMUSIC, HSTREAM or HRECORD.</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
+        /// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// Internally, a mixer will use the <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> function to get data from its source channels.
+        /// That means that the source channels must be decoding channels (not using a <see cref="RecordProcedure" /> in the case of a recording channel).
+        /// Plugging a channel into more than one mixer at a time is not possible because the mixers would be taking data away from each other.
+        /// An advantage of this is that there is no need for a mixer's handle to be provided with the channel functions.
+        /// It is actually possible to plug a channel into multiple mixers via the use of splitter streams.</para>
+        /// <para>
+        /// Channels are 'unplugged' using the <see cref="MixerRemoveChannel" /> function.
+        /// Channels are also automatically unplugged when they are freed.
+        /// </para>
+        /// <para>
+        /// When mixing a channel, the mixer makes use of the channel's attributes (freq/volume/pan), as set with <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" /> or <see cref="Bass.ChannelSlideAttribute(int,ChannelAttribute,float,int)" />.
+        /// The <see cref="Bass.LogarithmicVolumeCurve"/> and <see cref="Bass.LogarithmicPanningCurve"/> config option settings are also used.
+        /// </para>
+        /// <para>
+        /// If a multi-channel stream has more channels than the mixer output, the extra channels will be discarded.
+        /// For example, if a 5.1 stream is plugged into a stereo mixer, only the front-left/right channels will be retained.
+        /// That is unless matrix mixing is used.
+        /// </para>
+        /// <para>
+        /// The mixer processing is performed in floating-point, so it makes sense (for both quality and efficiency reasons) for the source channels to be floating-point too, though they do not have to be.
+        /// It is also more efficient if the source channels have the same sample rate as the mixer output because no sample rate conversion is required then.
+        /// When sample rate conversion is required, windowed sinc interpolation is used and the source's <see cref="ChannelAttribute.SampleRateConversion" /> attribute determines how many points/samples are used in that, as follows:
+        /// 0 (or below) = 4 points, 1 = 8 points, 2 = 16 points, 3 = 32 points, 4 = 64 points, 5 = 128 points, 6 (or above) = 256 points.
+        /// 8 points are used if the <see cref="ChannelAttribute.SampleRateConversion" /> attribute is unavailable (old BASS version).
+        /// A higher number of points results in better sound quality (less aliasing and smaller transition band in the low-pass filter), but also higher CPU usage.
+        /// </para>
+        /// <para><b>Platform-specific:</b></para>
+        /// <para>
+        /// The sample rate conversion processing is limited to 128 points on iOS and Android.
+        /// The mixer processing is also performed in fixed-point rather than floating-point on Android.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle">At least one of <paramref name="Handle" /> and <paramref name="Channel" /> is not valid.</exception>
+        /// <exception cref="Errors.Decode"><paramref name="Channel" /> is not a decoding channel.</exception>
+        /// <exception cref="Errors.Already"><paramref name="Channel" /> is already plugged into a mixer. It must be unplugged first.</exception>
+        /// <exception cref="Errors.Speaker">The mixer does not support the requested speaker(s), or you're attempting to assign a stereo stream to a mono speaker.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_StreamAddChannel")]
         public static extern bool MixerAddChannel(int Handle, int Channel, BassFlags Flags);
 
+        /// <summary>
+        /// Plugs a channel into a mixer, optionally delaying the start and limiting the length.
+        /// </summary>
+        /// <param name="Handle">The mixer handle (created with <see cref="CreateMixerStream" />).</param>
+        /// <param name="Channel">The handle of the channel to plug into the mixer... a HMUSIC, HSTREAM or HRECORD.</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
+        /// <param name="Start">Delay (in bytes) before the channel is mixed in.</param>
+        /// <param name="Length">The maximum amount of data (in bytes) to mix... 0 = no limit. Once this end point is reached, the channel will be removed from the mixer.</param>
+        /// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function is identical to <see cref="MixerAddChannel(int,int,BassFlags)" />, but with the additional ability to specify a delay and duration for the channel.
+        /// <para>
+        /// The <paramref name="Start" /> and <paramref name="Length" /> parameters relate to the mixer output.
+        /// So when calculating these values, use the mixer stream's sample format rather than the source channel's. 
+        /// The start parameter is automatically rounded-down to the nearest sample boundary, while the length parameter is rounded-up to the nearest sample boundary.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle">At least one of <paramref name="Handle" /> and <paramref name="Channel" /> is not valid.</exception>
+        /// <exception cref="Errors.Decode"><paramref name="Channel" /> is not a decoding channel.</exception>
+        /// <exception cref="Errors.Already"><paramref name="Channel" /> is already plugged into a mixer. It must be unplugged first.</exception>
+        /// <exception cref="Errors.Speaker">The mixer does not support the requested speaker(s), or you're attempting to assign a stereo stream to a mono speaker.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_StreamAddChannelEx")]
         public static extern bool MixerAddChannel(int Handle, int Channel, BassFlags Flags, long Start, long Length);
         
@@ -548,6 +653,24 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetPositionEx")]
         public static extern long ChannelGetPosition(int Handle, PositionFlags Mode, int Delay);
 
+        /// <summary>
+        /// Sets the playback position of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was addded via <see cref="MixerAddChannel(int,int,BassFlags)" /> or <see cref="MixerAddChannel(int,int,BassFlags,long,long)" /> beforehand).</param>
+        /// <param name="Position">The position, in bytes. With MOD musics, the position can also be set in orders and rows instead of bytes.</param>
+        /// <param name="Mode">Position Mode... default = <see cref="PositionFlags.Bytes"/>.</param>
+        /// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function works exactly like the standard <see cref="Bass.ChannelSetPosition" />, except that it also resets things for the channel in the mixer, well as supporting the <see cref="BassFlags.MixerNoRampin"/> flag.
+        /// See <see cref="ChannelGetPosition(int,PositionFlags)" /> for details.
+        /// <para>For custom looping purposes (eg. in a mixtime <see cref="SyncProcedure"/>), the standard <see cref="Bass.ChannelSetPosition(int,long,PositionFlags)" /> function should be used instead of this</para>
+        /// <para>The playback buffer of the mixer can be flushed by using pos = 0.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotFile">The stream is not a file stream.</exception>
+        /// <exception cref="Errors.Position">The requested position is illegal.</exception>
+        /// <exception cref="Errors.NotAvailable">The download has not yet reached the requested position.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetPosition")]
         public static extern bool ChannelSetPosition(int Handle, long Position, PositionFlags Mode = PositionFlags.Bytes);
 
@@ -602,15 +725,62 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetEnvelopePos")]
         public static extern long ChannelGetEnvelopePosition(int Handle, MixEnvelope Type, ref float Value);
 
+        /// <summary>
+        /// Sets the current position of an envelope on a channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle.</param>
+        /// <param name="Type">The envelope to set the position/value of.</param>
+        /// <param name="Position">The new envelope position, in bytes. If this is beyond the end of the envelope it will be capped or looped, depending on whether the envelope has looping enabled.</param>
+        /// <returns>If successful, the current position of the envelope is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// During playback, the effect of changes are not heard instantaneously, due to buffering. To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option config option to reduce the buffer length.
+        /// <para>
+        /// Note: Envelopes deal in mixer positions, not sources!
+        /// So when you are changing the source position (e.g. via <see cref="ChannelSetPosition(int,long,PositionFlags)" /> the envelope's positions doesn't change with it.
+        /// You might use this method to align the envelope position accorting to the new source position
+        /// .</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">There is no envelope of the requested type on the channel.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetEnvelopePos")]
         public static extern bool ChannelSetEnvelopePosition(int Handle, MixEnvelope Type, long Position);
 
-        [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetEnvelope")]
-        public static extern bool ChannelSetEnvelope(int Handle, MixEnvelope Type, MixerNode[] Nodes, int Count);
+        [DllImport(DllName)]
+        static extern bool BASS_Mixer_ChannelSetEnvelope(int Handle, MixEnvelope Type, MixerNode[] Nodes, int Count);
 
-        public static bool ChannelSetEnvelope(int Handle, MixEnvelope Type, MixerNode[] Nodes)
+        /// <summary>
+        /// Sets an envelope to modify the sample rate, volume or pan of a channel over a period of time.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle.</param>
+        /// <param name="Type">The envelope to get the position/value of.</param>
+        /// <param name="Nodes">The array of envelope nodes, which should have sequential positions.</param>
+        /// <param name="Length">The number of elements in the nodes array... 0 = no envelope.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// Envelopes are applied on top of the channel's attributes, as set via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" />. 
+        /// In the case of <see cref="MixEnvelope.Frequency"/> and <see cref="MixEnvelope.Volume"/>, 
+        /// the final sample rate and volume is a product of the channel attribute and the envelope. 
+        /// While in the <see cref="MixEnvelope.Pan"/> case, the final panning is a sum of the channel attribute and envelope.
+        /// </para>
+        /// <para>
+        /// <see cref="ChannelGetEnvelopePosition" /> can be used to get the current envelope position, 
+        /// and a <see cref="SyncFlags.MixerEnvelope"/> sync can be set via <see cref="ChannelSetSync(int,SyncFlags,long,SyncProcedure,IntPtr)" /> to be informed of when an envelope ends.
+        /// The function can be called again from such a sync, in order to set a new envelope to follow the old one.
+        /// </para>
+        /// <para>
+        /// Any previous envelope of the same type is replaced by the new envelope.
+        /// A copy is made of the nodes array, so it does not need to persist beyond this function call.
+        /// </para>
+        /// <para>Note: Envelopes deal in mixer positions, not sources!
+        /// You might use <see cref="ChannelSetEnvelopePosition" /> to adjust the envelope to a source channel position.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        public static bool ChannelSetEnvelope(int Handle, MixEnvelope Type, MixerNode[] Nodes, int Length = 0)
         {
-            return ChannelSetEnvelope(Handle, Type, Nodes, Nodes?.Length ?? 0);
+            return BASS_Mixer_ChannelSetEnvelope(Handle, Type, Nodes, Length == 0 ? Nodes.Length : Length);
         }
         #endregion
     }

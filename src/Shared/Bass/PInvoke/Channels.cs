@@ -81,7 +81,7 @@ namespace ManagedBass
 
             return h;
         }
-        
+
         [DllImport(DllName)]
         static extern bool BASS_ChannelRemoveDSP(int Handle, int DSP);
 
@@ -145,11 +145,11 @@ namespace ManagedBass
         public static int ChannelSetSync(int Handle, SyncFlags Type, long Parameter, SyncProcedure Procedure, IntPtr User = default(IntPtr))
         {
             var h = BASS_ChannelSetSync(Handle, Type, Parameter, Procedure, User);
-            
+
             if (h != 0)
                 Extensions.ChannelReferences.Add(Handle, h, Procedure);
 
-            return h;           
+            return h;
         }
 
         [DllImport(DllName)]
@@ -282,7 +282,7 @@ namespace ManagedBass
         /// </remarks>
         [DllImport(DllName, EntryPoint = "BASS_ChannelIsActive")]
         public static extern PlaybackState ChannelIsActive(int Handle);
-        
+
         /// <summary>
         /// Links two MOD music or stream channels together.
         /// </summary>
@@ -314,7 +314,7 @@ namespace ManagedBass
         /// </remarks>
         [DllImport(DllName, EntryPoint = "BASS_ChannelSetLink")]
         public static extern bool ChannelSetLink(int Handle, int Channel);
-        
+
         /// <summary>
         /// Removes a links between two MOD music or stream channels.
         /// </summary>
@@ -328,7 +328,7 @@ namespace ManagedBass
         /// <exception cref="Errors.Already">Either <paramref name="Channel" /> is not a valid channel, or it is already not linked to <paramref name="Handle" />.</exception>
         [DllImport(DllName, EntryPoint = "BASS_ChannelRemoveLink")]
         public static extern bool ChannelRemoveLink(int Handle, int Channel);
-                
+
         #region Channel Flags
         /// <summary>
         /// Modifies and retrieves a channel's flags.
@@ -403,7 +403,7 @@ namespace ManagedBass
         /// <exception cref="Errors.Type"><paramref name="Attribute" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetAttribute")]
         public static extern bool ChannelGetAttribute(int Handle, ChannelAttribute Attribute, out float Value);
-        
+
         /// <summary>
         /// Retrieves the value of an attribute of a sample, stream or MOD music.
         /// Can also get the sample rate of a recording channel.
@@ -419,53 +419,53 @@ namespace ManagedBass
             ChannelGetAttribute(Handle, Attribute, out temp);
             return temp;
         }
-        
-		/// <summary>
-		/// Retrieves the value of a channel's attribute. 
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
-		/// <param name="Attribute">The attribute to get the value of (e.g. <see cref="ChannelAttribute.ScannedInfo"/>)</param>
-		/// <param name="Value">Pointer to a buffer to receive the attribute data.</param>
-		/// <param name="Size">The size of the attribute data... 0 = get the size of the attribute without getting the data.</param>
-		/// <returns>If successful, the size of the attribute data is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>This function also supports the floating-point attributes supported by <see cref="ChannelGetAttribute(int, ChannelAttribute, out float)" />.</remarks>
+
+        /// <summary>
+        /// Retrieves the value of a channel's attribute.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
+        /// <param name="Attribute">The attribute to get the value of (e.g. <see cref="ChannelAttribute.ScannedInfo"/>)</param>
+        /// <param name="Value">Pointer to a buffer to receive the attribute data.</param>
+        /// <param name="Size">The size of the attribute data... 0 = get the size of the attribute without getting the data.</param>
+        /// <returns>If successful, the size of the attribute data is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>This function also supports the floating-point attributes supported by <see cref="ChannelGetAttribute(int, ChannelAttribute, out float)" />.</remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.NotAvailable">The <paramref name="Attribute" /> is not available.</exception>
         /// <exception cref="Errors.Type"><paramref name="Attribute" /> is not valid.</exception>
         /// <exception cref="Errors.Parameter">The <paramref name="Value" /> content or <paramref name="Size" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetAttributeEx")]
         public static extern int ChannelGetAttribute(int Handle, ChannelAttribute Attribute, IntPtr Value, int Size);
-        
-		/// <summary>
-		/// Sets the value of an attribute of a sample, stream or MOD music.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
-		/// <param name="Attribute">The attribute to set the value of.</param>
-		/// <param name="Value">The new attribute value. See the attribute's documentation for details on the possible values.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// The actual attribute value may not be exactly the same as requested, due to precision differences.
+
+        /// <summary>
+        /// Sets the value of an attribute of a sample, stream or MOD music.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
+        /// <param name="Attribute">The attribute to set the value of.</param>
+        /// <param name="Value">The new attribute value. See the attribute's documentation for details on the possible values.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// The actual attribute value may not be exactly the same as requested, due to precision differences.
         /// For example, an attribute might only allow whole number values.
         /// <see cref="ChannelGetAttribute(int, ChannelAttribute, out float)" /> can be used to confirm what the value is.
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.Type"><paramref name="Attribute" /> is not valid.</exception>
         /// <exception cref="Errors.Parameter"><paramref name="Value" /> is not valid. See the attribute's documentation for the valid range of values.</exception>
         [DllImport(DllName, EntryPoint = "BASS_ChannelSetAttribute")]
         public static extern bool ChannelSetAttribute(int Handle, ChannelAttribute Attribute, float Value);
-                
-		/// <summary>
-		/// Sets the value of an attribute of a sample, stream or MOD music.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
-		/// <param name="Attribute">The attribute to set the value of.</param>
-		/// <param name="Value">The new attribute value. See the attribute's documentation for details on the possible values.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// The actual attribute value may not be exactly the same as requested, due to precision differences.
+
+        /// <summary>
+        /// Sets the value of an attribute of a sample, stream or MOD music.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
+        /// <param name="Attribute">The attribute to set the value of.</param>
+        /// <param name="Value">The new attribute value. See the attribute's documentation for details on the possible values.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// The actual attribute value may not be exactly the same as requested, due to precision differences.
         /// For example, an attribute might only allow whole number values.
         /// <see cref="ChannelGetAttribute(int, ChannelAttribute)" /> can be used to confirm what the value is.
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.Type"><paramref name="Attribute" /> is not valid.</exception>
         /// <exception cref="Errors.Parameter"><paramref name="Value" /> is not valid. See the attribute's documentation for the valid range of values.</exception>
@@ -473,15 +473,15 @@ namespace ManagedBass
         {
             return ChannelSetAttribute(Handle, Attribute, (float)Value);
         }
-        
-		/// <summary>
-		/// Sets the value of a channel's attribute.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
-		/// <param name="Attribute">The attribute to set the value of. (e.g. <see cref="ChannelAttribute.ScannedInfo"/>)</param>
-		/// <param name="Value">The pointer to the new attribute data.</param>
-		/// <param name="Size">The size of the attribute data.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+
+        /// <summary>
+        /// Sets the value of a channel's attribute.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM  or HRECORD.</param>
+        /// <param name="Attribute">The attribute to set the value of. (e.g. <see cref="ChannelAttribute.ScannedInfo"/>)</param>
+        /// <param name="Value">The pointer to the new attribute data.</param>
+        /// <param name="Size">The size of the attribute data.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.Type"><paramref name="Attribute" /> is not valid.</exception>
         /// <exception cref="Errors.Parameter"><paramref name="Value" /> is not valid. See the attribute's documentation for the valid range of values.</exception>
@@ -490,24 +490,24 @@ namespace ManagedBass
         #endregion
 
         /// <summary>
-		/// Retrieves the requested tags/headers from a channel, if they are available.
-		/// </summary>
-		/// <param name="Handle">The channel handle...a HMUSIC or HSTREAM.</param>
-		/// <param name="Tags">The tags/headers wanted...</param>
-		/// <returns>If succesful, a pointer to the data of the tags/headers is returned, else <see cref="IntPtr.Zero" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// Some tags (eg. <see cref="TagType.ID3"/>) are located at the end of the file, so when streaming a file from the internet, the tags will not be available until the download is complete.
-        /// A <see cref="SyncFlags.Downloaded"/> sync can be set via <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />, to be informed of when the download is complete. 
-		/// A <see cref="SyncFlags.MetadataReceived"/> sync can be used to be informed of new Shoutcast metadata, and a <see cref="SyncFlags.OggChange"/> sync for when a new logical bitstream begins in a chained OGG stream, which generally brings new OGG tags.
-		/// <para>
+        /// Retrieves the requested tags/headers from a channel, if they are available.
+        /// </summary>
+        /// <param name="Handle">The channel handle...a HMUSIC or HSTREAM.</param>
+        /// <param name="Tags">The tags/headers wanted...</param>
+        /// <returns>If succesful, a pointer to the data of the tags/headers is returned, else <see cref="IntPtr.Zero" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Some tags (eg. <see cref="TagType.ID3"/>) are located at the end of the file, so when streaming a file from the internet, the tags will not be available until the download is complete.
+        /// A <see cref="SyncFlags.Downloaded"/> sync can be set via <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />, to be informed of when the download is complete.
+        /// A <see cref="SyncFlags.MetadataReceived"/> sync can be used to be informed of new Shoutcast metadata, and a <see cref="SyncFlags.OggChange"/> sync for when a new logical bitstream begins in a chained OGG stream, which generally brings new OGG tags.
+        /// <para>
         /// In a chained OGG file containing multiple bitstreams, each bitstream will have its own tags.
         /// To get the tags from a particular one, <see cref="ChannelSetPosition(int, long, PositionFlags)" /> can be first used to seek to it.
         /// </para>
-		/// <para>When a Media Foundation codec is in use, the <see cref="TagType.WaveFormat"/> tag can be used to find out what the source format is.</para>
-		/// </remarks>
+        /// <para>When a Media Foundation codec is in use, the <see cref="TagType.WaveFormat"/> tag can be used to find out what the source format is.</para>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         /// <exception cref="Errors.NotAvailable">The requested tags are not available.</exception>
-		[DllImport(DllName, EntryPoint = "BASS_ChannelGetTags")]
+        [DllImport(DllName, EntryPoint = "BASS_ChannelGetTags")]
         public static extern IntPtr ChannelGetTags(int Handle, TagType Tags);
 
         /// <summary>
@@ -553,7 +553,7 @@ namespace ManagedBass
         /// <remarks>The translation is based on the channel's initial sample rate, when it was created.</remarks>
         [DllImport(DllName, EntryPoint = "BASS_ChannelBytes2Seconds")]
         public static extern double ChannelBytes2Seconds(int Handle, long Position);
-        
+
         /// <summary>
         /// Translates a time (seconds) position into bytes, based on a channel's format.
         /// </summary>
@@ -628,7 +628,7 @@ namespace ManagedBass
         /// </remarks>
         [DllImport(DllName, EntryPoint = "BASS_ChannelSetPosition")]
         public static extern bool ChannelSetPosition(int Handle, long Position, PositionFlags Mode = PositionFlags.Bytes);
-        
+
         /// <summary>
         /// Checks if an attribute (or any attribute) of a sample, stream, or MOD music is sliding.
         /// </summary>
@@ -695,14 +695,14 @@ namespace ManagedBass
         /// If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
         /// <para>
         /// If successful, the level of the left channel is returned in the low word (low 16-bits), and the level of the right channel is returned in the high word (high 16-bits).
-        /// If the channel is mono, then the low word is duplicated in the high word. 
+        /// If the channel is mono, then the low word is duplicated in the high word.
         /// The level ranges linearly from 0 (silent) to 32768 (max).
         /// 0 will be returned when a channel is stalled.
         /// </para>
         /// </returns>
         /// <remarks>
         /// <para>
-        /// This function measures the level of the channel's sample data, not the level of the channel in the final output mix, 
+        /// This function measures the level of the channel's sample data, not the level of the channel in the final output mix,
         /// so the channel's volume and panning/balance (as set with <see cref="ChannelSetAttribute(int,ChannelAttribute,float)" />, <see cref="ChannelAttribute.Volume"/> or <see cref="ChannelAttribute.Pan"/>) does not affect it.
         /// The effect of any DSP/FX set on the channel is present in the measurement, except for DX8 effects when using the "With FX flag" DX8 effect implementation.
         /// </para>
@@ -734,43 +734,43 @@ namespace ManagedBass
         public static int ChannelGetLevelRight(int Handle) => ChannelGetLevel(Handle).HiWord();
 
         /// <summary>
-		/// Retrieves the level (peak amplitude) of a sample, stream, MOD music or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Levels">The array in which the levels are to be returned.</param>
-		/// <param name="Length">How much data (in seconds) to look at to get the level (limited to 1 second).</param>
-		/// <param name="Flags">What levels to retrieve.</param>
-		/// <returns>
-		/// On success <see langword="true" /> is returned - else <see langword="false" />, use <see cref="LastError" /> to get the error code.
-		/// <para>If successful, the requested levels are returned in the <paramref name="Levels" /> array.</para>
-		/// </returns>
-		/// <remarks>
-		/// This function operates in the same way as <see cref="ChannelGetLevel(int)" /> but has greater flexibility on how the level is measured. 
-		/// The levels are not clipped, so may exceed +/-1.0 on floating-point channels.
-		/// </remarks>
-		/// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
+        /// Retrieves the level (peak amplitude) of a sample, stream, MOD music or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Levels">The array in which the levels are to be returned.</param>
+        /// <param name="Length">How much data (in seconds) to look at to get the level (limited to 1 second).</param>
+        /// <param name="Flags">What levels to retrieve.</param>
+        /// <returns>
+        /// On success <see langword="true" /> is returned - else <see langword="false" />, use <see cref="LastError" /> to get the error code.
+        /// <para>If successful, the requested levels are returned in the <paramref name="Levels" /> array.</para>
+        /// </returns>
+        /// <remarks>
+        /// This function operates in the same way as <see cref="ChannelGetLevel(int)" /> but has greater flexibility on how the level is measured.
+        /// The levels are not clipped, so may exceed +/-1.0 on floating-point channels.
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.NotPlaying">The channel is not playing.</exception>
         /// <exception cref="Errors.Ended">The decoding channel has reached the end.</exception>
         /// <exception cref="Errors.BufferLost">Should not happen... check that a valid window handle was used with <see cref="Init" />.</exception>
-		[DllImport(DllName, EntryPoint = "BASS_ChannelGetLevelEx")]
+        [DllImport(DllName, EntryPoint = "BASS_ChannelGetLevelEx")]
         public static extern bool ChannelGetLevel(int Handle, [In, Out] float[] Levels, float Length, LevelRetrievalFlags Flags);
 
         /// <summary>
-		/// Retrieves the level (peak amplitude) of a sample, stream, MOD music or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Length">How much data (in seconds) to look at to get the level (limited to 1 second).</param>
-		/// <param name="Flags">What levels to retrieve.</param>
-		/// <returns>Array of levels on success, else <see langword="null" />. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// This function operates in the same way as <see cref="ChannelGetLevel(int)" /> but has greater flexibility on how the level is measured. 
-		/// The levels are not clipped, so may exceed +/-1.0 on floating-point channels.
-		/// </remarks>
-		/// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
+        /// Retrieves the level (peak amplitude) of a sample, stream, MOD music or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Length">How much data (in seconds) to look at to get the level (limited to 1 second).</param>
+        /// <param name="Flags">What levels to retrieve.</param>
+        /// <returns>Array of levels on success, else <see langword="null" />. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function operates in the same way as <see cref="ChannelGetLevel(int)" /> but has greater flexibility on how the level is measured.
+        /// The levels are not clipped, so may exceed +/-1.0 on floating-point channels.
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.NotPlaying">The channel is not playing.</exception>
         /// <exception cref="Errors.Ended">The decoding channel has reached the end.</exception>
         /// <exception cref="Errors.BufferLost">Should not happen... check that a valid window handle was used with <see cref="Init" />.</exception>
-		public static float[] ChannelGetLevel(int Handle, float Length, LevelRetrievalFlags Flags)
+        public static float[] ChannelGetLevel(int Handle, float Length, LevelRetrievalFlags Flags)
         {
             var n = ChannelGetInfo(Handle).Channels;
 
@@ -787,137 +787,137 @@ namespace ManagedBass
 
         #region Channel Get Data
         /// <summary>
-		/// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Buffer">Location to write the data as an <see cref="IntPtr"/> (can be <see cref="IntPtr.Zero" /> when handle is a recording channel (HRECORD), to discard the requested amount of data from the recording buffer).</param>
-		/// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
-		/// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
-		/// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
-		/// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
-		/// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
-		/// </returns>
-		/// <remarks>
-		/// <para>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Buffer">Location to write the data as an <see cref="IntPtr"/> (can be <see cref="IntPtr.Zero" /> when handle is a recording channel (HRECORD), to discard the requested amount of data from the recording buffer).</param>
+        /// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
         /// This function can only return as much data as has been written to the channel's buffer, so it may not always be possible to get the amount of data requested, especially if you request large amounts.
         /// If you really do need large amounts, then increase the buffer lengths (<see cref="PlaybackBufferLength"/>).
-		/// The <see cref="DataFlags.Available"/> flag can be used to check how much data a channel's buffer contains at any time, including when stopped or stalled.
+        /// The <see cref="DataFlags.Available"/> flag can be used to check how much data a channel's buffer contains at any time, including when stopped or stalled.
         /// </para>
-		/// <para>When requesting data from a decoding channel, data is decoded directly from the channel's source (no playback buffer) and as much data as the channel has available can be decoded at a time.</para>
-		/// <para>When retrieving sample data, 8-bit samples are unsigned (0 to 255), 16-bit samples are signed (-32768 to 32767), 32-bit floating-point samples range from -1 to +1 (not clipped, so can actually be outside this range).
+        /// <para>When requesting data from a decoding channel, data is decoded directly from the channel's source (no playback buffer) and as much data as the channel has available can be decoded at a time.</para>
+        /// <para>When retrieving sample data, 8-bit samples are unsigned (0 to 255), 16-bit samples are signed (-32768 to 32767), 32-bit floating-point samples range from -1 to +1 (not clipped, so can actually be outside this range).
         /// That is unless the <see cref="DataFlags.Float"/> flag is used, in which case, the sample data will be converted to 32-bit floating-point if it is not already, or if the DataFlags.Fixed flag is used, in which case the data will be coverted to 8.24 fixed-point.
         /// </para>
-		/// <para>
+        /// <para>
         /// Unless complex data is requested via the <see cref="DataFlags.FFTComplex"/> flag, the magnitudes of the first half of an FFT result are returned.
-		/// For example, with a 2048 sample FFT, there will be 1024 floating-point values returned.
+        /// For example, with a 2048 sample FFT, there will be 1024 floating-point values returned.
         /// If the DataFlags.Fixed flag is used, then the FFT values will be in 8.24 fixed-point form rather than floating-point.
         /// Each value, or "bin", ranges from 0 to 1 (can actually go higher if the sample data is floating-point and not clipped).
         /// The 1st bin contains the DC component, the 2nd contains the amplitude at 1/2048 of the channel's sample rate, followed by the amplitude at 2/2048, 3/2048, etc.
-		/// A Hann window is applied to the sample data to reduce leakage, unless the <see cref="DataFlags.FFTNoWindow"/> flag is used.
+        /// A Hann window is applied to the sample data to reduce leakage, unless the <see cref="DataFlags.FFTNoWindow"/> flag is used.
         /// When a window is applied, it causes the DC component to leak into the next bin, but that can be removed (reduced to 0) by using the <see cref="DataFlags.FFTRemoveDC"/> flag.
-		/// Doing so slightly increases the processing required though, so it should only be done when needed, which is when a window is applied and the 2nd bin value is important.
+        /// Doing so slightly increases the processing required though, so it should only be done when needed, which is when a window is applied and the 2nd bin value is important.
         /// </para>
-		/// <para>
+        /// <para>
         /// Channels that have 2 or more sample channels (ie. stereo or above) may have FFT performed on each individual channel, using the <see cref="DataFlags.FFTIndividual"/> flag.
         /// Without this flag, all of the channels are combined, and a single mono FFT is performed.
         /// Performing the extra individual FFTs of course increases the amount of processing required.
         /// The return values are interleaved in the same order as the channel's sample data, eg. stereo = left,right,left,etc.
         /// </para>
-		/// <para>This function is most useful if you wish to visualize (eg. spectrum analyze) the sound.</para>
-		/// <para><b>Platform-specific:</b></para>
-		/// <para>The DataFlags.Fixed flag is only available on Android and Windows CE.</para>
-		/// </remarks>
+        /// <para>This function is most useful if you wish to visualize (eg. spectrum analyze) the sound.</para>
+        /// <para><b>Platform-specific:</b></para>
+        /// <para>The DataFlags.Fixed flag is only available on Android and Windows CE.</para>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.Ended">The channel has reached the end.</exception>
         /// <exception cref="Errors.NotAvailable">The <see cref="DataFlags.Available"/> flag was used with a decoding channel.</exception>
         /// <exception cref="Errors.BufferLost">Should not happen... check that a valid window handle was used with <see cref="Init" />.</exception>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, IntPtr Buffer, int Length);
-        
+
         /// <summary>
-		/// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Buffer">Location to write the data as a byte[].</param>
-		/// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
-		/// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
-		/// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
-		/// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
-		/// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
-		/// </returns>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Buffer">Location to write the data as a byte[].</param>
+        /// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] byte[] Buffer, int Length);
 
         /// <summary>
-		/// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Buffer">Location to write the data as a short[].</param>
-		/// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
-		/// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
-		/// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
-		/// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
-		/// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
-		/// </returns>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Buffer">Location to write the data as a short[].</param>
+        /// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] short[] Buffer, int Length);
 
         /// <summary>
-		/// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Buffer">Location to write the data as a int[].</param>
-		/// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
-		/// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
-		/// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
-		/// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
-		/// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
-		/// </returns>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Buffer">Location to write the data as a int[].</param>
+        /// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] int[] Buffer, int Length);
 
         /// <summary>
-		/// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
-		/// <param name="Buffer">Location to write the data as a float[].</param>
-		/// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
-		/// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code. 
-		/// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
-		/// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
-		/// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
-		/// </returns>
+        /// Retrieves the immediate sample data (or an FFT representation of it) of a sample channel, stream, MOD music, or recording channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <param name="Buffer">Location to write the data as a float[].</param>
+        /// <param name="Length">Number of bytes wanted, and/or the <see cref="DataFlags" /></param>
+        /// <returns>If an error occurs, -1 is returned, use <see cref="LastError" /> to get the error code.
+        /// <para>When requesting FFT data, the number of bytes read from the channel (to perform the FFT) is returned.</para>
+        /// <para>When requesting sample data, the number of bytes written to buffer will be returned (not necessarily the same as the number of bytes read when using the <see cref="DataFlags.Float"/> or DataFlags.Fixed flag).</para>
+        /// <para>When using the <see cref="DataFlags.Available"/> flag, the number of bytes in the channel's buffer is returned.</para>
+        /// </returns>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] float[] Buffer, int Length);
         #endregion
 
         /// <summary>
-		/// Updates the playback buffer of a stream or MOD music.
-		/// </summary>
-		/// <param name="Handle">The channel handle... a HMUSIC or HSTREAM.</param>
-		/// <param name="Length">
+        /// Updates the playback buffer of a stream or MOD music.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HMUSIC or HSTREAM.</param>
+        /// <param name="Length">
         /// The amount to render, in milliseconds... 0 = default (2 x <see cref="UpdatePeriod" />).
         /// This is capped at the space available in the buffer.
         /// </param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// <para>
-        /// When starting playback of a stream or MOD music, after creating it or changing its position, there will be a slight delay while the initial data is decoded for playback. 
-		/// Usually the delay is not noticeable or important, but if you need playback to start instantly when you call <see cref="ChannelPlay" />, then use this function first. 
-		/// The length parameter should be at least equal to the <see cref="UpdatePeriod" />.
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// When starting playback of a stream or MOD music, after creating it or changing its position, there will be a slight delay while the initial data is decoded for playback.
+        /// Usually the delay is not noticeable or important, but if you need playback to start instantly when you call <see cref="ChannelPlay" />, then use this function first.
+        /// The length parameter should be at least equal to the <see cref="UpdatePeriod" />.
         /// </para>
-		/// <para>
-        /// It may not always be possible to render the requested amount of data, in which case this function will still succeed. 
-		/// <see cref="ChannelGetData(int, IntPtr, int)" /> (<see cref="DataFlags.Available"/>) can be used to check how much data a channel has buffered for playback.
+        /// <para>
+        /// It may not always be possible to render the requested amount of data, in which case this function will still succeed.
+        /// <see cref="ChannelGetData(int, IntPtr, int)" /> (<see cref="DataFlags.Available"/>) can be used to check how much data a channel has buffered for playback.
         /// </para>
-		/// <para>
+        /// <para>
         /// When automatic updating is disabled (<see cref="UpdatePeriod" /> = 0 or <see cref="UpdateThreads" /> = 0),
         /// this function could be used instead of <see cref="Update" /> to implement different update periods for different channels,
         /// instead of a single update period for all.
         /// Unlike <see cref="Update" />, this function can also be used while automatic updating is enabled.
         /// </para>
-		/// <para>The CPU usage of this function is not included in the <see cref="CPUUsage" /> reading.</para>
-		/// </remarks>
+        /// <para>The CPU usage of this function is not included in the <see cref="CPUUsage" /> reading.</para>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid channel.</exception>
         /// <exception cref="Errors.NotAvailable">Decoding channels do not have playback buffers.</exception>
         /// <exception cref="Errors.Ended">The channel has ended.</exception>

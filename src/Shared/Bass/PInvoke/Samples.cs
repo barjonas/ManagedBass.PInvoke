@@ -13,17 +13,17 @@ namespace ManagedBass
         /// <returns>If successful, the handle of the new channel is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
-        /// Use <see cref="SampleGetInfo(int, ref SampleInfo)" /> and <see cref="SampleSetInfo(int, SampleInfo)" /> to set a sample's default attributes, which are used when creating a channel. 
+        /// Use <see cref="SampleGetInfo(int, ref SampleInfo)" /> and <see cref="SampleSetInfo(int, SampleInfo)" /> to set a sample's default attributes, which are used when creating a channel.
         /// After creation, a channel's attributes can be changed via <see cref="ChannelSetAttribute(int, ChannelAttribute, float)" />, <see cref="ChannelSet3DAttributes" /> and <see cref="ChannelSet3DPosition" />.
         /// <see cref="Apply3D" /> should be called before starting playback of a 3D sample, even if you just want to use the default settings.
         /// </para>
         /// <para>
-        /// If a sample has a maximum number of simultaneous playbacks of 1 (the max parameter was 1 when calling <see cref="SampleLoad(string, long, int, int, BassFlags)" /> or <see cref="CreateSample" />), then the HCHANNEL handle returned will be identical to the HSAMPLE handle. 
+        /// If a sample has a maximum number of simultaneous playbacks of 1 (the max parameter was 1 when calling <see cref="SampleLoad(string, long, int, int, BassFlags)" /> or <see cref="CreateSample" />), then the HCHANNEL handle returned will be identical to the HSAMPLE handle.
         /// That means you can use the HSAMPLE handle with functions that usually require a HCHANNEL handle, but you must still call this function first to initialize the channel.
         /// </para>
         /// <para>
-        /// A sample channel is automatically freed when it's overridden by a new channel, or when stopped manually via <see cref="ChannelStop" />, <see cref="SampleStop" /> or <see cref="Stop" />. 
-        /// If you wish to stop a channel and re-use it, it should be paused (<see cref="ChannelPause" />) instead of stopped. 
+        /// A sample channel is automatically freed when it's overridden by a new channel, or when stopped manually via <see cref="ChannelStop" />, <see cref="SampleStop" /> or <see cref="Stop" />.
+        /// If you wish to stop a channel and re-use it, it should be paused (<see cref="ChannelPause" />) instead of stopped.
         /// Determining whether a channel still exists can be done by trying to use the handle in a function call, eg. <see cref="ChannelGetAttribute(int, ChannelAttribute, out float)" />.
         /// </para>
         /// <para>When channel overriding has been enabled via an override flag and there are multiple candidates for overriding (eg. with identical volume), the oldest of them will be chosen to make way for the new channel.</para>
@@ -40,10 +40,10 @@ namespace ManagedBass
         public static extern int SampleGetChannel(int Sample, bool OnlyNew = false);
 
         /// <summary>
-		/// Frees a sample's resources.
-		/// </summary>
-		/// <param name="Handle">The sample handle.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// Frees a sample's resources.
+        /// </summary>
+        /// <param name="Handle">The sample handle.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_SampleFree")]
         public static extern bool SampleFree(int Handle);
@@ -141,7 +141,7 @@ namespace ManagedBass
         /// </para>
         /// <para>
         /// Unless the BassFlags.SoftwareMixing flag is used, the sample will use hardware mixing if hardware resources are available.
-        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware. 
+        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware.
         /// The <see cref="BassFlags.VAM"/> flag allows a sample to be played by both hardware and software, with the decision made when the sample is played rather than when it's loaded.
         /// A sample's VAM options are set via <see cref="SampleSetInfo" />.
         /// </para>
@@ -150,7 +150,6 @@ namespace ManagedBass
         /// <para><b>Platform-specific</b></para>
         /// <para>
         /// The <see cref="BassFlags.VAM"/> flag requires DirectX 7 (or above).
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
         /// </para>
         /// </remarks>
         /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
@@ -257,27 +256,27 @@ namespace ManagedBass
         #endregion
 
         /// <summary>
-		/// Sets a sample's default attributes.
-		/// </summary>
-		/// <param name="Handle">The sample handle.</param>
-		/// <param name="Info">An instance of the <see cref="SampleInfo" /> class containing the sample information to set.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// <para>
-        /// Use this function and <see cref="SampleGetInfo(int, ref SampleInfo)" /> to edit a sample's default attributes. 
-		/// Changing a sample's default attributes does not affect any existing channels, it only affects channels subsequently created via <see cref="SampleGetChannel" />. 
-		/// The exception is the VAM settings, changes to that apply to all the sample's channels at their next playback (<see cref="ChannelPlay" />). 
-		/// Use <see cref="ChannelSetAttribute(int, ChannelAttribute, float)" /> and <see cref="ChannelSet3DAttributes" /> to change the attributes of an existing sample channel.
+        /// Sets a sample's default attributes.
+        /// </summary>
+        /// <param name="Handle">The sample handle.</param>
+        /// <param name="Info">An instance of the <see cref="SampleInfo" /> class containing the sample information to set.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// Use this function and <see cref="SampleGetInfo(int, ref SampleInfo)" /> to edit a sample's default attributes.
+        /// Changing a sample's default attributes does not affect any existing channels, it only affects channels subsequently created via <see cref="SampleGetChannel" />.
+        /// The exception is the VAM settings, changes to that apply to all the sample's channels at their next playback (<see cref="ChannelPlay" />).
+        /// Use <see cref="ChannelSetAttribute(int, ChannelAttribute, float)" /> and <see cref="ChannelSet3DAttributes" /> to change the attributes of an existing sample channel.
         /// </para>
-		/// <para>
+        /// <para>
         /// The sample's maximum number of simultaneous playbacks can be changed via the <see cref="SampleInfo.Max"/> member.
         /// If the new maximum is lower than the existing number of channels, the channels will remain existing until they are stopped.
         /// </para>
-		/// <para>
+        /// <para>
         /// <see cref="SampleInfo.Length"/>, <see cref="SampleInfo.OriginalResolution"/> and <see cref="SampleInfo.Channels"/> can't be modified - any changes are ignored.
-		/// <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Mono"/>, <see cref="BassFlags.Bass3D"/>, <see cref="BassFlags.MuteMax"/>, BassFlags.SoftwareMixing and <see cref="BassFlags.VAM"/> also cannot be changed.
+        /// <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Mono"/>, <see cref="BassFlags.Bass3D"/>, <see cref="BassFlags.MuteMax"/>, BassFlags.SoftwareMixing and <see cref="BassFlags.VAM"/> also cannot be changed.
         /// </para>
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_SampleSetInfo")]
         public static extern bool SampleSetInfo(int Handle, SampleInfo Info);
@@ -287,17 +286,17 @@ namespace ManagedBass
         static extern int BASS_SampleGetChannels(int handle, [In, Out] int[] channels);
 
         /// <summary>
-		/// Retrieves an array of a sample's existing channels.
-		/// </summary>
-		/// <param name="Handle">Handle of the sample.</param>
-		/// <returns>
+        /// Retrieves an array of a sample's existing channels.
+        /// </summary>
+        /// <param name="Handle">Handle of the sample.</param>
+        /// <returns>
         /// If successful, the array of existing channels is returned (which might have zero elements), else <see langword="null" /> is returned.
         /// Use <see cref="LastError" /> to get the error code.
         /// </returns>
-		/// <remarks>
+        /// <remarks>
         /// This overload only returns the existing channels in the array.
-		/// <para>If you need to determine whether a particular sample channel still exists, it is simplest to just try it in a function call.</para>
-		/// </remarks>
+        /// <para>If you need to determine whether a particular sample channel still exists, it is simplest to just try it in a function call.</para>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not a valid sample handle.</exception>
         public static int[] SampleGetChannels(int Handle)
         {
@@ -313,7 +312,7 @@ namespace ManagedBass
             return count < 0 ? null : Return;
         }
         #endregion
-        
+
         /// <summary>
         /// Stops all instances of a sample.
         /// </summary>
@@ -344,7 +343,7 @@ namespace ManagedBass
         /// <para>Additional format support is available via the plugin system (see <see cref="PluginLoad" />).</para>
         /// <para>
         /// Unless the BassFlags.SoftwareMixing flag is used, the sample will use hardware mixing if hardware resources are available.
-        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware. 
+        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware.
         /// The <see cref="BassFlags.VAM"/> flag allows a sample to be played by both hardware and software, with the decision made when the sample is played rather than when it's loaded.
         /// A sample's VAM options are set via <see cref="SampleSetInfo" />.
         /// </para>
@@ -353,7 +352,6 @@ namespace ManagedBass
         /// <para><b>Platform-specific</b></para>
         /// <para>
         /// The <see cref="BassFlags.VAM"/> flag requires DirectX 7 (or above).
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
         /// </para>
         /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
@@ -376,37 +374,36 @@ namespace ManagedBass
         }
 
         /// <summary>
-		/// Loads a WAV, AIFF, MP3, MP2, MP1, OGG or plugin supported sample.
-		/// <para>This overload uses an unmanaged IntPtr and implements loading a sample from memory.</para>
-		/// </summary>
-		/// <param name="Memory">An unmanaged IntPtr to the allocated memory block at which the sample data resides.</param>
+        /// Loads a WAV, AIFF, MP3, MP2, MP1, OGG or plugin supported sample.
+        /// <para>This overload uses an unmanaged IntPtr and implements loading a sample from memory.</para>
+        /// </summary>
+        /// <param name="Memory">An unmanaged IntPtr to the allocated memory block at which the sample data resides.</param>
         /// <param name="Offset">File offset to load the sample from.</param>
-		/// <param name="Length">Data length. Should be set to the length of the data contained in memory.</param>
-		/// <param name="MaxNoOfPlaybacks">Maximum number of simultaneous playbacks... 1 (min) - 65535 (max)... use one of the override flags to choose the override decider, in the case of there being no free channel available for playback (ie. the sample is already playing max times).</param>
-		/// <param name="Flags">A combination of <see cref="BassFlags"/> flags.</param>
-		/// <returns>If successful, the loaded sample's handle is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// <para>Additional format support is available via the plugin system (see <see cref="PluginLoad" />).</para>
-		/// <para>
+        /// <param name="Length">Data length. Should be set to the length of the data contained in memory.</param>
+        /// <param name="MaxNoOfPlaybacks">Maximum number of simultaneous playbacks... 1 (min) - 65535 (max)... use one of the override flags to choose the override decider, in the case of there being no free channel available for playback (ie. the sample is already playing max times).</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/> flags.</param>
+        /// <returns>If successful, the loaded sample's handle is returned, else 0 is returned. Use <see cref="LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>Additional format support is available via the plugin system (see <see cref="PluginLoad" />).</para>
+        /// <para>
         /// Unless the BassFlags.SoftwareMixing flag is used, the sample will use hardware mixing if hardware resources are available.
-        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware. 
-		/// The <see cref="BassFlags.VAM"/> flag allows a sample to be played by both hardware and software, with the decision made when the sample is played rather than when it's loaded.
+        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware.
+        /// The <see cref="BassFlags.VAM"/> flag allows a sample to be played by both hardware and software, with the decision made when the sample is played rather than when it's loaded.
         /// A sample's VAM options are set via <see cref="SampleSetInfo" />.
         /// </para>
-		/// <para>To play a sample, first a channel must be obtained using <see cref="SampleGetChannel" />, which can then be played using <see cref="ChannelPlay" />.</para>
-		/// <para>If you want to play a large or one-off sample, then it would probably be better to stream it instead with <see cref="CreateStream(IntPtr, long, long, BassFlags)" />.</para>
+        /// <para>To play a sample, first a channel must be obtained using <see cref="SampleGetChannel" />, which can then be played using <see cref="ChannelPlay" />.</para>
+        /// <para>If you want to play a large or one-off sample, then it would probably be better to stream it instead with <see cref="CreateStream(IntPtr, long, long, BassFlags)" />.</para>
         /// <para>There is no need to pin the memory buffer for this method, since after loading a sample from memory, the memory can safely be discarded, as a copy is made.</para>
-		/// <para><b>Platform-specific</b></para>
-		/// <para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>
         /// The <see cref="BassFlags.VAM"/> flag requires DirectX 7 (or above).
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
         /// </para>
-		/// <para>
+        /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// On iOS and OSX, CoreAudio codecs are supported, adding support for any file formats that have a codec installed.
         /// </para>
-		/// </remarks>
-		/// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
         /// <exception cref="Errors.NotAvailable">Sample functions are not available when using the <see cref="NoSoundDevice"/> device.</exception>
         /// <exception cref="Errors.Parameter"><paramref name="MaxNoOfPlaybacks" /> and/or <paramref name="Length" /> is invalid. Specifying <paramref name="Length" /> is mandatory when loading from memory.</exception>
         /// <exception cref="Errors.FileOpen">The <paramref name="Memory" /> could not be opened.</exception>
@@ -435,7 +432,7 @@ namespace ManagedBass
         /// <para>Additional format support is available via the plugin system (see <see cref="PluginLoad" />).</para>
         /// <para>
         /// Unless the BassFlags.SoftwareMixing flag is used, the sample will use hardware mixing if hardware resources are available.
-        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware. 
+        /// Use <see cref="GetInfo(out BassInfo)" /> to see if there are hardware mixing resources available, and which sample formats are supported by the hardware.
         /// The <see cref="BassFlags.VAM"/> flag allows a sample to be played by both hardware and software, with the decision made when the sample is played rather than when it's loaded.
         /// A sample's VAM options are set via <see cref="SampleSetInfo" />.
         /// </para>
@@ -445,7 +442,6 @@ namespace ManagedBass
         /// <para><b>Platform-specific</b></para>
         /// <para>
         /// The <see cref="BassFlags.VAM"/> flag requires DirectX 7 (or above).
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
         /// </para>
         /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.

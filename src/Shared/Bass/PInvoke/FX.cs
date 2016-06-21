@@ -21,7 +21,7 @@ namespace ManagedBass
         /// <seealso cref="FXGetParameters"/>
         [DllImport(DllName, EntryPoint = "BASS_FXSetParameters")]
         public static extern bool FXSetParameters(int Handle, IntPtr param);
-        
+
         /// <summary>
         /// Retrieves the parameters of an effect
         /// </summary>
@@ -126,7 +126,7 @@ namespace ManagedBass
         public static extern bool ChannelRemoveFX(int Handle, int FX);
 
         /// <summary>
-        /// Sets the priority of an effect or DSP function, which determines its position in the DSP chain. 
+        /// Sets the priority of an effect or DSP function, which determines its position in the DSP chain.
         /// </summary>
         /// <param name="Handle">The DSP/FX handle... a HDSP or HFX.</param>
         /// <param name="Priority">The new priority of the DSP/FX.</param>

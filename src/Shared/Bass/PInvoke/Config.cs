@@ -22,12 +22,12 @@ namespace ManagedBass
 
         [DllImport(DllName, EntryPoint = "BASS_GetConfig")]
         internal static extern bool GetConfigBool(Configuration option);
-        
+
         /// <summary>
         /// Gets if Floating-Point audio is supported on the current platform.
         /// </summary>
         public static bool Float => GetConfigBool(Configuration.Float);
-        
+
         /// <summary>
         /// The Buffer Length in milliseconds (default = 500).
         /// </summary>
@@ -352,7 +352,7 @@ namespace ManagedBass
             set
             {
                 var ptr = Marshal.StringToHGlobalAnsi(value);
-                
+
                 Configure(Configuration.NetAgent, ptr);
 
                 Marshal.FreeHGlobal(ptr);
@@ -373,7 +373,7 @@ namespace ManagedBass
             set
             {
                 var ptr = Marshal.StringToHGlobalAnsi(value);
-                
+
                 Configure(Configuration.NetProxy, ptr);
 
                 Marshal.FreeHGlobal(ptr);
@@ -455,7 +455,7 @@ namespace ManagedBass
             set { Configure(Configuration.DeviceBufferLength, value); }
         }
 #endif
-        
+
         /// <summary>
         /// Suppress silencing for corrupted MP3 frames. (default is false).
         /// </summary>
@@ -470,7 +470,7 @@ namespace ManagedBass
             get { return GetConfigBool(Configuration.SuppressMP3ErrorCorruptionSilence); }
             set { Configure(Configuration.SuppressMP3ErrorCorruptionSilence, value); }
         }
-        
+
         /// <summary>
         /// Gets or Sets the default sample rate conversion quality...
         /// 0 = linear interpolation,

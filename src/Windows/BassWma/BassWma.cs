@@ -39,26 +39,35 @@ namespace ManagedBass.Wma
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_WMA_StreamCreateFileAuth(bool mem, string file, long offset, long length, BassFlags flags, string user, string pass);
 
+        /// <summary>
+        /// Streams a WMA file authenticating using given <paramref name="UserName"/> and <paramref name="Password"/>.
+        /// </summary>
         public static int CreateStream(string File, BassFlags Flags, string UserName, string Password)
         {
             return BASS_WMA_StreamCreateFileAuth(false, File, 0, 0, Flags | BassFlags.Unicode, UserName, Password);
         }
 
+        /// <summary>
+        /// Streams a WMA file from Memory (<see cref="IntPtr"/>) authenticating using given <paramref name="UserName"/> and <paramref name="Password"/>.
+        /// </summary>
         public static int CreateStream(IntPtr Memory, long Length, BassFlags Flags, string UserName, string Password)
         {
             return BASS_WMA_StreamCreateFileAuth(true, Memory, 0, Length, Flags | BassFlags.Unicode, UserName, Password);
         }
 
+        /// <summary>
+        /// Streams a WMA file from Memory (byte[]) authenticating using given <paramref name="UserName"/> and <paramref name="Password"/>.
+        /// </summary>
         public static int CreateStream(byte[] Memory, long Length, BassFlags Flags, string UserName, string Password)
         {
-            var GCPin = GCHandle.Alloc(Memory, GCHandleType.Pinned);
+            var gcPin = GCHandle.Alloc(Memory, GCHandleType.Pinned);
 
-            var Handle = CreateStream(GCPin.AddrOfPinnedObject(), Length, Flags, UserName, Password);
+            var handle = CreateStream(gcPin.AddrOfPinnedObject(), Length, Flags, UserName, Password);
 
-            if (Handle == 0) GCPin.Free();
-            else Bass.ChannelSetSync(Handle, SyncFlags.Free, 0, (a, b, c, d) => GCPin.Free());
+            if (handle == 0) gcPin.Free();
+            else Bass.ChannelSetSync(handle, SyncFlags.Free, 0, (a, b, c, d) => gcPin.Free());
 
-            return Handle;
+            return handle;
         }
         #endregion
 
@@ -321,6 +330,33 @@ namespace ManagedBass.Wma
         public static extern bool EncodeSetNotify(int Handle, ClientConnectProcedure Procedure, IntPtr User);
 
         #region EncodeSetTag
+        /// <summary>
+        /// Sets a tag in a WMA encoding.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Tag">The pointer to the tag to set.</param>
+        /// <param name="Value">The pointer to the tag's text/data.</param>
+        /// <param name="Format">The format of the tag and value strings.</param>
+        /// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Where the tags are located in the encoded stream depends on when this function is used.
+        /// Calling this function before beginning encoding data puts the tags in the stream's header.
+        /// Calling this function after encoding has begun puts the tags in the actual stream data, at the current encoding position.
+        /// <para>Header tags must be set before encoding any data - no more header tags can be set once <see cref="EncodeWrite(int,IntPtr,int)" /> has been called.</para>
+        /// <para>
+        /// To set tags mid-stream (after encoding has begun), the <see cref="WMAEncodeFlags.Script"/> flag needs to have been specified in the encoder's creation.
+        /// A mid-stream tag typically used is "Caption", which get's displayed in Windows Media Player 9 and above (if the user has enabled captions).
+        /// </para>
+        /// <para>
+        /// When using a network encoder, it should be noted that while all header tags are sent to newly connecting clients, prior mid-stream tags are not.
+        /// So if, for example, you're using the "Caption" tag to indicate the current song title, it should be sent at fairly regular intervals (not only at the start of the song).
+        /// </para>
+        /// <para>On the playback side, mid-stream tags can be processed using <see cref="Bass.ChannelSetSync" /> (with <see cref="SyncFlags.MetadataReceived"/>).</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The encoder does not have mid-stream tags enabled, so tags can not be set once encoding has begun.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Tag" /> and/or <paramref name="Value" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_WMA_EncodeSetTag")]
         public static extern bool EncodeSetTag(int Handle, IntPtr Tag, IntPtr Value, WMATagFormat Format);
 
@@ -333,16 +369,96 @@ namespace ManagedBass.Wma
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern bool BASS_WMA_EncodeSetTag(int Handle, string Tag, string Value, WMATagFormat Format = WMATagFormat.Unicode);
 
+        /// <summary>
+        /// Sets a tag in a WMA encoding.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Tag">The tag to set.</param>
+        /// <param name="Value">The tag's text/data.</param>
+        /// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Where the tags are located in the encoded stream depends on when this function is used.
+        /// Calling this function before beginning encoding data puts the tags in the stream's header.
+        /// Calling this function after encoding has begun puts the tags in the actual stream data, at the current encoding position.
+        /// <para>Header tags must be set before encoding any data - no more header tags can be set once <see cref="EncodeWrite(int,IntPtr,int)" /> has been called.</para>
+        /// <para>
+        /// To set tags mid-stream (after encoding has begun), the <see cref="WMAEncodeFlags.Script"/> flag needs to have been specified in the encoder's creation.
+        /// A mid-stream tag typically used is "Caption", which get's displayed in Windows Media Player 9 and above (if the user has enabled captions).
+        /// </para>
+        /// <para>
+        /// When using a network encoder, it should be noted that while all header tags are sent to newly connecting clients, prior mid-stream tags are not.
+        /// So if, for example, you're using the "Caption" tag to indicate the current song title, it should be sent at fairly regular intervals (not only at the start of the song).
+        /// </para>
+        /// <para>On the playback side, mid-stream tags can be processed using <see cref="Bass.ChannelSetSync" /> (with <see cref="SyncFlags.MetadataReceived"/>).</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The encoder does not have mid-stream tags enabled, so tags can not be set once encoding has begun.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Tag" /> and/or <paramref name="Value" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static bool EncodeSetTag(int Handle, string Tag, string Value)
         {
             return BASS_WMA_EncodeSetTag(Handle, Tag, Value);
         }
 
+        /// <summary>
+        /// Sets a binary tag in a WMA encoding.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Tag">The tag to set.</param>
+        /// <param name="Length">The number of bytes provided as binary data in the tag.</param>
+        /// <param name="Value">The pointer to the binary tag's data.</param>
+        /// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Where the tags are located in the encoded stream depends on when this function is used.
+        /// Calling this function before beginning encoding data puts the tags in the stream's header.
+        /// Calling this function after encoding has begun puts the tags in the actual stream data, at the current encoding position.
+        /// <para>Header tags must be set before encoding any data - no more header tags can be set once <see cref="EncodeWrite(int,IntPtr,int)" /> has been called.</para>
+        /// <para>
+        /// To set tags mid-stream (after encoding has begun), the <see cref="WMAEncodeFlags.Script"/> flag needs to have been specified in the encoder's creation.
+        /// A mid-stream tag typically used is "Caption", which get's displayed in Windows Media Player 9 and above (if the user has enabled captions).
+        /// </para>
+        /// <para>
+        /// When using a network encoder, it should be noted that while all header tags are sent to newly connecting clients, prior mid-stream tags are not.
+        /// So if, for example, you're using the "Caption" tag to indicate the current song title, it should be sent at fairly regular intervals (not only at the start of the song).
+        /// </para>
+        /// <para>On the playback side, mid-stream tags can be processed using <see cref="Bass.ChannelSetSync" /> (with <see cref="SyncFlags.MetadataReceived"/>).</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The encoder does not have mid-stream tags enabled, so tags can not be set once encoding has begun.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Tag" /> and/or <paramref name="Value" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static bool EncodeSetTag(int Handle, string Tag, IntPtr Value, int Length)
         {
             return BASS_WMA_EncodeSetTag(Handle, Tag, Value, (WMATagFormat)BitHelper.MakeLong((short)WMATagFormat.Binary, (short)Length));
         }
 
+        /// <summary>
+        /// Sets a binary tag in a WMA encoding.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Tag">The tag to set.</param>
+        /// <param name="Length">The number of bytes provided as binary data in the tag.</param>
+        /// <param name="Value">The byte[] containing the binary tag's data.</param>
+        /// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// Where the tags are located in the encoded stream depends on when this function is used.
+        /// Calling this function before beginning encoding data puts the tags in the stream's header.
+        /// Calling this function after encoding has begun puts the tags in the actual stream data, at the current encoding position.
+        /// <para>Header tags must be set before encoding any data - no more header tags can be set once <see cref="EncodeWrite(int,IntPtr,int)" /> has been called.</para>
+        /// <para>
+        /// To set tags mid-stream (after encoding has begun), the <see cref="WMAEncodeFlags.Script"/> flag needs to have been specified in the encoder's creation.
+        /// A mid-stream tag typically used is "Caption", which get's displayed in Windows Media Player 9 and above (if the user has enabled captions).
+        /// </para>
+        /// <para>
+        /// When using a network encoder, it should be noted that while all header tags are sent to newly connecting clients, prior mid-stream tags are not.
+        /// So if, for example, you're using the "Caption" tag to indicate the current song title, it should be sent at fairly regular intervals (not only at the start of the song).
+        /// </para>
+        /// <para>On the playback side, mid-stream tags can be processed using <see cref="Bass.ChannelSetSync" /> (with <see cref="SyncFlags.MetadataReceived"/>).</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The encoder does not have mid-stream tags enabled, so tags can not be set once encoding has begun.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Tag" /> and/or <paramref name="Value" /> is invalid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static bool EncodeSetTag(int Handle, string Tag, byte[] Value, int Length)
         {
             return BASS_WMA_EncodeSetTag(Handle, Tag, Value, (WMATagFormat)BitHelper.MakeLong((short)WMATagFormat.Binary, (short)Length));

@@ -2072,10 +2072,6 @@ namespace ManagedBass{
         /// </para>
         /// <para><b>Platform-specific</b></para>
         /// <para>
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
-        /// The BassFlags.FX flag is also ignored.
-        /// </para>
-        /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// Media Foundation codecs are also supported on Windows 7 and updated versions of Vista, including support for AAC/MP4 and WMA.
         /// On iOS and OSX, CoreAudio codecs are supported, adding support for any file formats that have a codec installed.
@@ -2147,10 +2143,6 @@ namespace ManagedBass{
         /// <para>The Memory buffer must be pinned when using this overload.</para>
         /// <para><b>Platform-specific</b></para>
         /// <para>
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
-        /// The BassFlags.FX flag is also ignored.
-        /// </para>
-        /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// Media Foundation codecs are also supported on Windows 7 and updated versions of Vista, including support for AAC/MP4 and WMA.
         /// On iOS and OSX, CoreAudio codecs are supported, adding support for any file formats that have a codec installed.
@@ -2219,10 +2211,6 @@ namespace ManagedBass{
         /// </para>
         /// <para><b>Platform-specific</b></para>
         /// <para>
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
-        /// The BassFlags.FX flag is also ignored.
-        /// </para>
-        /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// Media Foundation codecs are also supported on Windows 7 and updated versions of Vista, including support for AAC/MP4 and WMA.
         /// On iOS and OSX, CoreAudio codecs are supported, adding support for any file formats that have a codec installed.
@@ -2283,10 +2271,6 @@ namespace ManagedBass{
         /// </para>
         /// <para>In all cases, BASS will automatically stall playback of the stream when insufficient data is available, and resume it when enough data does become available.</para>
         /// <para><b>Platform-specific</b></para>
-        /// <para>
-        /// Away from Windows, all mixing is done in software (by BASS), so the BassFlags.SoftwareMixing flag is unnecessary.
-        /// The BassFlags.FX flag is also ignored.
-        /// </para>
         /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// Media Foundation codecs are also supported on Windows 7 and updated versions of Vista, including support for AAC/MP4 and WMA.
@@ -2365,10 +2349,6 @@ namespace ManagedBass{
         /// ManagedBass automatically holds a reference and frees it when the Channel is freed.
         /// </para>
         /// <para><b>Platform-specific</b></para>
-        /// <para>
-        /// Away from Windows, all mixing is done in software (by Bass), so the BassFlags.SoftwareMixing flag is unnecessary.
-        /// The BassFlags.FX flag is also ignored.
-        /// </para>
         /// <para>
         /// On Windows and Windows CE, ACM codecs are supported with compressed WAV files.
         /// Media Foundation codecs are also supported on Windows 7 and updated versions of Vista, including support for AAC and WMA.

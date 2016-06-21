@@ -7,7 +7,7 @@ namespace ManagedBass
     static class DynamicLibrary
     {
         const string DllName = "/usr/lib/libSystem.dylib";
-        
+
         const int RtldNow = 2;
 
         [DllImport(DllName)]
