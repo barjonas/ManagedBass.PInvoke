@@ -452,21 +452,106 @@ namespace ManagedBass.Midi
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         public static int StreamGetFontsCount(int Handle) => StreamGetFonts(Handle, IntPtr.Zero, 0);
 
+        /// <summary>
+        /// Retrieves a marker from a MIDI stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to retrieve the marker from.</param>
+        /// <param name="Type">The type of marker to retrieve.</param>
+        /// <param name="Index">The marker to retrieve... 0 = the first.</param>
+        /// <param name="Mark">The <see cref="MidiMarker" /> structure to receive the marker details into.</param>
+        /// <returns><see langword="true" /> on success, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// The markers are ordered chronologically.
+        /// <para>Syncs can be used to be informed of when markers are encountered during playback.</para>
+        /// <para>
+        /// If a lyric marker text begins with a '/' (slash) character, that means a new line should be started.
+        /// If the text begins with a '\' (backslash) character, the display should be cleared. 
+        /// Lyrics can sometimes be found in <see cref="MidiMarkerType.Text"/> instead of <see cref="MidiMarkerType.Lyric"/> markers.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Index" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetMark")]
-        public static extern bool StreamGetMark(int handle, MidiMarkerType type, int index, out MidiMarker mark);
+        public static extern bool StreamGetMark(int Handle, MidiMarkerType Type, int Index, out MidiMarker Mark);
 
-        [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetMarks")]
-        public static extern int StreamGetMarks(int handle, int track, MidiMarkerType type, [In, Out] MidiMarker[] marks);
-
-        public static MidiMarker[] StreamGetMarks(int handle)
+        /// <summary>
+        /// Retrieves a marker from a MIDI stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to retrieve the marker from.</param>
+        /// <param name="Type">The type of marker to retrieve.</param>
+        /// <param name="Index">The marker to retrieve... 0 = the first.</param>
+        /// <returns>On success, an instance of the <see cref="MidiMarker" /> structure is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// The markers are ordered chronologically.
+        /// <para>Syncs can be used to be informed of when markers are encountered during playback.</para>
+        /// <para>
+        /// If a lyric marker text begins with a '/' (slash) character, that means a new line should be started.
+        /// If the text begins with a '\' (backslash) character, the display should be cleared. 
+        /// Lyrics can sometimes be found in <see cref="MidiMarkerType.Text"/> instead of <see cref="MidiMarkerType.Lyric"/> markers.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Index" /> is not valid.</exception>
+        public static MidiMarker StreamGetMark(int Handle, MidiMarkerType Type, int Index)
         {
-            var markCount = StreamGetMarks(handle, -1, MidiMarkerType.Marker, null);
+            MidiMarker mark;
+            StreamGetMark(Handle, Type, Index, out mark);
+            return mark;
+        }
+
+        /// <summary>
+        /// Retrieves the markers in a MIDI file stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to retrieve the markers from.</param>
+        /// <param name="Track">The track to get the markers from... 0 = 1st track, -1 = all tracks.</param>
+        /// <param name="Type">The type of marker to retrieve.</param>
+        /// <param name="Marks">An array of <see cref="MidiMarker"/>s to receive the data into. Can be null to get the no of markers.</param>
+        /// <returns>No of markers in the array on success, -1 on failure. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>The markers are ordered chronologically, and by track number (lowest first) if multiple markers have the same position.</para>
+        /// <para>SYNCs can be used to be informed of when markers are encountered during playback.</para>
+        /// <para>
+        /// If a lyric marker text begins with a / (slash) character, that means a new line should be started.
+        /// If the text begins with a \ (backslash) character, the display should be cleared.
+        /// Lyrics can sometimes be found in <see cref="MidiMarkerType.Text"/> instead of <see cref="MidiMarkerType.Lyric"/> markers.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Track" /> is not valid.</exception>
+        [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetMarks")]
+        public static extern int StreamGetMarks(int Handle, int Track, MidiMarkerType Type, [In, Out] MidiMarker[] Marks);
+
+        /// <summary>
+        /// Retrieves the markers in a MIDI file stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to retrieve the markers from.</param>
+        /// <param name="Track">The track to get the markers from... 0 = 1st track, -1 = all tracks.</param>
+        /// <param name="Type">The type of marker to retrieve.</param>
+        /// <returns>On success, an array of <see cref="MidiMarker" /> instances is returned, else <see langword="null" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>The markers are ordered chronologically, and by track number (lowest first) if multiple markers have the same position.</para>
+        /// <para>SYNCs can be used to be informed of when markers are encountered during playback.</para>
+        /// <para>
+        /// If a lyric marker text begins with a / (slash) character, that means a new line should be started.
+        /// If the text begins with a \ (backslash) character, the display should be cleared.
+        /// Lyrics can sometimes be found in <see cref="MidiMarkerType.Text"/> instead of <see cref="MidiMarkerType.Lyric"/> markers.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Track" /> is not valid.</exception>
+        public static MidiMarker[] StreamGetMarks(int Handle, int Track, MidiMarkerType Type)
+        {
+            var markCount = StreamGetMarks(Handle, Track, Type, null);
 
             if (markCount <= 0)
                 return null;
 
             var marks = new MidiMarker[markCount];
-            StreamGetMarks(handle, -1, MidiMarkerType.Marker, marks);
+            StreamGetMarks(Handle, Track, Type, marks);
 
             return marks;
         }

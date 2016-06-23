@@ -317,7 +317,7 @@ namespace ManagedBass.Enc
 
 #if __MAC__ || __IOS__
         [DllImport(DllName, EntryPoint = "BASS_Encode_StartCA")]
-        public static extern int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, EncodeProcedureEx proc, IntPtr user);
+        public static extern int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, EncodeProcedureEx Procedure, IntPtr user);
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_Encode_StartCAFile(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, string filename);
@@ -740,8 +740,54 @@ namespace ManagedBass.Enc
         #endregion
 
         #region Server
+        /// <summary>
+        /// Initializes a server to send an encoder's output to connecting clients.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Port">
+        /// The IP address and port number to accept client connections on... "xxx.xxx.xxx.xxx:port", <see langword="null" /> = an available port on all local addresses.
+        /// The IP address should be local and the port number should be lower than 65536.
+        /// If the address is "0.0.0.0" or omitted, then the server will accept connections on all local addresses.
+        /// If the port is "0" or omitted, then an available port will be assigned.
+        /// </param>
+        /// <param name="Buffer">The server's buffer length in bytes.</param>
+        /// <param name="Burst">The amount of buffered data to send to new clients. This will be capped at the size of the buffer.</param>
+        /// <param name="Flags"><see cref="EncodeServer"/> flags.</param>
+        /// <param name="Procedure">Callback function to receive notification of clients connecting and disconnecting... <see langword="null" /> = no callback.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If successful, the new server's port number is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// This function allows remote (or local) clients to receive the encoder's output by setting up a TCP server for them to connect to, using <see cref="Bass.CreateStream(string,int,BassFlags,DownloadProcedure,IntPtr)" /> for example. 
+        /// Connections can be refused by the <see cref="EncodeClientProcedure" /> callback function, and already connected clients can be kicked with the <see cref="ServerKick" /> function.
+        /// </para>
+        /// <para>
+        /// The server buffers the data that it receives from the encoder, and the data is then sent from the buffer to the connected clients.
+        /// The buffer should be at least big enough to account for the time that it takes for the clients to receive the data.
+        /// If a client falls too far behind (beyond the buffer length), it will miss some data.
+        /// When a client connects, buffered data can be "burst" to the client, allowing it to prebuffer and begin playback more quickly.
+        /// </para>
+        /// <para>
+        /// An encoder needs to be started, but with no data yet sent to it, before using this function to setup the server.
+        /// If <see cref="EncodeStart(int,string,EncodeFlags,EncodeProcedure,IntPtr)" /> is used, the encoder should be setup to write its output to STDOUT.
+        /// Due to the length restrictions of WAVE headers/files, the encoder should also be started with the <see cref="EncodeFlags.NoHeader"/> flag, and the sample format details sent via the command-line.
+        /// </para>
+        /// <para>
+        /// Normally, BASSenc will produce the encoded data (with the help of an encoder) that is sent to a clients, but it is also possible to send already encoded data (without first decoding and re-encoding it) via the PCM encoding option.
+        /// The encoder can be set on any BASS channel, as rather than feeding on sample data from the channel, <see cref="EncodeWrite(int,IntPtr,int)" /> would be used to feed in the already encoded data.
+        /// BASSenc does not know what the data's bitrate is in that case, so it is up to the user to process the data at the correct rate (real-time speed).
+        /// </para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>This function is not available on Windows CE.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Already">There is already a server set on the encoder.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Port" /> is not valid.</exception>
+        /// <exception cref="Errors.Busy">The port is in use.</exception>
+        /// <exception cref="Errors.Memory">There is insufficient memory.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_ServerInit")]
-        public static extern int ServerInit(int handle, string port, int buffer, int burst, EncodeServer flags, EncodeClientProcedure proc, IntPtr user);
+        public static extern int ServerInit(int Handle, string Port, int Buffer, int Burst, EncodeServer Flags, EncodeClientProcedure Procedure, IntPtr User);
         
 		/// <summary>
 		/// Kicks clients from a server.

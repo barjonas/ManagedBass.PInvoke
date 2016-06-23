@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace ManagedBass.Midi
 {
     /// <summary>
-    /// Used with <see cref="BassMidi.StreamGetMark" />, <see cref="SyncFlags.MidiLyric" />, <see cref="SyncFlags.MidiCue" /> and <see cref="SyncFlags.MidiMarker" /> to retrieve markers.
+    /// Used with <see cref="BassMidi.StreamGetMark(int,MidiMarkerType,int,out MidiMarker)" />, <see cref="SyncFlags.MidiLyric" />, <see cref="SyncFlags.MidiCue" /> and <see cref="SyncFlags.MidiMarker" /> to retrieve markers.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct MidiMarker
