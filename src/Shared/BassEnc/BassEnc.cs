@@ -63,7 +63,7 @@ namespace ManagedBass.Enc
         }
 
         /// <summary>
-        /// Proxy server settings when connecting to Icecast and Shoutcast (in the form of "[User:pass@]server:port"... <see langword="null"/> (default) = don't use a proxy but a direct connection).
+        /// Proxy server settings when connecting to Icecast and Shoutcast (in the form of "[User:Password@]server:port"... <see langword="null"/> (default) = don't use a proxy but a direct connection).
         /// </summary>
         /// <remarks>
         /// If only the "server:port" part is specified, then that proxy server is used without any authorization credentials.
@@ -206,7 +206,7 @@ namespace ManagedBass.Enc
         /// </summary>
         /// <param name="Handle">The encoder or channel Handle... a HENCODE, HSTREAM, HMUSIC, or HRECORD.</param>
         /// <param name="Procedure">Callback function to receive the notifications... <see langword="null" /> = no callback.</param>
-        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <param name="User">User instance data to Password to the callback function.</param>
         /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <remarks>
         /// <para>
@@ -254,7 +254,7 @@ namespace ManagedBass.Enc
         /// <param name="CommandLine">The encoder command-line, including the executable filename and any options. Or the output filename if the <see cref="EncodeFlags.PCM"/> flag is specified.</param>
         /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
         /// <param name="Procedure">Optional callback function to receive the encoded data... <see langword="null" /> = no callback. To have the encoded data received by a callback function, the encoder needs to be told to output to STDOUT (instead of a file).</param>
-        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <param name="User">User instance data to Password to the callback function.</param>
         /// <returns>The encoder process Handle is returned if the encoder is successfully started, else 0 is returned (use <see cref="Bass.LastError" /> to get the error code).</returns>
         /// <remarks>
         /// <para>
@@ -331,17 +331,135 @@ namespace ManagedBass.Enc
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_Encode_StartLimit(int handle, string cmdline, EncodeFlags flags, EncodeProcedure proc, IntPtr user, int limit);
 
-        public static int EncodeStart(int Handle, string cmdline, EncodeFlags flags, EncodeProcedure proc, IntPtr user, int limit)
+        /// <summary>
+        /// Starts encoding on a channel.
+        /// </summary>
+        /// <param name="Handle">The channel Handle... a HSTREAM, HMUSIC, or HRECORD.</param>
+        /// <param name="CommandLine">The encoder command-line, including the executable filename and any options. Or the output filename if the <see cref="EncodeFlags.PCM"/> flag is specified.</param>
+        /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
+        /// <param name="Procedure">Optional callback function to receive the encoded data... <see langword="null" /> = no callback. To have the encoded data received by a callback function, the encoder needs to be told to output to STDOUT (instead of a file).</param>
+        /// <param name="User">User instance data to Password to the callback function.</param>
+        /// <param name="Limit">The maximum number of bytes that will be encoded (0 = no limit).</param>
+        /// <returns>The encoder process Handle is returned if the encoder is successfully started, else 0 is returned (use <see cref="Bass.LastError" /> to get the error code).</returns>
+        /// <remarks>
+        /// <para>
+        /// This function works exactly like <see cref="EncodeStart(int,string,EncodeFlags,EncodeProcedure,IntPtr)" />, but with a <paramref name="Limit" /> parameter added, which is the maximum number of bytes that will be encoded (0=no limit).
+        /// Once the limit is hit, the encoder will die.
+        /// <see cref="EncodeSetNotify" /> can be used to be notified of that occurrence.
+        /// One thing to note is that the limit is applied after any conversion due to the floating-point flags.
+        /// </para>
+        /// <para>This can be useful in situations where the encoder needs to know in advance how much data it will be receiving. For example, when using a callback function with a file format that stores the length in the header, as the header cannot then be updated at the end of encoding. The length is communicated to the encoder via the WAVE header, so it requires that the BASS_ENCODE_NOHEAD flag is not used.</para>
+        /// <para>
+        /// The encoder must be told (via the command-line) to expect input from STDIN, rather than a file.
+        /// The command-line should also tell the encoder what filename to write it's output to, unless you're using a callback function, in which case it should be told to write it's output to STDOUT.
+        /// </para>
+        /// <para>
+        /// No user interaction with the encoder is possible, so anything that would cause the encoder to require the user to press any keys should be avoided.
+        /// For example, if the encoder asks whether to overwrite files, the encoder should be instructed to always overwrite (via the command-line), or you should delete the existing file before starting the encoder.
+        /// </para>
+        /// <para>
+        /// Standard RIFF files are limited to a little over 4GB in size.
+        /// When writing a WAV file, BASSenc will automatically stop at that point, so that the file is valid.
+        /// That does not apply when sending data to an encoder though, as the encoder may (possibly via a command-line option) ignore the size restriction, but if it does not, it could mean that the encoder stops after a few hours (depending on the sample format).
+        /// If longer encodings are needed, the <see cref="EncodeFlags.NoHeader"/> flag can be used to omit the WAVE header, and the encoder informed of the sample format via the command-line instead.
+        /// The 4GB size limit can also be overcome with the <see cref="EncodeFlags.RF64"/> flag, but most encoders are unlikely to support RF64.
+        /// </para>
+        /// <para>
+        /// When writing an RF64 WAV file, a standard RIFF header will still be written initially, which will only be replaced by an RF64 header at the end if the file size has exceeded the standard limit.
+        /// When an encoder is used, it is not possible to go back and change the header at the end, so the RF64 header is sent at the beginning in that case.
+        /// </para>
+        /// <para>
+        /// Internally, the sending of sample data to the encoder is implemented via a DSP callback on the channel.
+        /// That means when you play the channel (or call <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> if it's a decoding channel), the sample data will be sent to the encoder at the same time. 
+        /// It also means that if you use the <see cref="Bass.FloatingPointDSP"/> option, then the sample data will be 32-bit floating-point, and you'll need to use one of the Floating-point flags if the encoder does not support floating-point sample data. 
+        /// The <see cref="Bass.FloatingPointDSP"/> setting should not be changed while encoding is in progress.
+        /// </para>
+        /// <para>The encoder DSP has a priority setting of -1000, so if you want to set DSP/FX on the channel and have them present in the encoding, set their priority above that.</para>
+        /// <para>
+        /// Besides the automatic DSP system, data can also be manually fed to the encoder via the <see cref="EncodeWrite(int,IntPtr,int)" /> function.
+        /// Both methods can be used together, but in general, the "automatic" system ought be paused when using the "manual" system, by use of the <see cref="EncodeFlags.Pause"/> flag or the <see cref="EncodeSetPaused" /> function.
+        /// </para>
+        /// <para>
+        /// When queued encoding is enabled via the <see cref="EncodeFlags.Queue"/> flag, the DSP system or <see cref="EncodeWrite(int,IntPtr,int)" /> call will just buffer the data, and the data will then be fed to the encoder by another thread.
+        /// The buffer will grow as needed to hold the queued data, up to a limit specified by the <see cref="Queue"/> config option.
+        /// If the limit is exceeded (or there is no free memory), data will be lost; <see cref="EncodeSetNotify(int,EncodeNotifyProcedure,IntPtr)" /> can be used to be notified of that occurrence.
+        /// The amount of data that is currently queued, as well as the queue limit and how much data has been lost, is available from <see cref="EncodeGetCount(int,EncodeCount)" />.
+        /// </para>
+        /// <para>
+        /// <see cref="EncodeIsActive" /> can be used to check that the encoder is still running.
+        /// When done encoding, use <see cref="EncodeStop(int)" /> to close the encoder.
+        /// </para>
+        /// <para>The returned process Handle can be used to do things like change the encoder's priority and get it's exit code.</para>
+        /// <para>
+        /// Multiple encoders can be set on a channel.
+        /// For simplicity, the encoder functions will accept either an encoder Handle or a channel Handle.
+        /// When using a channel Handle, the function is applied to all encoders that are set on that channel.
+        /// </para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>External encoders are not supported on iOS or Windows CE, so only plain PCM file writing with the <see cref="EncodeFlags.PCM"/> flag is possible on those platforms.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.FileOpen">Couldn't start the encoder. Check that the executable exists.</exception>
+        /// <exception cref="Errors.Create">The PCM file couldn't be created.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeStart(int Handle, string CommandLine, EncodeFlags Flags, EncodeProcedure Procedure, IntPtr User, int Limit)
         {
-            return BASS_Encode_StartLimit(Handle, cmdline, flags | EncodeFlags.Unicode, proc, user, limit);
+            return BASS_Encode_StartLimit(Handle, CommandLine, Flags | EncodeFlags.Unicode, Procedure, User, Limit);
         }
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_Encode_StartUser(int handle, string filename, EncodeFlags flags, EncoderProcedure proc, IntPtr user);
 
-        public static int EncodeStart(int Handle, string filename, EncodeFlags flags, EncoderProcedure proc, IntPtr user = default(IntPtr))
+        /// <summary>
+        /// Sets up a user-provided encoder on a channel.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HSTREAM, HMUSIC, or HRECORD.</param>
+        /// <param name="Filename">Output filename... <see langword="null" /> = no output file.</param>
+        /// <param name="Flags">A combination of <see cref="EncodeFlags"/>.</param>
+        /// <param name="Procedure">Callback function to receive the sample data and return the encoded data.</param>
+        /// <param name="User">User instance data to Password to the callback function.</param>
+        /// <returns>The encoder process handle is returned if the encoder is successfully started, else 0 is returned (use <see cref="Bass.LastError" /> to get the error code).</returns>
+        /// <remarks>
+        /// <para>
+        /// This function allows user-provided encoders to be used, which is most useful for platforms where external encoders are unavailable 
+        /// for use with <see cref="EncodeStart(int,string,EncodeFlags,EncodeProcedure,IntPtr)" />.
+        /// For example, the LAME library could be used with this function instead of the standalone LAME executable with <see cref="EncodeStart(int,string,EncodeFlags,EncodeProcedure,IntPtr)" />.
+        /// </para>
+        /// <para>
+        /// Internally, the sending of sample data to the encoder is implemented via a DSP callback on the channel.
+        /// That means when the channel is played (or <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> is called if it is a decoding channel), the sample data will be sent to the encoder at the same time.
+        /// It also means that if the <see cref="Bass.FloatingPointDSP"/> option is enabled, the sample data will be 32-bit floating-point, and one of the floating-point flags will be required if the encoder does not support floating-point sample data.
+        /// The <see cref="Bass.FloatingPointDSP"/> setting should not be changed while encoding is in progress.
+        /// </para>
+        /// <para>
+        /// By default, the encoder DSP has a priority setting of -1000, which determines where in the DSP chain the encoding is performed.
+        /// That can be changed via the <see cref="DSPPriority"/> config option.
+        /// </para>
+        /// <para>
+        /// Besides the automatic DSP system, data can also be manually fed to the encoder via the <see cref="EncodeWrite(int,IntPtr,int)" /> function. 
+        /// Both methods can be used together, but in general, the 'automatic' system ought to be paused when using the 'manual' system, via the <see cref="EncodeFlags.Pause"/> flag or the <see cref="EncodeSetPaused" /> function.
+        /// Data fed to the encoder manually does not go through the source channel's DSP chain, so any DSP/FX set on the channel will not be applied to the data.
+        /// </para>
+        /// <para>
+        /// When queued encoding is enabled via the <see cref="EncodeFlags.Queue"/> flag, the DSP system or <see cref="EncodeWrite(int,IntPtr,int)" /> call will just buffer the data, and the data will then be fed to the encoder by another thread.
+        /// The buffer will grow as needed to hold the queued data, up to a limit specified by the <see cref="Queue"/> config option.
+        /// If the limit is exceeded (or there is no free memory), data will be lost;
+        /// <see cref="EncodeSetNotify" /> can be used to be notified of that occurrence. 
+        /// The amount of data that is currently queued, as well as the queue limit and how much data has been lost, is available from <see cref="EncodeGetCount" />.
+        /// </para>
+        /// <para>When done encoding, use <see cref="EncodeStop(int)" /> or <see cref="EncodeStop(int,bool)" /> to close the encoder.</para>
+        /// <para>
+        /// Multiple encoders can be set on a channel.
+        /// For convenience, most of the encoder functions will accept either an encoder handle or a channel handle. 
+        /// When a channel handle is used, the function is applied to all encoders that are set on that channel.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Create">The file could not be created.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeStart(int Handle, string Filename, EncodeFlags Flags, EncoderProcedure Procedure, IntPtr User = default(IntPtr))
         {
-            return BASS_Encode_StartUser(Handle, filename, flags | EncodeFlags.Unicode, proc, user);
+            return BASS_Encode_StartUser(Handle, Filename, Flags | EncodeFlags.Unicode, Procedure, User);
         }
         
 		/// <summary>
@@ -489,18 +607,65 @@ namespace ManagedBass.Enc
             return Marshal.PtrToStringAnsi(BASS_Encode_CastGetStats(Handle, Type, Password));
         }
 
+        /// <summary>
+        /// Initializes sending an encoder's output to a Shoutcast or Icecast server.
+        /// </summary>
+        /// <param name="Handle">The encoder handle.</param>
+        /// <param name="Server">The server to send to, in the form of "address:port" (Shoutcast v1) resp. "address:port,sid" (Shoutcast v2) or "address:port/mount" (Icecast).</param>
+        /// <param name="Password">The server password. A username can be included in the form of "username:password" when connecting to an Icecast or Shoutcast 2 server.</param>
+        /// <param name="Content">
+        /// The MIME type of the encoder output.
+        /// <para>'audio/mpeg' for Mp3, 'application/ogg' for Ogg and 'audio/aacp' for Aac.</para>
+        /// </param>
+        /// <param name="Name">The stream name... <see langword="null" /> = no name.</param>
+        /// <param name="Url">The URL, for example, of the radio station's webpage... <see langword="null" /> = no URL.</param>
+        /// <param name="Genre">The genre... <see langword="null" /> = no genre.</param>
+        /// <param name="Description">Description... <see langword="null" /> = no description. This applies to Icecast only.</param>
+        /// <param name="Headers">Other headers to send to the server... <see langword="null" /> = none. Each header should end with a carriage return and line feed ("\r\n").</param>
+        /// <param name="Bitrate">The bitrate (in kbps) of the encoder output... 0 = undefined bitrate. In cases where the bitrate is a "quality" (rather than CBR) setting, the headers parameter can be used to communicate that instead, eg. "ice-bitrate: Quality 0\r\n".</param>
+        /// <param name="Public">Public? If <see langword="true" />, the stream is added to the public directory of streams, at shoutcast.com or dir.xiph.org (or as defined in the server config).</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// This function sets up a Shoutcast/Icecast source client, sending the encoder's output to a server, which listeners can then connect to and receive the data from. 
+        /// The Shoutcast and Icecast server software is available from http://www.shoutcast.com/broadcast-tools and http://www.icecast.org/download.php, respectively.
+        /// </para>
+        /// <para>
+        /// An encoder needs to be started (but with no data sent to it yet) before using this function to setup the sending of the encoder's output to a Shoutcast or Icecast server.
+        /// If <see cref="EncodeStart(int,string,EncodeFlags,EncodeProcedure,IntPtr)" /> is used, the encoder should be setup to write its output to STDOUT.
+        /// Due to the length restrictions of WAVE headers/files, the encoder should also be started with the <see cref="EncodeFlags.NoHeader"/> flag, and the sample format details sent via the command-line.
+        /// </para>
+        /// <para>
+        /// Unless the <see cref="EncodeFlags.UnlimitedCastDataRate"/> flag is set on the encoder, BASSenc automatically limits the rate that data is processed to real-time speed to avoid overflowing the server's buffer, which means that it is safe to simply try to process data as quickly as possible, eg. when the source is a decoding channel.
+        /// Encoders set on recording channels are automatically exempt from the rate limiting, as they are inherently real-time.
+        /// With BASS 2.4.6 or above, also exempt are encoders that are fed in a playback buffer update cycle (including <see cref="Bass.Update" /> and <see cref="Bass.ChannelUpdate" /> calls), eg. when the source is a playing channel;
+        /// that is to avoid delaying the update thread, which could result in playback buffer underruns.
+        /// </para>
+        /// <para>
+        /// Normally, BASSenc will produce the encoded data (with the help of an encoder) that is sent to a Shoutcast/Icecast server, but it is also possible to send already encoded data to a server (without first decoding and re-encoding it) via the PCM encoding option.
+        /// The encoder can be set on any BASS channel, as rather than feeding on sample data from the channel, <see cref="EncodeWrite(int,IntPtr,int)" /> would be used to feed in the already encoded data.
+        /// BASSenc does not know what the data's bitrate is in that case, so it is up to the user to process the data at the correct rate (real-time speed).
+        /// </para>
+        /// <para><see cref="ServerInit" /> can be used to setup a server that listeners can connect to directly, without a Shoutcast/Icecast server intermediary.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.Already">There is already a cast set on the encoder.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Server" /> doesn't include a port number.</exception>
+        /// <exception cref="Errors.FileOpen">Couldn't connect to the server.</exception>
+        /// <exception cref="Errors.CastDenied"><paramref name="Password" /> is not valid.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_CastInit")]
-        public static extern bool CastInit(int handle,
-            string server,
-            string pass,
-            string content,
-            string name,
-            string url,
-            string genre,
-            string desc,
-            string headers,
-            int bitrate,
-            bool pub);
+        public static extern bool CastInit(int Handle,
+            string Server,
+            string Password,
+            string Content,
+            string Name,
+            string Url,
+            string Genre,
+            string Description,
+            string Headers,
+            int Bitrate,
+            bool Public);
 
         [DllImport(DllName)]
         static extern bool BASS_Encode_CastSendMeta(int handle, EncodeMetaDataType type, byte[] data, int length);

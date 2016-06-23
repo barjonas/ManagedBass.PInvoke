@@ -677,6 +677,37 @@ namespace ManagedBass.Mix
         [DllImport(DllName)]
         static extern int BASS_Mixer_ChannelSetSync(int Handle, SyncFlags Type, long Parameter, SyncProcedure Procedure, IntPtr User);
 
+        /// <summary>
+        /// Sets up a synchronizer on a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle.</param>
+        /// <param name="Type">The type of sync.</param>
+        /// <param name="Parameter">The sync parameters, depends on the sync type.</param>
+        /// <param name="Procedure">The callback function which should be invoked with the sync.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If succesful, then the new synchronizer's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// When used on a decoding channel (eg. a mixer source channel), syncs set with <see cref="Bass.ChannelSetSync" /> are automatically <see cref="SyncFlags.Mixtime"/>, 
+        /// which means that they will be triggered as soon as the sync event is encountered during decoding. 
+        /// But if the mixer output is being played, then there is a playback buffer involved, which will delay the hearing of the sync event. 
+        /// This function compensates for that, delaying the triggering of the sync until the event is actually heard. 
+        /// If the mixer itself is a decoding channel, or the <see cref="SyncFlags.Mixtime"/> flag is used, then there is effectively no real difference between this function and <see cref="Bass.ChannelSetSync" />.
+        /// One sync type that is slightly different is the <see cref="SyncFlags.Stalled"/> sync, which can be either mixtime or not.
+        /// </para>
+        /// <para>
+        /// Sync types that would automatically be mixtime when using <see cref="Bass.ChannelSetSync" /> are not so when using this function. 
+        /// The <see cref="SyncFlags.Mixtime"/> flag should be specified in those cases, or <see cref="Bass.ChannelSetSync" /> used instead.
+        /// </para>
+        /// <para>
+        /// When a source is removed from a mixer, any syncs that have been set on it via this function are automatically removed. 
+        /// If the channel is subsequently plugged back into a mixer, the previous syncs will not still be set on it.
+        /// Syncs set via <see cref="Bass.ChannelSetSync" /> are unaffected.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.Type">An illegal <paramref name="Type" /> was specified.</exception>
+        /// <exception cref="Errors.Parameter">An illegal <paramref name="Parameter" /> was specified.</exception>
         public static int ChannelSetSync(int Handle, SyncFlags Type, long Parameter, SyncProcedure Procedure, IntPtr User = default(IntPtr))
         {
             var h = BASS_Mixer_ChannelSetSync(Handle, Type, Parameter, Procedure, User);
@@ -690,6 +721,45 @@ namespace ManagedBass.Mix
         [DllImport(DllName)]
         static extern int BASS_Mixer_ChannelSetSync(int Handle, int Type, long Parameter, SyncProcedureEx Procedure, IntPtr User);
 
+        /// <summary>
+        /// Sets up an extended synchronizer on a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle.</param>
+        /// <param name="Type">The type of sync.</param>
+        /// <param name="Parameter">The sync parameters, depends on the sync type.</param>
+        /// <param name="Procedure">The callback function which should be invoked with the sync.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If succesful, then the new synchronizer's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// The main difference between this method and <see cref="ChannelSetSync(int,SyncFlags,long,SyncProcedure,IntPtr)" /> is, that this method invokes the <see cref="SyncProcedureEx" /> callback.
+		/// This callback contains an extra 'Offset' parameter, which defines the position of the sync occurrence within the current update cycle of the source converted to the mixer stream position.
+		/// This offset might be used to calculate more accurate non-mixtime sync triggers (as with non-mixtime sync's a variable delay is to be expected, as the accuracy depends on the sync thread waking in time, and there is no guarantee when that will happen) - 
+		/// as well as mixtime syncs are only accurate to the current update period, as they are triggered within such.
+		/// So a mixtime sync is being triggered ahead of the actual mixer position being heard.
+		/// The 'Offset' parameter might be used to compensate for that.
+		/// </para>
+		/// <para>
+        /// When used on a decoding channel (eg. a mixer source channel), syncs set with <see cref="Bass.ChannelSetSync" /> are automatically <see cref="SyncFlags.Mixtime"/>, 
+        /// which means that they will be triggered as soon as the sync event is encountered during decoding. 
+        /// But if the mixer output is being played, then there is a playback buffer involved, which will delay the hearing of the sync event. 
+        /// This function compensates for that, delaying the triggering of the sync until the event is actually heard. 
+        /// If the mixer itself is a decoding channel, or the <see cref="SyncFlags.Mixtime"/> flag is used, then there is effectively no real difference between this function and <see cref="Bass.ChannelSetSync" />.
+        /// One sync type that is slightly different is the <see cref="SyncFlags.Stalled"/> sync, which can be either mixtime or not.
+        /// </para>
+        /// <para>
+        /// Sync types that would automatically be mixtime when using <see cref="Bass.ChannelSetSync" /> are not so when using this function. 
+        /// The <see cref="SyncFlags.Mixtime"/> flag should be specified in those cases, or <see cref="Bass.ChannelSetSync" /> used instead.
+        /// </para>
+        /// <para>
+        /// When a source is removed from a mixer, any syncs that have been set on it via this function are automatically removed. 
+        /// If the channel is subsequently plugged back into a mixer, the previous syncs will not still be set on it.
+        /// Syncs set via <see cref="Bass.ChannelSetSync" /> are unaffected.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.Type">An illegal <paramref name="Type" /> was specified.</exception>
+        /// <exception cref="Errors.Parameter">An illegal <paramref name="Parameter" /> was specified.</exception>
         public static int ChannelSetSync(int Handle, SyncFlags Type, long Parameter, SyncProcedureEx Procedure, IntPtr User = default(IntPtr))
         {
             var h = BASS_Mixer_ChannelSetSync(Handle, (int)Type | 0x1000000, Parameter, Procedure, User);

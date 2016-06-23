@@ -326,19 +326,43 @@ namespace ManagedBass.Midi
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetEvent")]
         public static extern int StreamGetEvent(int Handle, int Channel, MidiEventType Event);
 
+        /// <summary>
+        /// Retrieves the events in a MIDI file stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to get the events from.</param>
+        /// <param name="Track">The track to get the events from... 0 = 1st track.</param>
+        /// <param name="Filter">The type of event to retrieve (use <see cref="MidiEventType.None"/> to retrieve all events).</param>
+        /// <param name="Events">An array of <see cref="MidiEvent" />s to retrieve the events (<see langword="null" /> = get the number of events without getting the events themselves).</param>
+        /// <returns>If successful, the number of events is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This function should first be called with <paramref name="Events" /> = <see langword="null" /> to get the number of events, before allocating an array of the required size and retrieving the events.
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The stream is for real-time events only, so does not have an event sequence.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Track" /> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_MIDI_StreamGetEvents")]
-        public static extern int StreamGetEvents(int handle, int track, int filter, [In, Out] MidiEvent[] events);
+        public static extern int StreamGetEvents(int Handle, int Track, MidiEventType Filter, [In, Out] MidiEvent[] Events);
 
-        public static MidiEvent[] StreamGetEvents(int handle, int track, int filter)
+        /// <summary>
+        /// Retrieves the events in a MIDI file stream.
+        /// </summary>
+        /// <param name="Handle">The MIDI stream to get the events from.</param>
+        /// <param name="Track">The track to get the events from... 0 = 1st track.</param>
+        /// <param name="Filter">The type of event to retrieve (use <see cref="MidiEventType.None"/> to retrieve all events).</param>
+        /// <returns>An array of <see cref="MidiEvent" /> configuration entries on success, <see langword="null" /> on error.</returns>
+        /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable">The stream is for real-time events only, so does not have an event sequence.</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Track" /> is not valid.</exception>
+        public static MidiEvent[] StreamGetEvents(int Handle, int Track, MidiEventType Filter)
         {
-            var count = StreamGetEvents(handle, track, filter, null);
+            var count = StreamGetEvents(Handle, Track, Filter, null);
 
             if (count <= 0)
                 return null;
 
             var events = new MidiEvent[count];
 
-            StreamGetEvents(handle, track, filter, events);
+            StreamGetEvents(Handle, Track, Filter, events);
 
             return events;
         }

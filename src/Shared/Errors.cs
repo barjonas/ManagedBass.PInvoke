@@ -248,6 +248,15 @@
         /// </summary>
         Wasapi = 5000,
 #endif
+        /// <summary>
+		/// BassEnc: ACM codec selection cancelled
+		/// </summary>
+		AcmCancel = 2000,
+
+        /// <summary>
+        /// BassEnc: Access denied (invalid password)
+        /// </summary>
+        CastDenied = 2100,
 
         /// <summary>
         /// BassAAC: Non-Streamable due to MP4 atom order ("mdat" before "moov")
