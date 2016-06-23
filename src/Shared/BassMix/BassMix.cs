@@ -548,6 +548,30 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetLevel")]
         public static extern int ChannelGetLevel(int Handle);
 
+        /// <summary>
+        /// Retrieves the level of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
+        /// <param name="Levels">An array to receive the levels.</param>
+        /// <param name="Length">The amount of data to inspect to calculate the level, in seconds. The maximum is 1 second. Less data than requested may be used if the full amount is not available, eg. if the source's buffer (determined by the <see cref="MixerBufferLength"/> config option) is shorter.</param>
+        /// <param name="Flags">A combination of <see cref="LevelRetrievalFlags"/>.</param>
+        /// <returns>
+        /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code.
+		/// <para>
+        /// If successful, the level of the left channel is returned in the low word (low 16-bits), and the level of the right channel is returned in the high word (high 16-bits).
+        /// If the channel is mono, then the low word is duplicated in the high word. 
+		/// The level ranges linearly from 0 (silent) to 32768 (max). 0 will be returned when a channel is stalled.
+        /// </para>
+		/// </returns>
+        /// <remarks>
+		/// <para>
+        /// This function is like the standard <see cref="Bass.ChannelGetLevel(int,float[],float,LevelRetrievalFlags)" />, but it gets the level from the channel's buffer instead of decoding data from the channel, which means that the mixer doesn't miss out on any data. 
+		/// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// </para>
+        /// </remarks>
+		/// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
+        /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
+        /// <exception cref="Errors.NotPlaying">The mixer is not playing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetLevelEx")]
         public static extern int ChannelGetLevel(int Handle, [In, Out] float[] Levels, float Length, LevelRetrievalFlags Flags);
         

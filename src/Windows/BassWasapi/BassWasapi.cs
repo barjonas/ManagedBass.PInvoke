@@ -435,15 +435,82 @@ namespace ManagedBass.Wasapi
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_SetVolume")]
         public static extern bool SetVolume(WasapiVolumeTypes Curve, float Volume);
 
+        /// <summary>
+        /// Initializes a Wasapi device/driver (endpoint).
+        /// </summary>
+        /// <param name="Device">The device to use... 0 = first device, -1 = default output device, -2 = default input device. <see cref="GetDeviceInfo(int,out WasapiDeviceInfo)" /> can be used to enumerate the available devices.</param>
+        /// <param name="Frequency">The sample rate to use... 0 = "mix format" sample rate.</param>
+        /// <param name="Channels">The number of channels to use... 0 = "mix format" channels, 1 = mono, 2 = stereo, etc.</param>
+        /// <param name="Flags">A combination of <see cref="WasapiInitFlags"/>.</param>
+        /// <param name="Buffer">
+        /// The length of the device's buffer in seconds.
+        /// This is a minimum and the driver may choose to use a larger buffer;
+        /// <see cref="Info" /> can be used to confirm what the buffer size is.
+        /// For an output device, the buffer size determines the latency.
+        /// </param>
+        /// <param name="Period">
+        /// The interval (in seconds) between callback function calls... 0 = use default.
+        /// If the specified period is below the minimum update period, it will automatically be raised to that.
+        /// <para>
+        /// The update period specifies the time between <see cref="WasapiProcedure" /> calls.
+        /// The <see cref="WasapiDeviceInfo" /> (see <see cref="GetDeviceInfo(int,out WasapiDeviceInfo)" />) "minperiod" and "defperiod" values are actually minimum/default update periods.
+        /// </para>
+        /// </param>
+        /// <param name="Procedure">
+        /// The user defined function to process the channel.
+        /// Use <see langword="null" /> to create a Wasapi "push" device (to which you can feed sample data via <see cref="PutData(IntPtr,int)" />).
+        /// </param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>If the device was successfully initialized, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// <para>
+        /// For convenience, devices are always initialized to use their highest sample resolution and that is then converted to 32-bit floating-point, so that <see cref="WasapiProcedure"/> callback functions and the <see cref="PutData(IntPtr,int)" /> and <see cref="GetData(IntPtr,int)" /> functions are always dealing with the same sample format.
+        /// The device's sample format can be obtained via <see cref="Info" />.
+        /// </para>
+        /// <para>
+        /// WASAPI does not support arbitrary sample formats, like DirectSound does.
+        /// In particular, only the "mix format" (available from <see cref="GetDeviceInfo(int,out WasapiDeviceInfo)" />) is generally supported in shared mode.
+        /// <see cref="CheckFormat" /> can be used to check whether a particular sample format is supported.
+        /// The BASSmix add-on can be used to play (or record) in otherwise unsupported sample formats, as well as playing multiple sources.
+        /// </para>
+        /// <para>The initialized device will not begin processing data until <see cref="Start" /> is called.</para>
+        /// <para>
+        /// Simultaneously using multiple devices is supported in the BASS API via a context switching system; instead of there being an extra "device" parameter in the function calls, the device to be used is set prior to calling the functions.
+        /// <see cref="CurrentDevice" /> is used to switch the current device.
+        /// When successful, <see cref="Init" /> automatically sets the current thread's device to the one that was just initialized.
+        /// </para>
+        /// <para>When using the default output or input device, <see cref="CurrentDevice" /> can be used to find out which device it was mapped to.</para>
+        /// <para>In SHARED mode you must initialize the device with the current WASAPI mixer sample rate and number of channels (see the <see cref="WasapiDeviceInfo" /> "mixfreq" and "mixchans" properties).</para>
+        /// <para>In EXCLUSIVE mode you might use any sample rate and number of channels which are supported by the device/driver.</para>
+        /// <para>This function must be successfully called before any input or output can be performed.</para>
+        /// <para>
+        /// In EXCLUSIVE mode, the "period" value will affect what's an acceptable "buffer" value (it appears that the buffer must be at least 4x the period).
+        /// In SHARED mode, it's the other way round, the "period" will be reduced to fit the "buffer" if necessary (with a minimum of the "defperiod" value).
+        /// The system will limit them to an acceptable range, so for example, you could use a very small value (eg. 0.0001) for both, to get the minimum possible latency.
+        /// </para>
+        /// <para>
+        /// Note: When initializing an input (capture or loopback) device, it might be the case, that the device is automatically muted once initialized.
+        /// You can use the <see cref="GetMute" />/<see cref="SetMute" /> methods to check and probably toggle this.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="Errors.Wasapi">WASAPI is not available.</exception>
+        /// <exception cref="Errors.Device">The <paramref name="Device" /> number specified is invalid.</exception>
+        /// <exception cref="Errors.Already">A device has already been initialized. You must call <see cref="Free" /> before you can initialize again.</exception>
+        /// <exception cref="Errors.Parameter">An illegal parameter was specified (a <see cref="WasapiProcedure"/> must be provided for an input device).</exception>
+        /// <exception cref="Errors.Driver">The driver could not be initialized.</exception>
+        /// <exception cref="Errors.SampleFormat">The specified format is not supported by the device. If the <see cref="WasapiInitFlags.AutoFormat"/> flag was specified, no other format could be found either.</exception>
+        /// <exception cref="Errors.Init">The <see cref="Bass.NoSoundDevice"/> has not been initialized.</exception>
+        /// <exception cref="Errors.Busy">The device is busy (eg. in "exclusive" use by another process).</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery error.</exception>
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_Init")]
         public static extern bool Init(int Device,
-                                        int Frequency = 0,
-                                        int Channels = 0,
-                                        WasapiInitFlags Flags = WasapiInitFlags.Shared,
-                                        float Buffer = 0,
-                                        float Period = 0,
-                                        WasapiProcedure Procedure = null,
-                                        IntPtr User = default(IntPtr));
+                                       int Frequency = 0,
+                                       int Channels = 0,
+                                       WasapiInitFlags Flags = WasapiInitFlags.Shared,
+                                       float Buffer = 0,
+                                       float Period = 0,
+                                       WasapiProcedure Procedure = null,
+                                       IntPtr User = default(IntPtr));
 
         #region IsStarted
         [DllImport(DllName)]
@@ -512,6 +579,20 @@ namespace ManagedBass.Wasapi
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_GetLevel")]
         public static extern int GetLevel();
 
+        /// <summary>
+        /// Retreives the level
+        /// </summary>
+        /// <param name="Levels">An array to receive the levels.</param>
+        /// <param name="Length"></param>
+        /// <param name="Flags"></param>
+        /// <returns>true on success, else false. Use <see cref="Bass.LastError"/> to get the Error code.</returns>
+        /// <remarks>
+        /// This function uses <see cref="Bass.ChannelGetLevel(int,float[],float,LevelRetrievalFlags)"/> internally, so it behaves identically to that.
+        /// The <see cref="WasapiInitFlags.Buffer"/> flag needs to have been specified in the device's initialization to enable the use of this function.
+        /// </remarks>
+        /// <exception cref="Errors.Init"><see cref="Init" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.NotAvailable">The device was not initialized using buffering (<see cref="WasapiInitFlags.Buffer"/>).</exception>
+        /// <exception cref="Errors.Parameter"><paramref name="Length"/> is not valid.</exception>
         [DllImport(DllName, EntryPoint = "BASS_WASAPI_GetLevelEx")]
         public static extern int GetLevel([In, Out] float[] Levels, float Length, LevelRetrievalFlags Flags);
 

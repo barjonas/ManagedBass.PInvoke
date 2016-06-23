@@ -316,15 +316,115 @@ namespace ManagedBass.Enc
         }
 
 #if __MAC__ || __IOS__
+        /// <summary>
+        /// Sets up an encoder on a channel, using a CoreAudio codec and sending the output to a user defined function.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HSTREAM, HMUSIC, or HRECORD.</param>
+        /// <param name="ftype">File format identifier.</param>
+        /// <param name="atype">Audio data format identifier</param>
+        /// <param name="Flags">A combination of <see cref="EncodeFlags"/>.</param>
+        /// <param name="Bitrate">The bitrate in bits per second... 0 = the codec's default bitrate.</param>
+        /// <param name="Procedure">Callback function to receive the encoded data.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
+        /// <returns>The encoder handle is returned if the encoder is successfully started, else 0 is returned. Use <see cref="Bass.LastError"/> to get the error code.</returns>
+        /// <remarks>
+        /// This function allows CoreAudio codecs to be used for encoding.
+        /// The available file and audio data identifiers, as well as other information, can be retreived via the Audio File Services and Audio Format Services APIs, eg. the kAudioFileGlobalInfo_WritableTypes and kAudioFormatProperty_EncodeFormatIDs properties.
+        /// <para>
+        /// Internally, the sending of sample data to the encoder is implemented via a DSP callback on the channel.
+        /// That means when you play the channel (or call <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> if it's a decoding channel), the sample data will be sent to the encoder at the same time. 
+        /// It also means that if you use the <see cref="Bass.FloatingPointDSP"/> option, then the sample data will be 32-bit floating-point, and you'll need to use one of the Floating-point flags if the encoder does not support floating-point sample data. 
+        /// The <see cref="Bass.FloatingPointDSP"/> setting should not be changed while encoding is in progress.
+        /// </para>
+        /// <para>The encoder DSP has a priority setting of -1000, so if you want to set DSP/FX on the channel and have them present in the encoding, set their priority above that.</para>
+        /// <para>
+        /// Besides the automatic DSP system, data can also be manually fed to the encoder via the <see cref="EncodeWrite(int,IntPtr,int)" /> function.
+        /// Both methods can be used together, but in general, the "automatic" system ought be paused when using the "manual" system, by use of the <see cref="EncodeFlags.Pause"/> flag or the <see cref="EncodeSetPaused" /> function.
+        /// </para>
+        /// <para>
+        /// When queued encoding is enabled via the <see cref="EncodeFlags.Queue"/> flag, the DSP system or <see cref="EncodeWrite(int,IntPtr,int)" /> call will just buffer the data, and the data will then be fed to the encoder by another thread.
+        /// The buffer will grow as needed to hold the queued data, up to a limit specified by the <see cref="Queue"/> config option.
+        /// If the limit is exceeded (or there is no free memory), data will be lost; <see cref="EncodeSetNotify(int,EncodeNotifyProcedure,IntPtr)" /> can be used to be notified of that occurrence.
+        /// The amount of data that is currently queued, as well as the queue limit and how much data has been lost, is available from <see cref="EncodeGetCount(int,EncodeCount)" />.
+        /// </para>
+        /// <para>
+        /// <see cref="EncodeIsActive" /> can be used to check that the encoder is still running.
+        /// When done encoding, use <see cref="EncodeStop(int)" /> to close the encoder.
+        /// </para>
+        /// <para>The returned process Handle can be used to do things like change the encoder's priority and get it's exit code.</para>
+        /// <para>
+        /// Multiple encoders can be set on a channel.
+        /// For simplicity, the encoder functions will accept either an encoder Handle or a channel Handle.
+        /// When using a channel Handle, the function is applied to all encoders that are set on that channel.
+        /// </para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>This function is only available on OSX and iOS.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle"/> is not valid.</exception>
+        /// <exception cref="Errors.FileFormat"><paramref name="ftype"/> is not valid.</exception>
+        /// <exception cref="Errors.Codec"><paramref name="atype"/> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable"><paramref name="Bitrate"/> is not supported by the codec.</exception>
+        /// <exception cref="Errors.SampleFormat">The channel's sample format is not supported by the codec.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_StartCA")]
-        public static extern int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, EncodeProcedureEx Procedure, IntPtr user);
+        public static extern int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags Flags, int Bitrate, EncodeProcedureEx Procedure, IntPtr User);
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         static extern int BASS_Encode_StartCAFile(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, string filename);
 
-        public static int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags flags, int bitrate, string filename)
+        /// <summary>
+        /// Sets up an encoder on a channel, using a CoreAudio codec and sending the output to a user defined function.
+        /// </summary>
+        /// <param name="Handle">The channel handle... a HSTREAM, HMUSIC, or HRECORD.</param>
+        /// <param name="ftype">File format identifier.</param>
+        /// <param name="atype">Audio data format identifier</param>
+        /// <param name="Flags">A combination of <see cref="EncodeFlags"/>.</param>
+        /// <param name="Bitrate">The bitrate in bits per second... 0 = the codec's default bitrate.</param>
+        /// <param name="Filename">The output filename.</param>
+        /// <returns>The encoder handle is returned if the encoder is successfully started, else 0 is returned. Use <see cref="Bass.LastError"/> to get the error code.</returns>
+        /// <remarks>
+        /// This function allows CoreAudio codecs to be used for encoding.
+        /// The available file and audio data identifiers, as well as other information, can be retreived via the Audio File Services and Audio Format Services APIs, eg. the kAudioFileGlobalInfo_WritableTypes and kAudioFormatProperty_EncodeFormatIDs properties.
+        /// <para>
+        /// Internally, the sending of sample data to the encoder is implemented via a DSP callback on the channel.
+        /// That means when you play the channel (or call <see cref="Bass.ChannelGetData(int,IntPtr,int)" /> if it's a decoding channel), the sample data will be sent to the encoder at the same time. 
+        /// It also means that if you use the <see cref="Bass.FloatingPointDSP"/> option, then the sample data will be 32-bit floating-point, and you'll need to use one of the Floating-point flags if the encoder does not support floating-point sample data. 
+        /// The <see cref="Bass.FloatingPointDSP"/> setting should not be changed while encoding is in progress.
+        /// </para>
+        /// <para>The encoder DSP has a priority setting of -1000, so if you want to set DSP/FX on the channel and have them present in the encoding, set their priority above that.</para>
+        /// <para>
+        /// Besides the automatic DSP system, data can also be manually fed to the encoder via the <see cref="EncodeWrite(int,IntPtr,int)" /> function.
+        /// Both methods can be used together, but in general, the "automatic" system ought be paused when using the "manual" system, by use of the <see cref="EncodeFlags.Pause"/> flag or the <see cref="EncodeSetPaused" /> function.
+        /// </para>
+        /// <para>
+        /// When queued encoding is enabled via the <see cref="EncodeFlags.Queue"/> flag, the DSP system or <see cref="EncodeWrite(int,IntPtr,int)" /> call will just buffer the data, and the data will then be fed to the encoder by another thread.
+        /// The buffer will grow as needed to hold the queued data, up to a limit specified by the <see cref="Queue"/> config option.
+        /// If the limit is exceeded (or there is no free memory), data will be lost; <see cref="EncodeSetNotify(int,EncodeNotifyProcedure,IntPtr)" /> can be used to be notified of that occurrence.
+        /// The amount of data that is currently queued, as well as the queue limit and how much data has been lost, is available from <see cref="EncodeGetCount(int,EncodeCount)" />.
+        /// </para>
+        /// <para>
+        /// <see cref="EncodeIsActive" /> can be used to check that the encoder is still running.
+        /// When done encoding, use <see cref="EncodeStop(int)" /> to close the encoder.
+        /// </para>
+        /// <para>The returned process Handle can be used to do things like change the encoder's priority and get it's exit code.</para>
+        /// <para>
+        /// Multiple encoders can be set on a channel.
+        /// For simplicity, the encoder functions will accept either an encoder Handle or a channel Handle.
+        /// When using a channel Handle, the function is applied to all encoders that are set on that channel.
+        /// </para>
+        /// <para><b>Platform-specific</b></para>
+        /// <para>This function is only available on OSX and iOS.</para>
+        /// </remarks>
+        /// <exception cref="Errors.Handle"><paramref name="Handle"/> is not valid.</exception>
+        /// <exception cref="Errors.FileFormat"><paramref name="ftype"/> is not valid.</exception>
+        /// <exception cref="Errors.Codec"><paramref name="atype"/> is not valid.</exception>
+        /// <exception cref="Errors.NotAvailable"><paramref name="Bitrate"/> is not supported by the codec.</exception>
+        /// <exception cref="Errors.SampleFormat">The channel's sample format is not supported by the codec.</exception>
+        /// <exception cref="Errors.Create">The file could not be created.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int EncodeStartCA(int Handle, int ftype, int atype, EncodeFlags Flags, int Bitrate, string Filename)
         {
-            return BASS_Encode_StartCAFile(Handle, ftype, atype, flags | EncodeFlags.Unicode, bitrate, filename);
+            return BASS_Encode_StartCAFile(Handle, ftype, atype, Flags | EncodeFlags.Unicode, Bitrate, Filename);
         }
 #endif
 
