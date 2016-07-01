@@ -9,8 +9,6 @@ namespace ManagedBass.Enc
     /// </summary>
     public static partial class BassEnc
     {
-        static IntPtr _castProxy;
-        
         #region Version
         [DllImport(DllName)]
         static extern int BASS_Encode_GetVersion();
@@ -70,32 +68,37 @@ namespace ManagedBass.Enc
         /// This setting affects how the following functions connect to servers: <see cref="CastInit"/>, <see cref="CastGetStats"/>, <see cref="CastSetTitle(int, string, string)"/>.
         /// When a proxy server is used, it needs to support the HTTP 'CONNECT' method.
         /// The default setting is <see langword="null"/> (do not use a proxy).
-        /// Changes take effect from the next internet stream creation call. 
-        /// By default, BassEnc will not use any proxy settings when connecting to Icecast and Shoutcast.
+        /// Changes take effect from the next internet stream creation call.
         /// </remarks>
         public static string CastProxy
         {
-            // BassEnc does not make a copy of the config string, so it must reside in the heap (not the stack), eg. a global variable. 
-            // This also means that the proxy settings can subsequently be changed at that location without having to call this function again.
-
-            get { return Marshal.PtrToStringAnsi(Bass.GetConfigPtr(Configuration.EncodeCastProxy)); }
+            get
+            {
+#if WINDOWS
+                return Marshal.PtrToStringUni(Bass.GetConfigPtr(Configuration.EncodeCastProxy));
+#else
+                return Marshal.PtrToStringAnsi(Bass.GetConfigPtr(Configuration.EncodeCastProxy));
+#endif
+            }
             set
             {
-                if (_castProxy != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(_castProxy);
+                var flags = (int)Configuration.EncodeCastProxy;
 
-                    _castProxy = IntPtr.Zero;
-                }
+#if WINDOWS
+                var castProxy = Marshal.StringToHGlobalUni(value);
+                flags |= (int)EncodeFlags.Unicode;
+#else
+                var castProxy = Marshal.StringToHGlobalAnsi(value);
+#endif
 
-                _castProxy = Marshal.StringToHGlobalAnsi(value);
+                Bass.Configure((Configuration)flags, castProxy);
 
-                Bass.Configure(Configuration.EncodeCastProxy, _castProxy);
+                Marshal.FreeHGlobal(castProxy);
             }
         }
-        #endregion
+#endregion
 
-        #region Encoding
+#region Encoding
         /// <summary>
         /// Sends a RIFF chunk to an encoder.
         /// </summary>
@@ -590,7 +593,7 @@ namespace ManagedBass.Enc
         [DllImport(DllName, EntryPoint = "BASS_Encode_StopEx")]
         public static extern bool EncodeStop(int Handle, bool Queue);
 
-        #region Encode Write
+#region Encode Write
         /// <summary>
         /// Sends sample data to the encoder.
         /// </summary>
@@ -675,10 +678,10 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.Ended">The encoder has died.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_Write")]
         public static extern bool EncodeWrite(int Handle, float[] Buffer, int Length);
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region Casting
+#region Casting
         [DllImport(DllName)]
         static extern IntPtr BASS_Encode_CastGetStats(int handle, EncodeStats type, [In] string pass);
 
@@ -687,15 +690,9 @@ namespace ManagedBass.Enc
         /// </summary>
         /// <param name="Handle">The encoder Handle.</param>
         /// <param name="Type">The type of stats to retrieve.</param>
-        /// <param name="Password">Password when retrieving Icecast server stats... <see langword="null" /> = use the password provided in the <see cref="CastInit" /> call.</param>
+        /// <param name="Password">Password when retrieving Icecast server stats... <see langword="null" /> = use the password provided in the <see cref="CastInit" /> call. A username can also be included in the form of "username:password". </param>
         /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-        /// <remarks>
-        /// The stats are returned in XML format.
-        /// <para>
-        /// Each encoder has a single stats buffer, which is reused by each call of this function for the encoder. 
-        /// So if the data needs to be retained across multiple calls, it should be copied to another buffer.
-        /// </para>
-        /// </remarks>
+        /// <remarks>The stats are returned in XML format.</remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not valid.</exception>
         /// <exception cref="Errors.Type"><paramref name="Type" /> is invalid.</exception>
         /// <exception cref="Errors.NotAvailable">There isn't a cast of the requested type set on the encoder.</exception>
@@ -837,9 +834,9 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_CastSetTitle")]
         public static extern bool CastSetTitle(int Handle, byte[] Title, byte[] Url);
-        #endregion
+#endregion
 
-        #region Server
+#region Server
         /// <summary>
         /// Initializes a server to send an encoder's output to connecting clients.
         /// </summary>
@@ -907,6 +904,6 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.NotAvailable">No matching clients were found.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_ServerKick")]
         public static extern int ServerKick(int Handle, string Client = "");
-        #endregion
+#endregion
     }
 }

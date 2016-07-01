@@ -13,6 +13,11 @@
         /// <summary>
         /// No HTTP headers.
         /// </summary>
-        NoHTTP
+        NoHTTP,
+
+        /// <summary>
+        /// Shoutcast metadata
+        /// </summary>
+        Meta
     }
 }

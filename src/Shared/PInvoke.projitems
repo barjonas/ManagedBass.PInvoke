@@ -27,12 +27,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncodeProcedure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncodeProcedureEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncoderProcedure.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\EncodeStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeCount.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeMetaDataType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeNotifyStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassFx\BassFx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassFx\BQFType.cs" />

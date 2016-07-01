@@ -44,6 +44,11 @@ namespace ManagedBass.Enc
         ConvertFloatTo32Bit = 0x8,
 
         /// <summary>
+        /// Convert floating-point sample data back to channel's format.
+        /// </summary>
+        ConvertFloatAuto = 14,
+
+        /// <summary>
         /// Big-Endian sample data.
         /// </summary>
         BigEndian = 0x10,
@@ -101,6 +106,11 @@ namespace ManagedBass.Enc
         /// Send an AIFF header to the encoder instead of a WAVE header.
         /// </summary>
         AIFF = 0x4000,
+
+        /// <summary>
+        /// Apply dither when converting floating-point sample data to integer.
+        /// </summary>
+        Dither = 0x8000,
 
         /// <summary>
         /// Free the encoder when the channel is freed.
