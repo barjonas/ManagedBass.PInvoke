@@ -45,24 +45,24 @@ namespace ManagedBass.Cd
 		/// Use: + track#. Returns the International Standard Recording Code of the track... 0 = first track.
 		/// This might not be available for all CDs.
 		/// </summary>
-		ISRC = 256,
+		ISRC = 0x100,
 
 		/// <summary>
 		/// Sends a "query" command to the configured CDDB server (see <see cref="BassCd.CDDBServer" />) to get a list of matching entries for the CD's CDDB identifier.
 		/// The contents of each entry can be retrieved via the <see cref="Read"/> option.
 		/// </summary>
-		Query = 512,
+		Query = 0x200,
 
 		/// <summary>
 		/// Use: + entry#.
 		/// Sends a "read" command to the configured CDDB server (see <see cref="BassCd.CDDBServer" />) to get a database entry for the CD's CDDB identifier... 0 = first entry.
 		/// </summary>
-		Read = 513,
+		Read = 0x201,
 
 		/// <summary>
 		/// Returns the cached CDDB "read" command response, if there is one.
 		/// </summary>
-		ReadCache = 767
+		ReadCache = 0x2ff
 	}
 }
 #endif

@@ -110,93 +110,99 @@ namespace ManagedBass
         /// </summary>
         WaveFormat = 14,
 
+        #region Riff
         /// <summary>
         /// RIFF/WAVE tags : array of null-terminated ANSI strings.
         /// </summary>
-        RiffInfo = 256,
+        RiffInfo = 0x100,
 
         /// <summary>
         /// BWF/RF64 tags (Broadcast Audio Extension) : A pointer to a variable Length block is returned.
         /// See the EBU specification for details of the block's structure.
         /// </summary>
-        RiffBext = 257,
+        RiffBext = 0x101,
 
         /// <summary>
         /// RIFF/BWF Radio Traffic Extension tags : A pointer to a variable Length block is returned.
         /// See the EBU specifications for details of the block's structure.
         /// </summary>
-        RiffCart = 258,
+        RiffCart = 0x102,
 
         /// <summary>
         /// RIFF DISP text chunk: a single ANSI string.
         /// </summary>
-        RiffDISP = 259,
+        RiffDISP = 0x103,
+        #endregion
 
         /// <summary>
         /// + index# : <see cref="ApeBinaryTag"/> structure.
         /// </summary>
-        ApeBinary = 4096,
+        ApeBinary = 0x1000,
 
+        #region MOD
         /// <summary>
         /// MOD music name : a single ANSI string.
         /// </summary>
-        MusicName = 65536,
+        MusicName = 0x10000,
 
         /// <summary>
         /// MOD message : a single ANSI string.
         /// </summary>
-        MusicMessage = 65537,
+        MusicMessage = 0x10001,
 
         /// <summary>
         /// MOD music order list: BYTE array of pattern numbers played at that order position.
         /// Pattern number 254 is "+++" (skip order) and 255 is "---" (end song).
         /// You can use <see cref="Bass.ChannelGetLength"/> with <see cref="PositionFlags.MusicOrders"/> to get the Length of the array.
         /// </summary>
-        MusicOrders = 65538,
-
-        /// <summary>
-        /// + instrument#, MOD instrument name : ANSI string
-        /// </summary>
-        MusicInstrument = 65792,
-
-        /// <summary>
-        /// + sample#, MOD sample name : ANSI string
-        /// </summary>
-        MusicSample = 66304,
-
-        /// <summary>
-        /// + track#, track text : array of null-terminated ANSI strings
-        /// </summary>
-        MidiTrack = 69632,
-
-        /// <summary>
-        /// + index# : FLACPicture structure.
-        /// </summary>
-        FlacPicture = 73728,
-
-        /// <summary>
-        /// ADX tags: A pointer to the ADX loop structure.
-        /// </summary>
-        AdxLoop = 73728,
-
-        /// <summary>
-        /// DSDIFF artist : ASCII string
-        /// </summary>
-        DSDArtist = 77824,
-
-        /// <summary>
-        /// DSDIFF title : ASCII string
-        /// </summary>
-        DSDTitle = 77825,
-
-        /// <summary>
-        /// + index, DSDIFF comment : A pointer to the DSDIFF comment tag structure.
-        /// </summary>
-        DSDComment = 78080,
+        MusicOrders = 0x10002,
 
         /// <summary>
         /// MOD author : UTF-8 string
         /// </summary>
-        MusicAuth = 0x10003
+        MusicAuth = 0x10003,
+
+        /// <summary>
+        /// + instrument#, MOD instrument name : ANSI string
+        /// </summary>
+        MusicInstrument = 0x10100,
+
+        /// <summary>
+        /// + sample#, MOD sample name : ANSI string
+        /// </summary>
+        MusicSample = 0x10300,
+
+        /// <summary>
+        /// + track#, track text : array of null-terminated ANSI strings
+        /// </summary>
+        MidiTrack = 0x11000,
+        #endregion
+
+        /// <summary>
+        /// + index# : FLACPicture structure.
+        /// </summary>
+        FlacPicture = 0x12000,
+
+        /// <summary>
+        /// ADX tags: A pointer to the ADX loop structure.
+        /// </summary>
+        AdxLoop = 0x12000,
+
+        #region DSD
+        /// <summary>
+        /// DSDIFF artist : ASCII string
+        /// </summary>
+        DSDArtist = 0x13000,
+
+        /// <summary>
+        /// DSDIFF title : ASCII string
+        /// </summary>
+        DSDTitle = 0x13001,
+
+        /// <summary>
+        /// + index, DSDIFF comment : A pointer to the DSDIFF comment tag structure.
+        /// </summary>
+        DSDComment = 0x13100
+        #endregion
     }
 }

@@ -13,136 +13,136 @@
         /// <summary>
         /// Generic
         /// </summary>
-        Generic = 0,
+        Generic,
 
         /// <summary>
         /// Padded Cell
         /// </summary>
-        PaddedCell = 1,
+        PaddedCell,
 
         /// <summary>
         /// Room
         /// </summary>
-        Room = 2,
+        Room,
 
         /// <summary>
         /// Bathroom
         /// </summary>
-        Bathroom = 3,
+        Bathroom,
 
         /// <summary>
         /// Livingroom
         /// </summary>
-        Livingroom = 4,
+        Livingroom,
 
         /// <summary>
         /// Stoneroom
         /// </summary>
-        Stoneroom = 5,
+        Stoneroom,
 
         /// <summary>
         /// Auditorium
         /// </summary>
-        Auditorium = 6,
+        Auditorium,
 
         /// <summary>
         /// Concert Hall
         /// </summary>
-        ConcertHall = 7,
+        ConcertHall,
 
         /// <summary>
         /// Cave
         /// </summary>
-        Cave = 8,
+        Cave,
 
         /// <summary>
         /// Arena
         /// </summary>
-        Arena = 9,
+        Arena,
 
         /// <summary>
         /// Hangar
         /// </summary>
-        Hangar = 10,
+        Hangar,
 
         /// <summary>
         /// Carpeted Hallway
         /// </summary>
-        CarpetedHallway = 11,
+        CarpetedHallway,
 
         /// <summary>
         /// Hallway
         /// </summary>
-        Hallway = 12,
+        Hallway,
 
         /// <summary>
         /// Stone Corridor
         /// </summary>
-        StoneCorridor = 13,
+        StoneCorridor,
 
         /// <summary>
         /// Alley
         /// </summary>
-        Alley = 14,
+        Alley,
 
         /// <summary>
         /// Forest
         /// </summary>
-        Forest = 15,
+        Forest,
 
         /// <summary>
         /// City
         /// </summary>
-        City = 16,
+        City,
 
         /// <summary>
         /// Mountains
         /// </summary>
-        Mountains = 17,
+        Mountains,
 
         /// <summary>
         /// Quarry
         /// </summary>
-        Quarry = 18,
+        Quarry,
 
         /// <summary>
         /// Plain
         /// </summary>
-        Plain = 19,
+        Plain,
 
         /// <summary>
         /// Parkinglot
         /// </summary>
-        ParkingLot = 20,
+        ParkingLot,
 
         /// <summary>
         /// Sewer Pipe
         /// </summary>
-        SewerPipe = 21,
+        SewerPipe,
 
         /// <summary>
         /// Underwater
         /// </summary>
-        Underwater = 22,
+        Underwater,
 
         /// <summary>
         /// Drugged
         /// </summary>
-        Drugged = 23,
+        Drugged,
 
         /// <summary>
         /// Dizzy
         /// </summary>
-        Dizzy = 24,
+        Dizzy,
 
         /// <summary>
         /// Psychotic
         /// </summary>
-        Psychotic = 25,
+        Psychotic,
 
         /// <summary>
         /// Total number of environments
         /// </summary>
-        Count = 26
+        Count
     }
 }

@@ -13,26 +13,26 @@
         /// <summary>
         /// 32-bit floating-point.
         /// </summary>
-        Float = 0,
+        Float,
 
         /// <summary>
         /// 8-bit integer.
         /// </summary>
-        Bit8 = 1,
+        Bit8,
 
         /// <summary>
         /// 16-bit integer.
         /// </summary>
-        Bit16 = 2,
+        Bit16,
 
         /// <summary>
         /// 24-bit integer.
         /// </summary>
-        Bit24 = 3,
+        Bit24,
 
         /// <summary>
         /// 32-bit integer.
         /// </summary>
-        Bit32 = 4
+        Bit32
     }
 }

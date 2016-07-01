@@ -14,77 +14,77 @@ namespace ManagedBass.Asio
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		DisableTimeCodeRead = 2,
+		DisableTimeCodeRead,
 
 		/// <summary>
 		/// ASIOInputMonitor* in params
 		/// </summary>
-		SetInputMonitor = 3,
+		SetInputMonitor,
 
 		/// <summary>
 		/// ASIOTransportParameters* in params
 		/// </summary>
-		Transport = 4,
+		Transport,
 
 		/// <summary>
 		/// ASIOChannelControls* in params, apply gain
 		/// </summary>
-		SetInputGain = 5,
+		SetInputGain,
 
 		/// <summary>
 		/// ASIOChannelControls* in params, fill meter
 		/// </summary>
-		GetInputMeter = 6,
+		GetInputMeter,
 
 		/// <summary>
 		/// ASIOChannelControls* in params, apply gain
 		/// </summary>
-		SetOutputGain = 7,
+		SetOutputGain,
 
 		/// <summary>
 		/// ASIOChannelControls* in params, fill meter
 		/// </summary>
-		GetOutputMeter = 8,
+		GetOutputMete,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanInputMonitor = 9,
+		CanInputMonitor,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanTimeInfo = 10,
+		CanTimeInfo,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanTimeCode = 11,
+		CanTimeCode,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanTransport = 12,
+		CanTransport,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanInputGain = 13,
+		CanInputGain,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanInputMeter = 14,
+		CanInputMeter,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanOutputGain = 15,
+		CanOutputGain,
 
 		/// <summary>
 		/// No arguments
 		/// </summary>
-		CanOutputMeter = 16,
+		CanOutputMeter,
 
 		/// <summary>
 		/// DSD support: ASIOIoFormat * in params

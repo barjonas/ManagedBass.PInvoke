@@ -11,7 +11,7 @@ namespace ManagedBass
     /// </summary>
     public static class Extensions
     {
-        internal static ReferenceHolder ChannelReferences = new ReferenceHolder();
+        internal static readonly ReferenceHolder ChannelReferences = new ReferenceHolder();
         
         /// <summary>
         /// Clips a value between a Minimum and a Maximum.

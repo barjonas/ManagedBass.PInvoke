@@ -8,66 +8,66 @@
         /// <summary>
         /// SHOUTcast v2 Cacheable Metadata (Content Info Metadata).
         /// </summary>
-        XmlContent = 12288,
+        XmlContent = 0x3000,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Metadata (Url Metadata).
         /// </summary>
-        XmlUrl = 12289,
+        XmlUrl = 0x3001,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Metadata (Aol Radio format).
         /// </summary>
-        XmlAol = 14593,
+        XmlAol = 0x3901,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Metadata (SHOUTcast 2.0 format).
         /// </summary>
-        XmlShoutcast = 14594,
+        XmlShoutcast = 0x3902,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Station logo image/jpeg).
         /// </summary>
-        BinStationLogoJpg = 16384,
+        BinStationLogoJpg = 0x4000,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Station logo image/png).
         /// </summary>
-        BinStationLogoPng = 16385,
+        BinStationLogoPng = 0x4001,
         
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Station logo image/bmp).
         /// </summary>
-        BinStationLogoBmp = 16386,
+        BinStationLogoBmp = 0x4002,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Station logo image/gif).
         /// </summary>
-        BinStationLogoGif = 16387,
+        BinStationLogoGif = 0x4003,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Album art image/jpeg).
         /// </summary>
-        BinAlbumArtJpg = 16640,
+        BinAlbumArtJpg = 0x4100,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Album art image/png).
         /// </summary>
-        BinAlbumArtPng = 16641,
+        BinAlbumArtPng = 0x4101,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Album art image/bmp).
         /// </summary>
-        BinAlbumArtBmp = 16642,
+        BinAlbumArtBmp = 0x4102,
 
         /// <summary>
         /// SHOUTcast v2 Cacheable Binary Metadata (Album art image/gif).
         /// </summary>
-        BinAlbumArtGif = 16643,
+        BinAlbumArtGif = 0x4103,
 
         /// <summary>
         /// SHOUTcast v2 Pass-through Metadata (Time Remaining).
         /// </summary>
-        XmlTimeRemaining = 20481
+        XmlTimeRemaining = 0x5001
     }
 }

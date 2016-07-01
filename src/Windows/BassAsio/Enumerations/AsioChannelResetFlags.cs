@@ -11,31 +11,31 @@ namespace ManagedBass.Asio
         /// <summary>
         /// Disable Channel
         /// </summary>
-        Enable = 1,
+        Enable = 0x1,
 
         /// <summary>
         /// Unjoin Channel
         /// </summary>
-        Join = 2,
+        Join = 0x2,
 
         /// <summary>
         /// Unpause Channel
         /// </summary>
-        Pause = 4,
+        Pause = 0x4,
 
         /// <summary>
         /// Reset sample format to native format
         /// </summary>
-        Format = 8,
+        Format = 0x8,
 
         /// <summary>
         /// Reset sample rate to device rate
         /// </summary>
-        Rate = 16,
+        Rate = 0x10,
 
         /// <summary>
         /// Reset Volume to 1.0
         /// </summary>
-        Volume = 32
+        Volume = 0x20
     }
 }

@@ -11,21 +11,21 @@ namespace ManagedBass
         /// <summary>
         /// Retrieves mono levels
         /// </summary>
-        All = 0,
+        All,
 
         /// <summary>
         /// Retrieves mono levels
         /// </summary>
-        Mono = 1,
+        Mono = 0x1,
 
         /// <summary>
         /// Retrieves stereo levels
         /// </summary>
-        Stereo = 2,
+        Stereo = 0x2,
 
         /// <summary>
         /// Optional Flag: If set it returns RMS levels instead of peak leavels
         /// </summary>
-        RMS = 4
+        RMS = 0x4
     }
 }

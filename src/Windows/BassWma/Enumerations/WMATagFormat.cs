@@ -10,22 +10,22 @@ namespace ManagedBass.Wma
         /// <summary>
         /// ANSI strings.
         /// </summary>
-        Ansi = 0,
+        Ansi,
 
         /// <summary>
         /// Unicode (UTF-16) strings (recommended to be used with .Net).
         /// </summary>
-        Unicode = 1,
+        Unicode,
         
         /// <summary>
         /// UTF-8 strings.
         /// </summary>
-        Utf8 = 2,
+        Utf8,
         
         /// <summary>
         /// Write a binary tag.
         /// <para>The length of the binary data is given in the high word.</para>
         /// </summary>
-        Binary = 256
+        Binary = 0x100
     }
 }

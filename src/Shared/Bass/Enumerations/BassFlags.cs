@@ -14,23 +14,23 @@ namespace ManagedBass
         /// <summary>
         /// 0 = default create stream: 16 Bit, stereo, no Float, hardware mixing, no Loop, no 3D, no speaker assignments...
         /// </summary>
-        Default = 0,
+        Default,
 
         /// <summary>
         /// Use 8-bit resolution. If neither this or the <see cref="Float"/> flags are specified, then the stream is 16-bit.
         /// </summary>
-        Byte = 1,
+        Byte = 0x1,
 
         /// <summary>
         /// Decode/play the stream (MP3/MP2/MP1 only) in mono, reducing the CPU usage (if it was originally stereo).
         /// This flag is automatically applied if <see cref="DeviceInitFlags.Mono"/> was specified when calling <see cref="Bass.Init"/>.
         /// </summary>
-        Mono = 2,
+        Mono = 0x2,
 
         /// <summary>
         /// Loop the file. This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>.
         /// </summary>
-        Loop = 4,
+        Loop = 0x4,
 
         /// <summary>
         /// Use 3D functionality.
@@ -38,27 +38,27 @@ namespace ManagedBass
         /// 3D streams must be mono (chans=1).
         /// The Speaker flags can not be used together with this flag.
         /// </summary>
-        Bass3D = 8,
+        Bass3D = 0x8,
 
 #if WINDOWS
         /// <summary>
         /// Force the stream to not use hardware mixing.
         /// </summary>
-        SoftwareMixing = 16,
+        SoftwareMixing = 0x10,
 
         /// <summary>
         /// Enable the old implementation of DirectX 8 effects.
         /// Use <see cref="Bass.ChannelSetFX"/> to add effects to the stream.
         /// Requires DirectX 8 or above.
         /// </summary>
-        FX = 128,
+        FX = 0x80,
 #endif
         
         /// <summary>
         /// Use 32-bit floating-point sample data (see Floating-Point Channels for details).
         /// WDM drivers or the <see cref="Decode"/> flag are required to use this flag.
         /// </summary>
-        Float = 256,
+        Float = 0x100,
 
         /// <summary>
         /// Enable pin-point accurate seeking (to the exact byte) on the MP3/MP2/MP1 stream or MOD music.
@@ -121,33 +121,33 @@ namespace ManagedBass
         /// <summary>
         /// BassFx add-on: If in use, then you can do other stuff while detection's in process.
         /// </summary>
-        FxBpmBackground = 1,
+        FxBpmBackground = 0x1,
 
         /// <summary>
         /// BassFx add-on: If in use, then will auto multiply bpm by 2 (if BPM &lt; MinBPM*2)
         /// </summary>
-        FXBpmMult2 = 2,
+        FXBpmMult2 = 0x2,
 
         /// <summary>
         /// BassFx add-on (<see cref="BassFx.TempoCreate"/>): Uses a linear interpolation mode (simple).
         /// </summary>
-        FxTempoAlgorithmLinear = 512,
+        FxTempoAlgorithmLinear = 0x200,
 
         /// <summary>
         /// BassFx add-on (<see cref="BassFx.TempoCreate"/>): Uses a cubic interpolation mode (recommended, default).
         /// </summary>
-        FxTempoAlgorithmCubic = 1024,
+        FxTempoAlgorithmCubic = 0x400,
 
         /// <summary>
         /// BassFx add-on (<see cref="BassFx.TempoCreate"/>):
         /// Uses a 8-tap band-limited Shannon interpolation (complex, but not much better than cubic).
         /// </summary>
-        FxTempoAlgorithmShannon = 2048,
+        FxTempoAlgorithmShannon = 0x800,
 
         /// <summary>
         /// BassFx add-on: Free the source Handle as well?
         /// </summary>
-        FxFreeSource = 65536,
+        FxFreeSource = 0x10000,
         #endregion
 
         #region BassMidi
@@ -156,42 +156,42 @@ namespace ManagedBass
         /// If this flag is used then the sample format (mono 16-bit)
         /// must be passed to the encoder some other way, eg. via the command-line.
         /// </summary>
-        MidiNoHeader = 1,
+        MidiNoHeader = 0x1,
 
         /// <summary>
         /// BASSMIDI add-on: Reduce 24-bit sample data to 16-bit before encoding.
         /// </summary>
-        Midi16Bit = 2,
+        Midi16Bit = 0x2,
 
         /// <summary>
         /// BASSMIDI add-on: Ignore system reset events (<see cref="MidiEventType.System"/>) when the system mode is unchanged.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>.
         /// </summary>
-        MidiNoSystemReset = 2048,
+        MidiNoSystemReset = 0x800,
 
         /// <summary>
         /// BASSMIDI add-on: Let the sound decay naturally (including reverb) instead of stopping it abruptly at the end of the file.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/> methods.
         /// </summary>
-        MidiDecayEnd = 4096,
+        MidiDecayEnd = 0x1000,
 
         /// <summary>
         /// BASSMIDI add-on: Disable the MIDI reverb/chorus processing.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>.
         /// </summary>
-        MidiNoFx = 8192,
+        MidiNoFx = 0x2000,
 
         /// <summary>
         /// BASSMIDI add-on: Let the old sound decay naturally (including reverb) when changing the position, including looping.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>, and can also be used in <see cref="Bass.ChannelSetPosition"/>
         /// calls to have it apply to particular position changes.
         /// </summary>
-        MidiDecaySeek = 16384,
+        MidiDecaySeek = 0x4000,
 
         /// <summary>
         /// BASSMIDI add-on: Do not remove empty space (containing no events) from the end of the file.
         /// </summary>
-        MidiNoCrop = 32768,
+        MidiNoCrop = 0x8000,
 
         /// <summary>
         /// BASSMIDI add-on: Only release the oldest instance upon a note off event (<see cref="MidiEventType.Note"/> with velocity=0)
@@ -199,7 +199,7 @@ namespace ManagedBass
         /// Otherwise all instances are released.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>.
         /// </summary>
-        MidiNoteOff1 = 65536,
+        MidiNoteOff1 = 0x10000,
 
         /// <summary>
         /// BASSMIDI add-on: Map the file into memory.
@@ -207,7 +207,7 @@ namespace ManagedBass
         /// it needs to be decoded.
         /// This flag is also ignored if the file is too large to be mapped into memory.
         /// </summary>
-        MidiFontMemoryMap = 131072,
+        MidiFontMemoryMap = 0x20000,
 
         /// <summary>
         /// Use bank 127 in the soundfont for XG drum kits.
@@ -310,12 +310,12 @@ namespace ManagedBass
         /// <summary>
         /// Sample: muted at max distance (3D only)
         /// </summary>
-        MuteMax = 32,
+        MuteMax = 0x20,
 
         /// <summary>
         /// Sample: uses the DX7 voice allocation and management
         /// </summary>
-        VAM = 64,
+        VAM = 0x40,
 
         /// <summary>
         /// Sample: override lowest volume
@@ -340,14 +340,14 @@ namespace ManagedBass
         /// This flag can not be used with the <see cref="Float"/> flag,
         /// and is ignored if the <see cref="Decode"/> flag is not used.
         /// </summary>
-        CDSubChannel = 512,
+        CDSubChannel = 0x200,
 
         /// <summary>
         /// BASSCD add-on: Read sub-channel data, without using any hardware de-interleaving.
         /// This is identical to the <see cref="CDSubChannel"/> flag, except that the
         /// de-interleaving is always performed by BASSCD even if the drive is apparently capable of de-interleaving itself.
         /// </summary>
-        CDSubchannelNoHW = 1024,
+        CDSubchannelNoHW = 0x400,
 
         /// <summary>
         /// BASSCD add-on: Include C2 error info.
@@ -359,64 +359,64 @@ namespace ManagedBass
         /// The final byte is just padding.
         /// Note that if you request both sub-channel data and C2 error info, the C2 info will come before the sub-channel data!
         /// </summary>
-        CdC2Errors = 2048,
+        CdC2Errors = 0x800,
         #endregion
 
         #region BassMix
         /// <summary>
         /// BASSmix add-on: only read buffered data.
         /// </summary>
-        SplitSlave = 4096,
+        SplitSlave = 0x1000,
 
         /// <summary>
         /// BASSmix add-on: resume a stalled mixer immediately upon new/unpaused source
         /// </summary>
-        MixerResume = 4096,
+        MixerResume = 0x1000,
 
         /// <summary>
         /// BASSmix add-on: enable <see cref="BassMix.ChannelGetPosition(int,PositionFlags,int)"/> support.
         /// </summary>
-        MixerPositionEx = 8192,
+        MixerPositionEx = 0x2000,
 
         /// <summary>
         /// BASSmix add-on: Buffer source data for <see cref="BassMix.ChannelGetData(int,IntPtr,int)"/> and <see cref="BassMix.ChannelGetLevel(int)"/>.
         /// </summary>
-        MixerBuffer = 8192,
+        MixerBuffer = 0x2000,
 
         /// <summary>
         /// BASSmix add-on: Limit mixer processing to the amount available from this source.
         /// </summary>
-        MixerLimit = 16384,
+        MixerLimit = 0x4000,
 
         /// <summary>
         /// BASSmix add-on: end the stream when there are no sources
         /// </summary>
-        MixerEnd = 65536,
+        MixerEnd = 0x10000,
 
         /// <summary>
         /// BASSmix add-on: Matrix mixing
         /// </summary>
-        MixerMatrix = 65536,
+        MixerMatrix = 0x10000,
 
         /// <summary>
         /// BASSmix add-on: don't stall when there are no sources
         /// </summary>
-        MixerNonStop = 131072,
+        MixerNonStop = 0x20000,
 
         /// <summary>
         /// BASSmix add-on: don't process the source
         /// </summary>
-        MixerPause = 131072,
+        MixerPause = 0x20000,
 
         /// <summary>
         /// BASSmix add-on: downmix to stereo (or mono if mixer is mono)
         /// </summary>
-        MixerDownMix = 4194304,
+        MixerDownMix = 0x400000,
 
         /// <summary>
         /// BASSmix add-on: don't ramp-in the start
         /// </summary>
-        MixerNoRampin = 8388608,
+        MixerNoRampin = 0x800000,
         #endregion
 
         #region Recording
@@ -591,7 +591,7 @@ namespace ManagedBass
         /// <summary>
         /// BassAac add-on: use 960 samples per frame
         /// </summary>
-        AacFrame960 = 4096,
+        AacFrame960 = 0x1000,
 
         /// <summary>
         /// BassAac add-on: Downmatrix to Stereo
@@ -603,67 +603,67 @@ namespace ManagedBass
         /// <summary>
         /// BassDSD add-on: Produce DSD-over-PCM data (with 0x05/0xFA markers). DSD-over-PCM data is 24-bit, so the <see cref="Float"/> flag is required.
         /// </summary>
-        DSDOverPCM = 1024,
+        DSDOverPCM = 0x400,
 
         /// <summary>
         /// BassDSD add-on: Produce raw DSD data instead of PCM. The DSD data is in blocks of 8 bits (1 byte) per-channel with the MSB being first/oldest.
         /// DSD data is not playable by BASS, so the <see cref="Decode"/> flag is required.
         /// </summary>
-        DSDRaw = 512,
+        DSDRaw = 0x200,
         #endregion
 
         #region BassAc3
         /// <summary>
         /// BassAC3 add-on: downmix to stereo
         /// </summary>
-        Ac3DownmixStereo = 512,
+        Ac3DownmixStereo = 0x200,
 
         /// <summary>
         /// BASS_AC3 add-on: downmix to quad
         /// </summary>
-        Ac3DownmixQuad = 1024,
+        Ac3DownmixQuad = 0x400,
 
         /// <summary>
         /// BASS_AC3 add-on: downmix to dolby
         /// </summary>
-        Ac3DownmixDolby = 1536,
+        Ac3DownmixDolby = 0x600,
 
         /// <summary>
         /// BASS_AC3 add-on: enable dynamic range compression
         /// </summary>
-        Ac3DRC = 2048,
+        Ac3DRC = 0x800,
         #endregion
 
         #region BassDShow
         /// <summary>
         /// DSHOW add-on: Use this flag to disable audio processing.
         /// </summary>
-        DShowNoAudioProcessing = 524288,
+        DShowNoAudioProcessing = 0x80000,
 
         /// <summary>
         /// DSHOW add-on: Use this flag to enable mixing video on a channel.
         /// </summary>
-        DShowStreamMix = 16777216,
+        DShowStreamMix = 0x1000000,
 
         /// <summary>
         /// DSHOW add-on: Use this flag to enable auto dvd functions(on mouse down, keys etc).
         /// </summary>
-        DShowAutoDVD = 67108864,
+        DShowAutoDVD = 0x4000000,
 
         /// <summary>
         /// DSHOW add-on: Use this flag to restart the stream when it's finished.
         /// </summary>
-        DShowLoop = 134217728,
+        DShowLoop = 0x8000000,
 
         /// <summary>
         /// DSHOW add-on: Use this to enable video processing.
         /// </summary>
-        DShowVideoProcessing = 131072,
+        DShowVideoProcessing = 0x20000,
         #endregion
 
         /// <summary>
         /// BassWV add-on: Limit to stereo
         /// </summary>
-        WVStereo = 4194304
+        WVStereo = 0x400000
     }
 }

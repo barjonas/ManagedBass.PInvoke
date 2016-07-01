@@ -12,87 +12,87 @@ namespace ManagedBass.Cd
         /// <summary>
         /// The drive can read CD-R media.
         /// </summary>
-        CDR = 1,
+        CDR = 0x1,
         
         /// <summary>
         /// The drive can read CD-RW media.
         /// </summary>
-        CDRW = 2,
+        CDRW = 0x2,
         
         /// <summary>
         /// The drive can read CD-R/RW media where the addressing Type is "method 2".
         /// </summary>
-        CDRW2 = 4,
+        CDRW2 = 0x4,
         
         /// <summary>
         /// The drive can read DVD-ROM media.
         /// </summary>
-        DVD = 8,
+        DVD = 0x8,
         
         /// <summary>
         /// The drive can read DVD-R media.
         /// </summary>
-        DVDR = 16,
+        DVDR = 0x10,
         
         /// <summary>
         /// The drive can read DVD-RAM media.
         /// </summary>
-        DVDRAM = 32,
+        DVDRAM = 0x20,
         
         /// <summary>
         /// The drive is capable of analog playback.
         /// </summary>
-        Analog = 65536,
+        Analog = 0x10000,
         
         /// <summary>
         /// The drive can read in "mode 2 form 1" format.
         /// </summary>
-        M2F1 = 1048576,
+        M2F1 = 0x100000,
         
         /// <summary>
         /// The drive can read in "mode 2 form 2" format.
         /// </summary>
-        M2F2 = 2097152,
+        M2F2 = 0x200000,
         
         /// <summary>
         /// The drive can read multi-session discs.
         /// </summary>
-        MultiSession = 4194304,
+        MultiSession = 0x400000,
         
         /// <summary>
         /// The drive can read CD audio.
         /// </summary>
-        CDDA = 16777216,
+        CDDA = 0x1000000,
         
         /// <summary>
         /// The drive supports "stream is accurate".
         /// </summary>
-        CDDASIA = 33554432,
+        CDDASIA = 0x2000000,
         
         /// <summary>
         /// The drive can read sub-channel data.
         /// </summary>
-        SubChannel = 67108864,
+        SubChannel = 0x4000000,
         
         /// <summary>
         /// The drive can read sub-channel data, and de-interleave it.
         /// </summary>
-        SubChannelDeInterleave = 134217728,
+        SubChannelDeInterleave = 0x8000000,
         
         /// <summary>
         /// The drive can provide C2 error info.
         /// </summary>
-        C2 = 268435456,
+        C2 = 0x10000000,
         
         /// <summary>
         /// The drive can read ISRC numbers.
         /// </summary>
-        ISRC = 536870912,
+        ISRC = 0x20000000,
         
         /// <summary>
         /// The drive can read UPC numbers.
         /// </summary>
-        UPC = 1073741824
+        UPC = 0x40000000
     }
 }
 #endif

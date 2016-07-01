@@ -21,16 +21,16 @@ namespace ManagedBass.Wasapi
         /// <summary>
         /// Linear curve.
         /// </summary>
-        LinearCurve = 1,
+        LinearCurve = 0x1,
 
         /// <summary>
         /// Windows' hybrid curve.
         /// </summary>
-        WindowsHybridCurve = 2,
+        WindowsHybridCurve = 0x2,
 
         /// <summary>
         /// Use the session volume.
         /// </summary>
-        Session = 8
+        Session = 0x8
     }
 }

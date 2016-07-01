@@ -8,56 +8,56 @@
         /// <summary>
         /// A network device.
         /// </summary>
-        NetworkDevice = 0,
+        NetworkDevice,
         
         /// <summary>
         /// A speakers device.
         /// </summary>
-        Speakers = 1,
+        Speakers,
         
         /// <summary>
         /// A line level device.
         /// </summary>
-        LineLevel = 2,
+        LineLevel,
         
         /// <summary>
         /// A headphone device.
         /// </summary>
-        Headphones = 3,
+        Headphones,
         
         /// <summary>
         /// A microphone device.
         /// </summary>
-        Microphone = 4,
+        Microphone,
         
         /// <summary>
         /// A headset device.
         /// </summary>
-        Headset = 5,
+        Headset,
         
         /// <summary>
         /// A handset device.
         /// </summary>
-        Handset = 6,
+        Handset,
         
         /// <summary>
         /// A digital device.
         /// </summary>
-        Digital = 7,
+        Digital,
         
         /// <summary>
         /// A S/PDIF device.
         /// </summary>
-        SPDIF = 8,
+        SPDIF,
         
         /// <summary>
         /// A HDMI device.
         /// </summary>
-        HDMI = 9,
+        HDMI,
         
         /// <summary>
         /// An unknown device.
         /// </summary>
-        Unknown = 10
+        Unknown
     }
 }

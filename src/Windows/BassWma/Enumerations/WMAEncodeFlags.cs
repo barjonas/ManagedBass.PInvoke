@@ -27,54 +27,54 @@ namespace ManagedBass.Wma
 		/// <summary>
 		/// 8 bit sample data.
 		/// </summary>
-		Byte = 1,
+		Byte = 0x1,
 
 		/// <summary>
 		/// 32-bit floating-point sample data.
 		/// </summary>
-		Float = 256,
+		Float = 0x100,
 
 		/// <summary>
 		/// Standard WMA encoding.
 		/// </summary>
-		Standard = 8192,
+		Standard = 0x2000,
 
 		/// <summary>
 		/// WMA Professional encoding.
 		/// </summary>
-		Professional = 16384,
+		Professional = 0x4000,
 
 		/// <summary>
 		///  Enable 24-bit encoding.
 		/// </summary>
-		Encode24Bit = 32768,
+		Encode24Bit = 0x8000,
 
 		/// <summary>
 		/// Save uncompressed PCM data.
 		/// <para>When the sample data is floating-point (BASS_SAMPLE_FLOAT flag is used), the BASS_WMA_ENCODE_24BIT flag is considered; 24-bit data is written with it and 16-bit without. The "bitrate" parameter is ignored, except that it should be non-0.</para>
 		/// </summary>
-		PCM = 65536,
+		PCM = 0x10000,
 
 		/// <summary>
 		/// GetRates: get available VBR quality settings.
 		/// </summary>
-		RatesVBR = 65536,
+		RatesVBR = 0x10000,
 
 		/// <summary>
 		/// Enable the specification of tags mid-stream (after encoding has begun).
 		/// </summary>
-		Script = 131072,
+		Script = 0x20000,
 
 		/// <summary>
 		/// Queue data to feed encoder asynchronously
 		/// </summary>
-		Queue = 262144,
+		Queue = 0x40000,
 
         /// <summary>
         /// Use a BASS channel as source (provided in Frequency parameter).
         /// Channels parameter is ignored.
         /// If the BASSenc add-on is loaded, then the <see cref="BassEnc.DSPPriority" /> setting is used to determine where in the channel's DSP chain the encoding is performed, otherwise priority -1000 is used.
         /// </summary>
-        Source = 524288
+        Source = 0x80000
     }
 }

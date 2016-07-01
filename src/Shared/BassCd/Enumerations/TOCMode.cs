@@ -12,12 +12,12 @@ namespace ManagedBass.Cd
         /// <summary>
         /// Get the track start address in LBA form.
         /// </summary>
-        LBA = 0,
+        LBA,
 
         /// <summary>
         /// Get the track start address in time form (hour, minute, second, frame).
         /// </summary>
-        Time = 256,
+        Time = 0x100,
         
         /// <summary>
         /// + track#, Get the position of indexes (instead of tracks)
@@ -25,7 +25,7 @@ namespace ManagedBass.Cd
         /// and the 'track' member of the <see cref="TOCTrack"/> structure is also an index number and the "lba" or "hmsf" member 
         /// (depending on whether "<see cref="Time"/>" is used) is an offset from the start of the track</para>
         /// </summary>
-        Index = 512
+        Index = 0x200
     }
 }
 #endif

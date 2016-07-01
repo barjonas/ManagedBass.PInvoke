@@ -13,31 +13,31 @@
         /// <summary>
         /// 16-bit integer.
         /// </summary>
-        Bit16 = 16,
+        Bit16 = 0x10,
 
         /// <summary>
         /// 24-bit integer.
         /// </summary>
-        Bit24 = 17,
+        Bit24,
 
         /// <summary>
         /// 32-bit integer.
         /// </summary>
-        Bit32 = 18,
+        Bit32,
 
         /// <summary>
         /// 32-bit floating-point.
         /// </summary>
-        Float = 19,
+        Float,
 
         /// <summary>
         /// DSD (LSB 1st)
         /// </summary>
-        DSD_LSB = 32,
+        DSD_LSB = 0x20,
 
         /// <summary>
         /// DSD (MSB 1st)
         /// </summary>
-        DSD_MSB = 33
+        DSD_MSB
     }
 }

@@ -9,6 +9,43 @@ namespace ManagedBass
     public enum DataFlags : uint
     {
         /// <summary>
+        /// Query how much data is buffered
+        /// </summary>
+        Available,
+
+        /// <summary>
+        /// FFT flag: FFT for each channel, else all combined
+        /// </summary>
+        FFTIndividual = 0x10,
+
+        /// <summary>
+        /// FFT flag: no Hanning window
+        /// </summary>
+        FFTNoWindow = 0x20,
+
+        /// <summary>
+        /// FFT flag: pre-remove DC bias
+        /// </summary>
+        FFTRemoveDC = 0x40,
+
+        /// <summary>
+        /// FFT flag: return complex data
+        /// </summary>
+        FFTComplex = 0x80,
+
+#if __ANDROID__
+        /// <summary>
+        /// flag: return 8.24 fixed-point data
+        /// </summary>
+        Fixed = 0x20000000,
+#endif
+
+        /// <summary>
+        /// flag: return floating-point sample data
+        /// </summary>
+        Float = 0x40000000,
+
+        /// <summary>
         /// 256 sample FFT (returns 128 floating-point values)
         /// </summary>
         FFT256 = 0x80000000,
@@ -46,43 +83,6 @@ namespace ManagedBass
         /// <summary>
         /// 32768 FFT
         /// </summary>
-        FFT32768 = 0x80000007,
-
-        /// <summary>
-        /// Query how much data is buffered
-        /// </summary>
-        Available = 0,
-
-        /// <summary>
-        /// FFT flag: FFT for each channel, else all combined
-        /// </summary>
-        FFTIndividual = 16,
-
-        /// <summary>
-        /// FFT flag: no Hanning window
-        /// </summary>
-        FFTNoWindow = 32,
-
-        /// <summary>
-        /// FFT flag: pre-remove DC bias
-        /// </summary>
-        FFTRemoveDC = 64,
-
-        /// <summary>
-        /// FFT flag: return complex data
-        /// </summary>
-        FFTComplex = 128,
-
-#if __ANDROID__
-        /// <summary>
-        /// flag: return 8.24 fixed-point data
-        /// </summary>
-        Fixed = 0x20000000,
-#endif
-
-        /// <summary>
-        /// flag: return floating-point sample data
-        /// </summary>
-        Float = 0x40000000
+        FFT32768 = 0x80000007
     }
 }

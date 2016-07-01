@@ -12,22 +12,22 @@ namespace ManagedBass.Cd
         /// <summary>
         /// No flag defined.
         /// </summary>
-        None = 0,
+        None,
 
         /// <summary>
         /// Pre-emphasis of 50/15 µs.
         /// </summary>
-        PreEmphasis = 1,
+        PreEmphasis = 0x1,
 
         /// <summary>
         /// Digital copy permitted.
         /// </summary>
-        DigitalCopyPermitted = 2,
+        DigitalCopyPermitted = 0x2,
 
         /// <summary>
         /// Data track.
         /// </summary>
-        DataTrack = 4
+        DataTrack = 0x4
     }
 }
 #endif

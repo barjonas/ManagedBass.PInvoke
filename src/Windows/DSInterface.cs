@@ -13,6 +13,6 @@
         /// <summary>
         /// Retrieve the IDirectSound3DListener interface.
         /// </summary>
-        IDirectSound3DListener = 2
+        IDirectSound3DListener
     }
 }

@@ -33,7 +33,7 @@ namespace ManagedBass
         /// <para><b>Platform-specific</b></para>
         /// <para>On Windows, the sample rate will get rounded down to a whole number during playback.</para>
         /// </summary>
-        Frequency = 1,
+        Frequency = 0x1,
 
         /// <summary>
         /// The volume level of a channel... 0 (silent) to 1 (full).
@@ -49,7 +49,7 @@ namespace ManagedBass
         /// to slide this attribute, a negative volume value can be used to fade-out and then stop the channel.
         /// </para>
         /// </summary>
-        Volume = 2,
+        Volume = 0x2,
 
         /// <summary>
         /// The panning/balance position of a channel... -1 (Full Left) to +1 (Full Right), 0 = Centre.
@@ -72,7 +72,7 @@ namespace ManagedBass
         /// Balance control could be implemented via a <see cref="DSPProcedure"/> instead
         /// </para>
         /// </summary>
-        Pan = 3,
+        Pan = 0x3,
 
         /// <summary>
         /// The wet (reverb) / dry (no reverb) mix ratio... 0 (full dry) to 1 (full wet), -1 = automatically calculate the mix based on the distance (the default).
@@ -89,7 +89,7 @@ namespace ManagedBass
         /// EAX is only supported on Windows.
         /// </para>
         /// </summary>
-        EaxMix = 4,
+        EaxMix = 0x4,
 
         /// <summary>
         /// Non-Windows: Disable playback buffering?... 0 = no, else yes..
@@ -114,7 +114,7 @@ namespace ManagedBass
         /// <para>If switched on, any already buffered data will still be played, so that there is no break in sound.</para>
         /// <para>This attribute is not available on Windows, as BASS does not generate the final mix.</para>
         /// </summary>
-        NoBuffer = 5,
+        NoBuffer = 0x5,
 
         /// <summary>
         /// The CPU usage of a channel. (in percentage).
@@ -139,7 +139,7 @@ namespace ManagedBass
         /// </para>
         /// <para>This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int, ChannelAttribute, float)"/>.</para>
         /// </summary>
-        CPUUsage = 7,
+        CPUUsage = 0x7,
 
         /// <summary>
         /// The sample rate conversion quality of a channel
@@ -174,7 +174,7 @@ namespace ManagedBass
         /// <para><b>Platform-specific</b></para>
         /// <para>On Windows, sample rate conversion is handled by Windows or the output device/driver rather than BASS, so this setting has no effect on playback there.</para>
         /// </summary>
-        SampleRateConversion = 8,
+        SampleRateConversion = 0x8,
 
         /// <summary>
         /// The download Buffer level required to resume stalled playback in percent... 0 - 100 (the default is 50%).
@@ -184,12 +184,12 @@ namespace ManagedBass
         /// It also applies to 'buffered' User file streams created with <see cref="Bass.CreateStream(StreamSystem,BassFlags,FileProcedures,IntPtr)"/>.
         /// </para>
         /// </summary>
-        NetworkResumeBufferLevel = 9,
+        NetworkResumeBufferLevel = 0x9,
 
         /// <summary>
         /// The scanned info of a channel.
         /// </summary>
-        ScannedInfo = 10,
+        ScannedInfo = 0xa,
 
         #region MOD Music
         /// <summary>
@@ -207,7 +207,7 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicAmplify = 256,
+        MusicAmplify = 0x100,
 
         /// <summary>
         /// The pan separation level of a MOD music... 0 (min) to 100 (max), 50 = linear.
@@ -218,7 +218,7 @@ namespace ManagedBass
         /// To use the Amiga panning (ie. full left and right) set it to 100.
         /// </para>
         /// </summary>
-        MusicPanSeparation = 257,
+        MusicPanSeparation = 0x101,
 
         /// <summary>
         /// The position scaler of a MOD music... 1 (min) to 256 (max).
@@ -229,7 +229,7 @@ namespace ManagedBass
         /// The default scaler is 1.
         /// </para>
         /// </summary>
-        MusicPositionScaler = 258,
+        MusicPositionScaler = 0x102,
 
         /// <summary>
         /// The BPM of a MOD music... 1 (min) to 255 (max).
@@ -241,7 +241,7 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicBPM = 259,
+        MusicBPM = 0x103,
 
         /// <summary>
         /// The speed of a MOD music... 0 (min) to 255 (max).
@@ -255,7 +255,7 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicSpeed = 260,
+        MusicSpeed = 0x104,
 
         /// <summary>
         /// The global volume level of a MOD music... 0 (min) to 64 (max, 128 for IT format).
@@ -269,7 +269,7 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicVolumeGlobal = 261,
+        MusicVolumeGlobal = 0x105,
 
         /// <summary>
         /// The number of active channels in a MOD music.
@@ -280,7 +280,7 @@ namespace ManagedBass
         /// This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)"/>.
         /// </para>
         /// </summary>
-        MusicActiveChannelCount = 262,
+        MusicActiveChannelCount = 0x106,
 
         /// <summary>
         /// The volume level... 0 (silent) to 1 (full) of a channel in a MOD music + channel#.
@@ -294,7 +294,7 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicVolumeChannel = 512,
+        MusicVolumeChannel = 0x200,
 
         /// <summary>
         /// The volume level... 0 (silent) to 1 (full) of an instrument in a MOD music + inst#.
@@ -309,72 +309,72 @@ namespace ManagedBass
         /// To reduce the delay, use the <see cref="Bass.PlaybackBufferLength"/> config option to reduce the Buffer Length.
         /// </para>
         /// </summary>
-        MusicVolumeInstrument = 768,
+        MusicVolumeInstrument = 0x300,
         #endregion
 
         #region BassFx
         /// <summary>
         /// BassFx Tempo: The Tempo in percents (-95%..0..+5000%).
         /// </summary>
-        Tempo = 65536,
+        Tempo = 0x10000,
 
         /// <summary>
         /// BassFx Tempo: The Pitch in semitones (-60..0..+60).
         /// </summary>
-        Pitch = 65537,
+        Pitch = 0x10001,
 
         /// <summary>
         /// BassFx Tempo: The Samplerate in Hz, but calculates by the same % as <see cref="Tempo"/>.
         /// </summary>
-        TempoFrequency = 65538,
+        TempoFrequency = 0x10002,
 
         /// <summary>
         /// BassFx Tempo Option: Use FIR low-pass (anti-alias) filter (gain speed, lose quality)? true=1 (default), false=0.
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// <para>On iOS, Android, WinCE and Linux ARM platforms this is by default disabled for lower CPU usage.</para>
         /// </summary>
-        TempoUseAAFilter = 65552,
+        TempoUseAAFilter = 0x10010,
 
         /// <summary>
         /// BassFx Tempo Option: FIR low-pass (anti-alias) filter Length in taps (8 .. 128 taps, default = 32, should be %4).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoAAFilterLength = 65553,
+        TempoAAFilterLength = 0x10011,
 
         /// <summary>
         /// BassFx Tempo Option: Use quicker tempo change algorithm (gain speed, lose quality)? true=1, false=0 (default).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoUseQuickAlgorithm = 65554,
+        TempoUseQuickAlgorithm = 0x10012,
 
         /// <summary>
         /// BassFx Tempo Option: Tempo Sequence in milliseconds (default = 82).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoSequenceMilliseconds = 65555,
+        TempoSequenceMilliseconds = 0x10013,
 
         /// <summary>
         /// BassFx Tempo Option: SeekWindow in milliseconds (default = 14).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoSeekWindowMilliseconds = 65556,
+        TempoSeekWindowMilliseconds = 0x10014,
 
         /// <summary>
         /// BassFx Tempo Option: Tempo Overlap in milliseconds (default = 12).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoOverlapMilliseconds = 65557,
+        TempoOverlapMilliseconds = 0x10015,
 
         /// <summary>
         /// BassFx Tempo Option: Prevents clicks with tempo changes (default = FALSE).
         /// <para>See <see cref="BassFx.TempoCreate"/> for details.</para>
         /// </summary>
-        TempoPreventClick = 65558,
+        TempoPreventClick = 0x10016,
 
         /// <summary>
         /// Playback direction (-1 = Reverse or 1 = Forward).
         /// </summary>
-        ReverseDirection = 69632,
+        ReverseDirection = 0x11000,
         #endregion
 
         #region BassMidi
@@ -386,7 +386,7 @@ namespace ManagedBass
         /// It is read-only, so can't be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)"/>.
         /// </para>
         /// </summary>
-        MidiPPQN = 73728,
+        MidiPPQN = 0x12000,
 
         /// <summary>
         /// BASSMIDI: The maximum percentage of CPU time that a MIDI stream can use... 0 to 100, 0 = unlimited.
@@ -402,7 +402,7 @@ namespace ManagedBass
         /// By default, a MIDI stream will have no CPU limit.
         /// </para>
         /// </summary>
-        MidiCPU = 73729,
+        MidiCPU = 0x12001,
 
         /// <summary>
         /// BASSMIDI: The number of MIDI channels in a MIDI stream... 1 (min) - 128 (max).
@@ -412,7 +412,7 @@ namespace ManagedBass
         /// Any notes playing on a removed channel are immediately stopped.
         /// </para>
         /// </summary>
-        MidiChannels = 73730,
+        MidiChannels = 0x12002,
 
         /// <summary>
         /// BASSMIDI: The maximum number of samples to play at a time (polyphony) in a MIDI stream... 1 (min) - 1000 (max).
@@ -422,13 +422,13 @@ namespace ManagedBass
         /// A MIDI stream will initially have a default number of voices as determined by the Voices config option.
         /// </para>
         /// </summary>
-        MidiVoices = 73731,
+        MidiVoices = 0x12003,
 
         /// <summary>
         /// BASSMIDI: The number of samples (voices) currently playing in a MIDI stream.
         /// <para>This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)"/>.</para>
         /// </summary>
-        MidiVoicesActive = 73732,
+        MidiVoicesActive = 0x12004,
 
         /// <summary>
         /// BASSMIDI: The volume level (0.0=silent, 1.0=normal/default) of a track in a MIDI file stream + track#.
@@ -442,7 +442,7 @@ namespace ManagedBass
         /// MIDI streams created via <see cref="BassMidi.CreateStream(int,BassFlags,int)"/> do not have any tracks.
         /// </para>
         /// </summary>
-        MidiTrackVolume = 73984,
+        MidiTrackVolume = 0x12100,
         #endregion
 
         /// <summary>
@@ -453,7 +453,7 @@ namespace ManagedBass
         /// This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" />.
         /// </para>
         /// </summary>
-        OpusOriginalFrequency = 77824,
+        OpusOriginalFrequency = 0x13000,
 
         /// <summary>
         /// BassDSD: The gain (in decibels) applied when converting to PCM.
@@ -462,23 +462,23 @@ namespace ManagedBass
         /// This attribute is only applicable when converting to PCM, and is unavailable when producing DSD-over-PCM or raw DSD data.
         /// The default setting is determined by the <see cref="DSDGain" /> config option
         /// </remarks>
-        DSDGain = 81920,
+        DSDGain = 0x14000,
 
         /// <summary>
         /// BassDSD: The DSD sample rate.
         /// </summary>
         /// <remarks>This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" />.
         /// </remarks>
-        DSDRate = 81921,
+        DSDRate = 0x14001,
 
         /// <summary>
         /// The average bitrate of a file stream. 
         /// </summary>
-        Bitrate = 12,
+        Bitrate = 0xc,
 
         /// <summary>
         /// Disable playback ramping? 
         /// </summary>
-        NoRamp = 11
+        NoRamp = 0xb
     }
 }

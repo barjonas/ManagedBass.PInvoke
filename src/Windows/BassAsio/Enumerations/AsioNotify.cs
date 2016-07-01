@@ -16,6 +16,6 @@
         /// for example, following a change of the default Buffer size.
         /// This request can be ignored, but if a reinitialization is performed, it should not be done within the callback.
         /// </summary>
-        Reset = 2
+        Reset
     }
 }

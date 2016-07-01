@@ -9,41 +9,41 @@ namespace ManagedBass.Wasapi
         /// Unknown flags. 
         /// e.g. the WASAPI device is not present.
         /// </summary>
-        Unknown = 0,
+        Unknown,
 
         /// <summary>
         /// The WASAPI device is enabled (active).
         /// </summary>
-        Enabled = 1,
+        Enabled = 0x1,
 
         /// <summary>
         /// The WASAPI device is the default device.
         /// </summary>
-        Default = 2,
+        Default = 0x2,
 
         /// <summary>
         /// The WASAPI device is initialized.
         /// </summary>
-        Initialized = 4,
+        Initialized = 0x4,
 
         /// <summary>
         /// The WASAPI device is a loopback device.
         /// </summary>
-        Loopback = 8,
+        Loopback = 0x8,
 
         /// <summary>
         /// The WASAPI device is an Input (capture) device.
         /// </summary>
-        Input = 16,
+        Input = 0x10,
 
         /// <summary>
         /// The WASAPI device is unplugged.
         /// </summary>
-        Unplugged = 32,
+        Unplugged = 0x20,
 
         /// <summary>
         /// The WASAPI device is disabled.
         /// </summary>
-        Disabled = 64
+        Disabled = 0x40
     }
 }

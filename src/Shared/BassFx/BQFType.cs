@@ -8,46 +8,46 @@
         /// <summary>
         /// BiQuad Lowpass filter.
         /// </summary>
-        LowPass = 0,
+        LowPass,
         
         /// <summary>
         /// BiQuad Highpass filter.
         /// </summary>
-        HighPass = 1,
+        HighPass,
         
         /// <summary>
         /// BiQuad Bandpass filter (constant 0 dB peak gain).
         /// </summary>
-        BandPass = 2,
+        BandPass,
         
         /// <summary>
         /// BiQuad Bandpass Q filter (constant skirt gain, peak gain = Q).
         /// </summary>
-        BandPassQ = 3,
+        BandPassQ,
         
         /// <summary>
         /// BiQuad Notch filter.
         /// </summary>
-        Notch = 4,
+        Notch,
         
         /// <summary>
         /// BiQuad All-Pass filter.
         /// </summary>
-        AllPass = 5,
+        AllPass,
         
         /// <summary>
         /// BiQuad Peaking EQ filter.
         /// </summary>
-        PeakingEQ = 6,
+        PeakingEQ,
         
         /// <summary>
         /// BiQuad Low-Shelf filter.
         /// </summary>
-        LowShelf = 7,
+        LowShelf,
         
         /// <summary>
         /// BiQuad High-Shelf filter.
         /// </summary>
-        HighShelf = 8
+        HighShelf
     }
 }

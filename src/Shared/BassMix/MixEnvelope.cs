@@ -32,6 +32,6 @@ namespace ManagedBass.Mix
         /// <summary>
         /// Loop the envelope (flag).
         /// </summary>
-        Loop = 65536
+        Loop = 0x10000
     }
 }

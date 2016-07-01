@@ -21,21 +21,21 @@ namespace ManagedBass.Enc
         /// <summary>
         /// Use the format as default selection.
         /// </summary>
-        Default = 1,
+        Default = 0x1,
 
         /// <summary>
         /// Only list formats with same sample rate as the source channel.
         /// </summary>
-        SameSampleRate = 2,
+        SameSampleRate = 0x2,
 
         /// <summary>
         /// Only list formats with same number of channels (eg. mono/stereo).
         /// </summary>
-        SameChannels = 4,
+        SameChannels = 0x4,
 
         /// <summary>
         /// Suggest a format (HIWORD=format tag - use one of the WAVEFormatTag flags).
         /// </summary>
-        Suggest = 8
+        Suggest = 0x8
     }
 }

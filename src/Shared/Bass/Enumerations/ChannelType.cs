@@ -11,190 +11,191 @@ namespace ManagedBass
         /// <summary>
         /// Unknown channel format.
         /// </summary>
-        Unknown = 0,
+        Unknown,
 
         /// <summary>
         /// Sample channel. (HCHANNEL)
         /// </summary>
-        Sample = 1,
+        Sample = 0x1,
 
         /// <summary>
         /// Recording channel. (HRECORD)
         /// </summary>
-        Recording = 2,
+        Recording = 0x2,
 
         /// <summary>
         /// MO3 format music.
         /// </summary>
-        MO3 = 256,
+        MO3 = 0x100,
 
+        #region HStream
         /// <summary>
         /// User sample stream.
         /// This can also be used as a flag to test if the channel is any kind of HSTREAM.
         /// </summary>
-        Stream = 65536,
+        Stream = 0x10000,
 
         /// <summary>
         /// OGG format stream.
         /// </summary>
-        OGG = 65538,
+        OGG = 0x10002,
 
         /// <summary>
         /// MP1 format stream.
         /// </summary>
-        MP1 = 65539,
+        MP1 = 0x10003,
 
         /// <summary>
         /// MP2 format stream.
         /// </summary>
-        MP2 = 65540,
+        MP2 = 0x10004,
 
         /// <summary>
         /// MP3 format stream.
         /// </summary>
-        MP3 = 65541,
+        MP3 = 0x10005,
 
         /// <summary>
         /// WAV format stream.
         /// </summary>
-        AIFF = 65542,
+        AIFF = 0x10006,
 
 #if __IOS__ || __MAC__
         /// <summary>
         /// CoreAudio codec stream. Additional information is avaliable via the <see cref="TagType.CoreAudioCodec"/> tag.
         /// </summary>
-        CA = 65543,
+        CA = 0x10007,
 #endif
 
         /// <summary>
         /// Media Foundation codec stream. Additional information is avaliable via the <see cref="TagType.MF"/> tag.
         /// </summary>
-        MF = 65544,
+        MF = 0x10008,
 
         /// <summary>
         /// Audio-CD, CDA
         /// </summary>
-        CD = 66048,
+        CD = 0x10200,
 
         /// <summary>
         /// WMA format stream.
         /// </summary>
-        WMA = 66304,
+        WMA = 0x10300,
 
         /// <summary>
         /// MP3 over WMA format stream.
         /// </summary>
-        WMA_MP3 = 66305,
+        WMA_MP3 = 0x10301,
 
         /// <summary>
         /// Winamp Input format stream.
         /// </summary>
-        WINAMP = 66560,
+        WINAMP = 0x10400,
 
         /// <summary>
         /// WavPack Lossless format stream.
         /// </summary>
-        WV = 66816,
+        WV = 0x10500,
 
         /// <summary>
         /// WavPack Hybrid Lossless format stream.
         /// </summary>
-        WV_H = 66817,
+        WV_H = 0x10501,
 
         /// <summary>
         /// WavPack Lossy format stream.
         /// </summary>
-        WV_L = 66818,
+        WV_L = 0x10502,
 
         /// <summary>
         /// WavPack Hybrid Lossy format stream.
         /// </summary>
-        WV_LH = 66819,
+        WV_LH = 0x10503,
 
         /// <summary>
         /// Optimfrog format stream.
         /// </summary>
-        OFR = 67072,
+        OFR = 0x10600,
 
         /// <summary>
         /// APE format stream.
         /// </summary>
-        APE = 67328,
+        APE = 0x10700,
 
         /// <summary>
         /// BassMix mixer stream.
         /// </summary>
-        Mixer = 67584,
+        Mixer = 0x10800,
 
         /// <summary>
         /// BassMix splitter stream.
         /// </summary>
-        Split = 67585,
+        Split = 0x10801,
 
         /// <summary>
         /// FLAC format stream.
         /// </summary>
-        FLAC = 67840,
+        FLAC = 0x10900,
 
         /// <summary>
         /// FLAC OGG format stream.
         /// </summary>
-        FLAC_OGG = 67841,
+        FLAC_OGG = 0x10901,
 
         /// <summary>
         /// MPC format stream.
         /// </summary>
-        MPC = 68096,
+        MPC = 0x10a00,
 
         /// <summary>
         /// AAC format stream.
         /// </summary>
-        AAC = 68352,
+        AAC = 0x10b00,
 
         /// <summary>
         /// MP4 format stream.
         /// </summary>
-        MP4 = 68353,
+        MP4 = 0x10b01,
 
         /// <summary>
         /// Speex format stream.
         /// </summary>
-        SPX = 68608,
+        SPX = 0x10c00,
 
         /// <summary>
         /// MIDI sound format stream.
         /// </summary>
-        MIDI = 68864,
+        MIDI = 0x10d00,
 
         /// <summary>
         /// Apple Lossless (ALAC) format stream.
         /// </summary>
-        ALAC = 69120,
+        ALAC = 0x10e00,
 
         /// <summary>
         /// TTA format stream.
         /// </summary>
-        TTA = 69376,
+        TTA = 0x10f00,
 
         /// <summary>
         /// AC3 format stream.
         /// </summary>
-        AC3 = 69632,
+        AC3 = 0x11000,
 
         /// <summary>
         /// Video format stream.
         /// </summary>
-        Video = 69888,
+        Video = 0x11100,
 
         /// <summary>
         /// Opus format stream.
         /// </summary>
-        OPUS = 70144,
+        OPUS = 0x11200,
 
         /// <summary>
         /// Direct Stream Digital (DSD) format stream.
         /// </summary>
-        DSD = 71424,
+        DSD = 0x11700,
 
         /// <summary>
         /// ADX format stream.
@@ -203,63 +204,66 @@ namespace ManagedBass
         /// by CRI Middleware specifically for use in video games, it is derived from ADPCM.
         /// </para>
         /// </summary>
-        ADX = 126976,
+        ADX = 0x1f000,
 
         /// <summary>
         /// AIX format stream.
         /// Only for ADX of all versions (with AIXP support).
         /// </summary>
-        AIX = 126977,
+        AIX = 0x1f001,
 
         /// <summary>
         /// BassFx tempo stream.
         /// </summary>
-        Tempo = 127488,
+        Tempo = 0x1f200,
 
         /// <summary>
         /// BassFx reverse stream.
         /// </summary>
-        Reverse = 127489,
+        Reverse = 0x1f201,
+        #endregion
 
+        #region HMusic
         /// <summary>
         /// MOD format music.
         /// This can also be used as a flag to test if the channel is any kind of HMusic.
         /// </summary>
-        MOD = 131072,
+        MOD = 0x20000,
 
         /// <summary>
         /// MTM format music.
         /// </summary>
-        MTM = 131073,
+        MTM = 0x20001,
 
         /// <summary>
         /// S3M format music.
         /// </summary>
-        S3M = 131074,
+        S3M = 0x20002,
 
         /// <summary>
         /// XM format music.
         /// </summary>
-        XM = 131075,
+        XM = 0x20003,
 
         /// <summary>
         /// IT format music.
         /// </summary>
-        IT = 131076,
+        IT = 0x20004,
+        #endregion
 
         /// <summary>
         /// Wave format stream, LoWord = codec.
         /// </summary>
-        Wave = 262144,
+        Wave = 0x40000,
 
         /// <summary>
         /// Wave format stream, PCM 16-bit.
         /// </summary>
-        WavePCM = 327681,
+        WavePCM = 0x50001,
 
         /// <summary>
         /// Wave format stream, Float 32-bit.
         /// </summary>
-        WaveFloat = 327683
+        WaveFloat = 0x50003
     }
 }

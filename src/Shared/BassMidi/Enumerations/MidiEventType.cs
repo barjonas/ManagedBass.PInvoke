@@ -379,14 +379,14 @@
         /// Set the level.
         /// param : the level (0=silent, 100=0dB, 200=+6dB).
         /// </summary>
-        Level = 65536,
+        Level = 0x10000,
 
         /// <summary>
         /// Transpose all notes. 
         /// Changes take effect from the next note played, and affect melodic channels only (not drum channels).
         /// param : transposition amount in semitones (0=-100, 100=normal, 200=+100).
         /// </summary>
-        Transpose = 65537,
+        Transpose = 0x10001,
 
         /// <summary>
         /// Set the system mode, resetting everything to the system's defaults. 
@@ -395,16 +395,16 @@
         /// via the <see cref="ChannelAttribute.MidiChannels"/> attribute, while this does.
         /// param : system mode (see <see cref="MidiSystem"/>).
         /// </summary>
-        SystemEx = 65538,
+        SystemEx = 0x10002,
 
         /// <summary>
         /// Used with <see cref="BassMidi.CreateStream(MidiEvent[],int,BassFlags,int)"/> to mark the end of a track (the next event will be in a new track).
         /// </summary>
-        EndTrack = 65539,
+        EndTrack = 0x10003,
 
         /// <summary>
         /// Flag: no running status.
         /// </summary>
-        NoRunningStatus = 33554432
+        NoRunningStatus = 0x2000000
     }
 }

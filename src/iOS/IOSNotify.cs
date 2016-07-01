@@ -13,6 +13,6 @@
         /// <summary>
         /// iOS Audio Session Interruption Ended.
         /// </summary>
-        InterruptEnd = 2
+        InterruptEnd
     }
 }

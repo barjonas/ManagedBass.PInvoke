@@ -12,18 +12,18 @@ namespace ManagedBass
         /// Allow other audio to mix with app's audio (default).
         /// Enables kAudioSessionProperty_OverrideCategoryMixWithOthers.
         /// </summary>
-        MixWithOthers = 1,
+        MixWithOthers = 0x1,
 
         /// <summary>
         /// Also 'duck' the other audio.
         /// Enables kAudioSessionProperty_OtherMixableAudioShouldDuck.
         /// </summary>
-        OtherMixableAudioShouldDuck = 2,
+        OtherMixableAudioShouldDuck = 0x2,
 
         /// <summary>
         /// Use the 'ambient' category.
         /// Enables kAudioSessionCategory_SoloAmbientSound/AmbientSound instead of kAudioSessionCategory_MediaPlayback.
         /// </summary>
-        AmbientSound = 4
+        AmbientSound = 0x4
     }
 }

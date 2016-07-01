@@ -11,7 +11,7 @@ namespace ManagedBass.Midi
         /// <summary>
         /// An array of <see cref="MidiEvent" /> structures (Default).
         /// </summary>
-        Struct = 0,
+        Struct,
 
         /// <summary>
         /// Raw MIDI event data, as would be sent to a MIDI device. 
