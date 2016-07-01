@@ -622,18 +622,19 @@ namespace ManagedBass.Mix
         /// <exception cref="Errors.NotAvailable">The channel is not using matrix mixing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetMatrix")]
         public static extern bool ChannelSetMatrix(int Handle, float[,] Matrix);
-        
-		/// <summary>
-		/// Fades to a channel's mixing matrix, if it has one.
-		/// </summary>
-		/// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" /> beforehand).</param>
-		/// <param name="Matrix">The 2-dimensional array (float[,]) of the new mixing matrix.</param>
-		/// <param name="Time">A period (in seconds) for the channel's current matrix to smoothly transition to the specified (new) matrix.</param>
-		/// <returns>If successful, a <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// This method is identical to <see cref="ChannelSetMatrix(int, float[,])" /> except for the additional <paramref name="Time" /> parameter.
-		/// <para>Note that <see cref="ChannelGetMatrix(int, float[,])" /> will always return the final matrix (that was passed to this function), not a mid-transition matrix.</para>
-		/// </remarks>
+
+        /// <summary>
+        /// Sets a channel's mixing matrix, transitioning from the current matrix.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" /> beforehand).</param>
+        /// <param name="Matrix">The 2-dimensional array (float[,]) of the new mixing matrix.</param>
+        /// <param name="Time">The time to take (in seconds) to transition from the current matrix to the specified matrix.</param>
+        /// <returns>If successful, a <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// This method is identical to <see cref="ChannelSetMatrix(int, float[,])" /> but with the option of transitioning over time to the specified matrix.
+        /// If this function or <see cref="ChannelSetMatrix(int,float[,])"/> is called while a previous matrix transition is still in progress, then that transition will be stopped.
+        /// If <see cref="ChannelGetMatrix"/> is called mid-transition, it will give the mid-transition matrix values.
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
         /// <exception cref="Errors.NotAvailable">The channel is not using matrix mixing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelSetMatrixEx")]

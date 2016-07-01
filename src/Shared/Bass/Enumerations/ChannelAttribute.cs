@@ -467,9 +467,18 @@ namespace ManagedBass
         /// <summary>
         /// BassDSD: The DSD sample rate.
         /// </summary>
-        /// <remarks>This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" />.
-        /// </remarks>
+        /// <remarks>This attribute is read-only, so cannot be modified via <see cref="Bass.ChannelSetAttribute(int,ChannelAttribute,float)" />.</remarks>
         DSDRate = 0x14001,
+
+        /// <summary>
+        /// BassMix: Custom output latency in seconds... default = 0 (no accounting for latency). Changes take immediate effect.
+        /// </summary>
+        /// <remarks>
+        /// When a mixer is played by BASS, the <see cref="BassMix.ChannelGetData(int,IntPtr,int)"/>, <see cref="BassMix.ChannelGetLevel(int)"/>, <see cref="BassMix.ChannelGetLevel(int,float[],float,LevelRetrievalFlags)"/>, and <see cref="BassMix.ChannelGetPosition(int,PositionFlags)"/> functions will get the output latency and account for that so that they reflect what is currently being heard, but that cannot be done when a different output system is used, eg. ASIO or WASAPI.
+        /// In that case, this attribute can be used to tell the mixer what the output latency is, so that those functions can still account for it.
+        /// The mixer needs to have the <see cref="BassFlags.Decode"/> and <see cref="BassFlags.MixerPositionEx"/> flags set to use this attribute. 
+        /// </remarks>
+        MixerLatency = 0x15000,
 
         /// <summary>
         /// The average bitrate of a file stream. 
