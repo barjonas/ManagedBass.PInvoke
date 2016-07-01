@@ -51,6 +51,8 @@
     <Compile Include="BassAsio\Structures\AsioInfo.cs" />
     <Compile Include="BassAsio\Structures\AsioInputMonitor.cs" />
     <Compile Include="BassAsio\Structures\AsioIOFormat.cs" />
+    <Compile Include="BassAsio\Enumerations\AsioIOFormatType.cs" />
+    <Compile Include="BassAsio\Enumerations\AsioTransportCommand.cs" />
     <Compile Include="BassAsio\Structures\AsioTransportParameters.cs" />
     <Compile Include="BassEnc\ACMFormatFlags.cs" />
     <Compile Include="BassEnc\BassEnc.cs" />

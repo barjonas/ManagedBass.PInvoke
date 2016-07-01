@@ -234,7 +234,15 @@ namespace ManagedBass
         /// param : Optional limit the sync to a certain envelope Type (one of the BASSMIXEnvelope values).
         /// data : Will contain the envelope Type in the LOWORD and the current node number in the HIWORD.
         /// </summary>
-        MixerEnvelopeNode = 0x10201
+        MixerEnvelopeNode = 0x10201,
         #endregion
+
+        /// <summary>
+        /// Sync when a new segment begins downloading.
+        /// Mixtime only.
+        /// param: not used.
+        /// data: not used.
+        /// </summary>
+        HlsSegement = 0x10300
     }
 }

@@ -202,7 +202,12 @@ namespace ManagedBass
         /// <summary>
         /// + index, DSDIFF comment : A pointer to the DSDIFF comment tag structure.
         /// </summary>
-        DSDComment = 0x13100
+        DSDComment = 0x13100,
         #endregion
+
+        /// <summary>
+        /// Segment's EXTINF tag: UTF-8 string.
+        /// </summary>
+        HlsExtInf = 0x14000
     }
 }

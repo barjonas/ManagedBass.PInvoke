@@ -18,25 +18,4 @@ namespace ManagedBass.Asio
 		/// </summary>
         public string Future = string.Empty;
 	}
-
-    /// <summary>
-    /// Asio IO Format type to be used with <see cref="AsioIOFormat.FormatType"/>.
-    /// </summary>
-    public enum AsioIOFormatType
-    {
-        /// <summary>
-        /// Invalid.
-        /// </summary>
-        Invalid = -1,
-
-        /// <summary>
-        /// PCM.
-        /// </summary>
-        PCM = 0,
-
-        /// <summary>
-        /// DSD.
-        /// </summary>
-        DSD = 1
-    }
 }
