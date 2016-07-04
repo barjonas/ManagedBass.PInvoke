@@ -457,7 +457,7 @@ namespace ManagedBass.Cd
 		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
 		/// <remarks>
 		/// This function can be used to compensate for the fact that most drives will read audio data from CDs at a slight offset from where they ideally should.
-		/// Different drive models will have differing offsets, a list of which can be found at <a href="www.accuraterip.com/driveoffsets.htm">AccurateRip</a>.
+		/// Different drive models will have differing offsets.
 		/// <para>
         /// When a negative offset is used, reading the beginning of the first track will require accessing the lead-in, and when a positive offset is used, reading the end of the last track will require accessing the lead-out.
 		/// The drive may not support that (overreading), in which case those parts will be replaced with silence.

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>ManagedBass.PInvoke</id>
-        <version>0.1.0</version>
+        <version>0.3.1</version>
         <title>ManagedBass.PInvoke</title>
         <authors>MathewSachin</authors>
         <licenseUrl>https://raw.githubusercontent.com/ManagedBass/ManagedBass.PInvoke/master/LICENSE.md</licenseUrl>

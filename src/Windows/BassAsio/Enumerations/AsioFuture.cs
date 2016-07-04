@@ -44,7 +44,7 @@ namespace ManagedBass.Asio
 		/// <summary>
 		/// ASIOChannelControls* in params, fill meter
 		/// </summary>
-		GetOutputMete,
+		GetOutputMeter,
 
 		/// <summary>
 		/// No arguments

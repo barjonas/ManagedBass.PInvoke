@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace ManagedBass
 {
+    // TODO: Airplay should be available on OSX not iOS
     public static partial class Bass
     {
         static readonly IOSNotifyProcedure iosnproc = status => _iosnotify?.Invoke(status);

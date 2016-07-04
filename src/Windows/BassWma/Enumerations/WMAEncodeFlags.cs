@@ -49,11 +49,15 @@ namespace ManagedBass.Wma
 		/// </summary>
 		Encode24Bit = 0x8000,
 
-		/// <summary>
-		/// Save uncompressed PCM data.
-		/// <para>When the sample data is floating-point (BASS_SAMPLE_FLOAT flag is used), the BASS_WMA_ENCODE_24BIT flag is considered; 24-bit data is written with it and 16-bit without. The "bitrate" parameter is ignored, except that it should be non-0.</para>
-		/// </summary>
-		PCM = 0x10000,
+        /// <summary>
+        /// Save uncompressed PCM data.
+        /// </summary>
+        /// <remarks>
+        /// When the sample data is floating-point (<see cref="Float"/> flag is used), the <see cref="Encode24Bit"/> flag is considered;
+        /// 24-bit data is written with it and 16-bit without.
+        /// The "bitrate" parameter is ignored, except that it should be non-0.
+        /// </remarks>
+        PCM = 0x10000,
 
 		/// <summary>
 		/// GetRates: get available VBR quality settings.
