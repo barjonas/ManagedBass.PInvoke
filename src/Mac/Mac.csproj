@@ -38,6 +38,7 @@
     <Compile Include="..\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Bass.cs" />
     <Compile Include="DynamicLibrary.cs" />
   </ItemGroup>
   <Import Project="..\Shared\PInvoke.projitems" Label="Shared" />
