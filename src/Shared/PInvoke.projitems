@@ -21,7 +21,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)BassDsd\BassDsd.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassDsd\DSDComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassDsd\DSDCommentType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\BassEnc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncodeClientProcedure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncodeNotifyProcedure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Delegates\EncodeProcedure.cs" />
@@ -33,6 +32,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeNotifyStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeStats.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\Encoding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\Cast.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\BassEnc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassFx\BassFx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassFx\BQFType.cs" />
