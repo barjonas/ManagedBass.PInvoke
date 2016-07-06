@@ -1,7 +1,7 @@
 ﻿namespace ManagedBass.Wasapi
 {
     /// <summary>
-    /// BassWasapi sample formats to be used with <see cref="WasapiInfo" /> and <see cref="BassWasapi.GetInfo" />.
+    /// BassWasapi Notification type to be used with <see cref="BassWasapi.SetNotify"/>.
     /// </summary>
     public enum WasapiNotificationType
     {

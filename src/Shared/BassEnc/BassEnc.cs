@@ -96,9 +96,9 @@ namespace ManagedBass.Enc
                 Marshal.FreeHGlobal(castProxy);
             }
         }
-#endregion
+        #endregion
 
-#region Encoding
+        #region Encoding
         /// <summary>
         /// Sends a RIFF chunk to an encoder.
         /// </summary>
@@ -593,7 +593,7 @@ namespace ManagedBass.Enc
         [DllImport(DllName, EntryPoint = "BASS_Encode_StopEx")]
         public static extern bool EncodeStop(int Handle, bool Queue);
 
-#region Encode Write
+        #region Encode Write
         /// <summary>
         /// Sends sample data to the encoder.
         /// </summary>
@@ -678,12 +678,27 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.Ended">The encoder has died.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_Write")]
         public static extern bool EncodeWrite(int Handle, float[] Buffer, int Length);
-#endregion
-#endregion
+        #endregion
+        #endregion
 
-#region Casting
+        #region Casting
         [DllImport(DllName)]
         static extern IntPtr BASS_Encode_CastGetStats(int handle, EncodeStats type, [In] string pass);
+
+        /// <summary>
+        /// Mime type for Mp3.
+        /// </summary>
+        public const string MimeMp3 = "audio/mpeg";
+
+        /// <summary>
+        /// Mime type for Ogg.
+        /// </summary>
+        public const string MimeOgg = "application/ogg";
+
+        /// <summary>
+        /// Mime type for Aac.
+        /// </summary>
+        public const string MimeAac = "audio/aacp";
 
         /// <summary>
         /// Retrieves stats from the Shoutcast or Icecast server.
@@ -712,7 +727,7 @@ namespace ManagedBass.Enc
         /// <param name="Password">The server password. A username can be included in the form of "username:password" when connecting to an Icecast or Shoutcast 2 server.</param>
         /// <param name="Content">
         /// The MIME type of the encoder output.
-        /// <para>'audio/mpeg' for Mp3, 'application/ogg' for Ogg and 'audio/aacp' for Aac.</para>
+        /// <para><see cref="MimeMp3"/>, <see cref="MimeOgg"/> or <see cref="MimeAac"/>.</para>
         /// </param>
         /// <param name="Name">The stream name... <see langword="null" /> = no name.</param>
         /// <param name="Url">The URL, for example, of the radio station's webpage... <see langword="null" /> = no URL.</param>
@@ -834,9 +849,9 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_CastSetTitle")]
         public static extern bool CastSetTitle(int Handle, byte[] Title, byte[] Url);
-#endregion
+        #endregion
 
-#region Server
+        #region Server
         /// <summary>
         /// Initializes a server to send an encoder's output to connecting clients.
         /// </summary>
@@ -904,6 +919,6 @@ namespace ManagedBass.Enc
         /// <exception cref="Errors.NotAvailable">No matching clients were found.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Encode_ServerKick")]
         public static extern int ServerKick(int Handle, string Client = "");
-#endregion
+        #endregion
     }
 }

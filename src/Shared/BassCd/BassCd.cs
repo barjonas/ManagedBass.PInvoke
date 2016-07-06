@@ -13,6 +13,10 @@ namespace ManagedBass.Cd
     /// </remarks>
     public static partial class BassCd
     {
+        /// <summary>
+        /// Track Pregap constant
+        /// </summary>
+        public const int TrackPregap = 0xFFFF;
         static IntPtr _cddbServer;
         
         /// <summary>
@@ -201,12 +205,11 @@ namespace ManagedBass.Cd
         }
 
         #region CreateStream
-        // TODO: Define BASS_CD_TRACK_PREGAP
 		/// <summary>
 		/// Creates a sample stream from an audio CD track.
 		/// </summary>
 		/// <param name="Drive">The drive... 0 = the first drive.</param>
-		/// <param name="Track">The track... 0 = the first track, BASS_CD_TRACK_PREGAP = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
+		/// <param name="Track">The track... 0 = the first track, <see cref="TrackPregap"/> = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
 		/// <param name="Flags">A combination of <see cref="BassFlags"/></param>
 		/// <returns>If successful, the new stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
 		/// <remarks>
@@ -250,7 +253,7 @@ namespace ManagedBass.Cd
         /// Creates a sample stream from an audio CD track, optionally providing a callback function to receive sub-channel data and/or C2 error info.
         /// </summary>
         /// <param name="Drive">The drive... 0 = the first drive.</param>
-        /// <param name="Track">The track... 0 = the first track, BASS_CD_TRACK_PREGAP = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
+        /// <param name="Track">The track... 0 = the first track, <see cref="TrackPregap"/> = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
         /// <param name="Flags">A combination of <see cref="BassFlags"/>.</param>
         /// <param name="Procedure">A callback function to receive sub-channel data and C2 error info... <see langword="null" /> = no callback. If a callback function is provided, sub-channel data and C2 error info will be delivered to it rather than being inserted amongst the sample data.</param>
         /// <param name="User">User instance data to pass to the callback function.</param>
@@ -382,7 +385,7 @@ namespace ManagedBass.Cd
         /// Changes the track of a CD stream.
         /// </summary>
         /// <param name="Handle">The CD stream handle.</param>
-        /// <param name="Track">The new track... 0 = the first track, BASS_CD_TRACK_PREGAP = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
+        /// <param name="Track">The new track... 0 = the first track, <see cref="TrackPregap"/> = 1st track pregap (not all drives support reading of the 1st track pregap).</param>
         /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <remarks>
         /// The stream's current position is set to the start of the new track.
