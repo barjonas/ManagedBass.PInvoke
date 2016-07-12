@@ -5,7 +5,7 @@
 [assembly: AssemblyProduct("ManagedBass.PInvoke")]
 [assembly: AssemblyCopyright("(c) 2016 Mathew Sachin")]
 
-[assembly: AssemblyVersion("0.3.1")]
+[assembly: AssemblyVersion("0.3.2")]
 
 [assembly: AssemblyDescription ("Free Open-Source " +
 

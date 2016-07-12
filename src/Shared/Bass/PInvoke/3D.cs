@@ -64,13 +64,6 @@ namespace ManagedBass
         /// <para>As with all 3D functions, use <see cref="Apply3D" /> to apply the changes.</para>
         /// <para>When using multiple devices, the current thread's device setting (as set with <see cref="CurrentDevice" />) determines which device this function call applies to.</para>
         /// </remarks>
-        /// <example>
-        /// Use yards as the distance measurement unit, while leaving the current rolloff and doppler factors untouched.
-        /// <code>
-        /// Bass.Set3DFactors(0.914, -1.0, -1.0);
-        /// Bass.Apply3D();
-        /// </code>
-        /// </example>
         /// <seealso cref="Apply3D"/>
         /// <seealso cref="Get3DFactors"/>
         [DllImport(DllName, EntryPoint = "BASS_Set3DFactors")]

@@ -531,15 +531,6 @@ namespace ManagedBass
         /// <para>Unless an OGG file contains a single bitstream, the number of bitstreams it contains will only be available if it was pre-scanned at the stream's creation.</para>
         /// <para>Retrieving the Length of a MOD music requires that the <see cref="BassFlags.Prescan"/> flag was used in the <see cref="MusicLoad(string,long,int,BassFlags,int)" /> call.</para>
         /// </remarks>
-        /// <example>
-        /// Get the duration (in seconds) of a channel:
-        /// <code>
-        /// // Length in Bytes
-        /// long len = Bass.ChannelGetLength(channel);
-        /// // Length in Seconds
-        /// double s = Bass.ChannelBytes2Seconds(channel, len);
-        /// </code>
-        /// </example>
         [DllImport(DllName, EntryPoint = "BASS_ChannelGetLength")]
         public static extern long ChannelGetLength(int Handle, PositionFlags Mode = PositionFlags.Bytes);
 
@@ -642,6 +633,7 @@ namespace ManagedBass
         /// Checks whether a <see cref="ChannelAttribute"/> is slidable via <see cref="ChannelSlideAttribute"/>.
         /// </summary>
         /// <param name="Attribute">The attribute to check</param>
+        [Obsolete("See the online API documentation for knowing about Slidable attributes.")]
         public static bool IsSlidableAttribute(ChannelAttribute Attribute)
         {
             switch (Attribute)
