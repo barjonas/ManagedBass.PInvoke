@@ -237,7 +237,7 @@ namespace ManagedBass
         /// Music: Use "sensitive" ramping.
         /// This flag can be toggled at any time using <see cref="Bass.ChannelFlags"/>.
         /// </summary>
-        MuicSensitiveRamping = 0x400,
+        MusicSensitiveRamping = 0x400,
 
         /// <summary>
         /// Music: Apply XMPlay's surround sound to the music (ignored in mono).
