@@ -18,11 +18,13 @@ namespace ManagedBass.Cd
         /// </summary>
         public const int TrackPregap = 0xFFFF;
         static IntPtr _cddbServer;
-        
+
+#if WINDOWS
         /// <summary>
         /// Gets the <see cref="Plugin"/> instance for <see cref="BassCd"/>.
         /// </summary>
         public static readonly Plugin Plugin = new Plugin(DllName);
+#endif
 
         /// <summary>
         /// Gets the number of CD Drives available.
