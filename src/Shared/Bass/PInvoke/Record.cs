@@ -111,19 +111,21 @@ namespace ManagedBass
         /// Starts recording.
         /// </summary>
         /// <param name="Frequency">The sample rate to record at.</param>
-        /// <param name="chans">The number of channels... 1 = mono, 2 = stereo.</param>
-        /// <param name="flags">Any combination of <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Float"/> and <see cref="BassFlags.RecordPause"/>.</param>
-        /// <param name="period">
+        /// <param name="Channels">The number of channels... 1 = mono, 2 = stereo.</param>
+        /// <param name="Flags">Any combination of <see cref="BassFlags.Byte"/>, <see cref="BassFlags.Float"/> and <see cref="BassFlags.RecordPause"/>.</param>
+        /// <param name="Period">
         /// Set the period (in milliseconds) between calls to the callback function (<see cref="RecordProcedure" />).
         /// The minimum period is 5ms, the maximum the maximum is half the <see cref="RecordingBufferLength"/> setting.
         /// If the period specified is outside this range, it is automatically capped. The default is 100ms.
         /// </param>
-        /// <param name="proc">The user defined function to receive the recorded sample data... can be <see langword="null" /> if you do not wish to use a callback.</param>
-        /// <param name="user">User instance data to pass to the callback function.</param>
+        /// <param name="Procedure">The user defined function to receive the recorded sample data... can be <see langword="null" /> if you do not wish to use a callback.</param>
+        /// <param name="User">User instance data to pass to the callback function.</param>
         /// <returns>If successful, the new recording's handle is returned, else <see langword="false" /> is returned. Use <see cref="LastError"/> to get the error code.</returns>
-        public static int RecordStart(int Frequency, int chans, BassFlags flags, int period, RecordProcedure proc, IntPtr user)
+        /// <exception cref="Errors.Memory">There is insufficient memory.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        public static int RecordStart(int Frequency, int Channels, BassFlags Flags, int Period, RecordProcedure Procedure, IntPtr User = default(IntPtr))
         {
-            return RecordStart(Frequency, chans, (BassFlags)BitHelper.MakeLong((short)flags, (short)period), proc, user);
+            return RecordStart(Frequency, Channels, (BassFlags)BitHelper.MakeLong((short)Flags, (short)Period), Procedure, User);
         }
         #endregion
 
