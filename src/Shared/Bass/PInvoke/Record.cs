@@ -121,6 +121,20 @@ namespace ManagedBass
         /// <param name="Procedure">The user defined function to receive the recorded sample data... can be <see langword="null" /> if you do not wish to use a callback.</param>
         /// <param name="User">User instance data to pass to the callback function.</param>
         /// <returns>If successful, the new recording's handle is returned, else <see langword="false" /> is returned. Use <see cref="LastError"/> to get the error code.</returns>
+        /// <exception cref="Errors.Init"><see cref="RecordInit" /> has not been successfully called.</exception>
+        /// <exception cref="Errors.Busy">
+        /// The device is busy.
+        /// An existing recording must be stopped before starting another one.
+        /// Multiple simultaneous recordings can be made from the same device on Windows XP and Vista, but generally not on older Windows.
+        /// </exception>
+        /// <exception cref="Errors.NotAvailable">
+        /// The recording device is not available.
+        /// Another application may already be recording with it, or it could be a half-duplex device and is currently being used for playback.
+        /// </exception>
+        /// <exception cref="Errors.SampleFormat">
+        /// The specified format is not supported.
+        /// If using the <see cref="BassFlags.Float"/> flag, it could be that floating-point recording is not supported.
+        /// </exception>
         /// <exception cref="Errors.Memory">There is insufficient memory.</exception>
         /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         public static int RecordStart(int Frequency, int Channels, BassFlags Flags, int Period, RecordProcedure Procedure, IntPtr User = default(IntPtr))
