@@ -94,32 +94,32 @@ namespace ManagedBass
         [DllImport(DllName, EntryPoint = "BASS_PluginFree")]
         public static extern bool PluginFree(int Handle);
 
-#if __ANDROID__ || WINDOWS || LINUX || __MAC__
+#if WINDOWS || LINUX || __MAC__
         /// <summary>
         /// Loads all BASS add-ons (bass*.dll or libbass*.so or libbass*.dylib) contained in the specified directory.
         /// </summary>
-        /// <param name="directory">The directory in which to search for BASS add-ons.</param>
+        /// <param name="Folder">The directory in which to search for BASS add-ons.</param>
         /// <returns>A Dictionary of filename and plugin handle.</returns>
-        public static Dictionary<string, int> PluginLoadDirectory(string directory)
+        public static Dictionary<string, int> PluginLoadDirectory(string Folder)
         {
             var list = new Dictionary<string, int>();
 
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(Folder))
                 return list;
 
-            string[] Wildcards;
+            string[] wildcards;
 
 #if WINDOWS
-            Wildcards = new[] { "bass*.dll" };
+            wildcards = new[] { "bass*.dll" };
 #elif __ANDROID__ || LINUX
-            Wildcards = new[] { "libbass*.so" };
+            wildcards = new[] { "libbass*.so" };
 #elif __MAC__
-            Wildcards = new[] { "libbass*.dylib" };
+            wildcards = new[] { "libbass*.dylib" };
 #else
-            Wildcards = new[] { "bass*.dll", "libbass*.so", "libbass*.dylib" };
+            wildcards = new[] { "bass*.dll", "libbass*.so", "libbass*.dylib" };
 #endif
 
-            foreach (var libs in Wildcards.Select(wildcard => Directory.GetFiles(directory, wildcard))
+            foreach (var libs in wildcards.Select(wildcard => Directory.GetFiles(Folder, wildcard))
                                           .Where(libs => libs.Length != 0))
             {
                 foreach (var lib in libs)
