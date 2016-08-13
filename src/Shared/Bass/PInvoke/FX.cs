@@ -9,7 +9,7 @@ namespace ManagedBass
         /// Sets the parameters of an effect
         /// </summary>
         /// <param name="Handle">The effect handle</param>
-        /// <param name="param">Pointer to the parameters structure. The structure used depends on the effect type.</param>
+        /// <param name="Parameters">Pointer to the parameters structure. The structure used depends on the effect type.</param>
         /// <returns>
         /// If successful, <see langword="true"/> is returned, else <see langword="false"/> is returned.
         /// Use <see cref="LastError"/> to get the error code.
@@ -18,24 +18,72 @@ namespace ManagedBass
         /// <exception cref="Errors.Parameter">One or more of the parameters are invalid, make sure all the values are within the valid ranges.</exception>
         /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         /// <seealso cref="ChannelSetFX"/>
-        /// <seealso cref="FXGetParameters"/>
+        /// <seealso cref="FXGetParameters(int,IntPtr)"/>
         [DllImport(DllName, EntryPoint = "BASS_FXSetParameters")]
-        public static extern bool FXSetParameters(int Handle, IntPtr param);
+        public static extern bool FXSetParameters(int Handle, IntPtr Parameters);
+
+        /// <summary>
+        /// Sets the parameters of an effect
+        /// </summary>
+        /// <param name="Handle">The effect handle</param>
+        /// <param name="Parameters">The parameters structure. The structure used depends on the effect type.</param>
+        /// <returns>
+        /// If successful, <see langword="true"/> is returned, else <see langword="false"/> is returned.
+        /// Use <see cref="LastError"/> to get the error code.
+        /// </returns>
+        /// <exception cref="Errors.Handle"><paramref name="Handle"/> is not valid.</exception>
+        /// <exception cref="Errors.Parameter">One or more of the parameters are invalid, make sure all the values are within the valid ranges.</exception>
+        /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
+        /// <seealso cref="ChannelSetFX"/>
+        /// <seealso cref="FXGetParameters(int,IntPtr)"/>
+        public static bool FXSetParameters(int Handle, IEffectParameter Parameters)
+        {
+            var gch = GCHandle.Alloc(Parameters);
+
+            var result = FXSetParameters(Handle, gch.AddrOfPinnedObject());
+
+            gch.Free();
+
+            return result;
+        }
 
         /// <summary>
         /// Retrieves the parameters of an effect
         /// </summary>
         /// <param name="Handle">The effect handle</param>
-        /// <param name="param">Pointer to the parameters structure to fill. The structure used depends on the effect type.</param>
+        /// <param name="Parameters">Pointer to the parameters structure to fill. The structure used depends on the effect type.</param>
         /// <returns>
         /// If successful, <see langword="true"/> is returned, else <see langword="false"/> is returned.
         /// Use <see cref="LastError"/> to get the error code.
         /// </returns>
         /// <exception cref="Errors.Handle"><paramref name="Handle"/> is not valid.</exception>
         /// <seealso cref="ChannelSetFX"/>
-        /// <seealso cref="FXSetParameters"/>
+        /// <seealso cref="FXSetParameters(int,IntPtr)"/>
         [DllImport(DllName, EntryPoint = "BASS_FXGetParameters")]
-        public static extern bool FXGetParameters(int Handle, IntPtr param);
+        public static extern bool FXGetParameters(int Handle, IntPtr Parameters);
+
+        /// <summary>
+        /// Retrieves the parameters of an effect
+        /// </summary>
+        /// <param name="Handle">The effect handle</param>
+        /// <param name="Parameters">The parameters structure to fill. The structure used depends on the effect type.</param>
+        /// <returns>
+        /// If successful, <see langword="true"/> is returned, else <see langword="false"/> is returned.
+        /// Use <see cref="LastError"/> to get the error code.
+        /// </returns>
+        /// <exception cref="Errors.Handle"><paramref name="Handle"/> is not valid.</exception>
+        /// <seealso cref="ChannelSetFX"/>
+        /// <seealso cref="FXSetParameters(int,IntPtr)"/>
+        public static bool FXGetParameters(int Handle, IEffectParameter Parameters)
+        {
+            var gch = GCHandle.Alloc(Parameters);
+
+            var result = FXGetParameters(Handle, gch.AddrOfPinnedObject());
+
+            gch.Free();
+
+            return result;
+        }
 
         /// <summary>
         /// Resets the state of an effect or all effects on a channel.
@@ -81,7 +129,7 @@ namespace ManagedBass
         /// <remarks>
         /// <para>
         /// Multiple effects may be used per channel. Use <see cref="ChannelRemoveFX" /> to remove an effect.
-        /// Use <see cref="FXSetParameters" /> to set an effect's parameters.
+        /// Use <see cref="FXSetParameters(int,IntPtr)" /> to set an effect's parameters.
         /// </para>
         /// <para>
         /// Effects can be applied to MOD musics and streams, but not samples.
@@ -100,8 +148,8 @@ namespace ManagedBass
         /// </remarks>
         /// <seealso cref="ChannelLock"/>
         /// <seealso cref="ChannelRemoveFX"/>
-        /// <seealso cref="FXGetParameters"/>
-        /// <seealso cref="FXSetParameters"/>
+        /// <seealso cref="FXGetParameters(int,IntPtr)"/>
+        /// <seealso cref="FXSetParameters(int,IntPtr)"/>
         /// <seealso cref="ChannelSetDSP"/>
         [DllImport(DllName, EntryPoint = "BASS_ChannelSetFX")]
         public static extern int ChannelSetFX(int Handle, EffectType Type, int Priority);

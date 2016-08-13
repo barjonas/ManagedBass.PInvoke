@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>ManagedBass.PInvoke</id>
-        <version>0.3.1</version>
+        <version>0.4.0</version>
         <title>ManagedBass.PInvoke</title>
         <authors>MathewSachin</authors>
         <licenseUrl>https://raw.githubusercontent.com/ManagedBass/ManagedBass.PInvoke/master/LICENSE.md</licenseUrl>
@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>
 ManagedBass PInvoke Library for un4seen BASS.
-This library is built from the core of ManagedBass and in future will be referenced by it.
+This library was built from the core of ManagedBass and now is referenced by it.
         </description>
         <summary>ManagedBass PInvoke Library for un4seen BASS.</summary>
         <releaseNotes>
