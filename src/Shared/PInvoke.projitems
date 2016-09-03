@@ -32,6 +32,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeNotifyStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\Enumerations\EncodeStats.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\BassEnc_Opus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\BassEnc_Ogg.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\Encoding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\Cast.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BassEnc\PInvoke\BassEnc.cs" />
