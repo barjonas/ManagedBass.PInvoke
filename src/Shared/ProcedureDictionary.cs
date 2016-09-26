@@ -17,7 +17,7 @@ namespace ManagedBass
 
         public void Add(int Handle, int SpecificHandle, object proc)
         {
-            var key = new Tuple<int, int>(Handle, SpecificHandle);
+            var key = Tuple.Create(Handle, SpecificHandle);
 
             var contains = _procedures.ContainsKey(key);
 
@@ -44,11 +44,10 @@ namespace ManagedBass
 
         public void Remove<T>(int Handle, int SpecialHandle)
         {
-            var key = Tuple.Create<int, int>(Handle, SpecialHandle);
+            var key = Tuple.Create(Handle, SpecialHandle);
+            
             if (_procedures.ContainsKey(key) && _procedures[key].GetType() == typeof(T))
-            {
                 _procedures.Remove(key);
-            }
         }
 
         void Callback(int Handle, int Channel, int Data, IntPtr User)
