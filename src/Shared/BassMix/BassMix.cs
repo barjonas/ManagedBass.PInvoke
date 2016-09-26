@@ -795,8 +795,9 @@ namespace ManagedBass.Mix
             return h;
         }
 
-        [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelRemoveSync")]
+        [DllImport(DllName)]
         static extern bool BASS_Mixer_ChannelRemoveSync(int Handle, int Sync);
+
         /// <summary>
         /// Removes a synchronizer from a mixer source channel.
         /// </summary>
