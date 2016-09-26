@@ -6,18 +6,18 @@ namespace ManagedBass
 {
     class ReferenceHolder
     {
-        readonly Dictionary<Tuple<int, object>, object> _procedures = new Dictionary<Tuple<int, object>, object>();
+        readonly Dictionary<Tuple<int, int>, object> _procedures = new Dictionary<Tuple<int, int>, object>();
         readonly SyncProcedure _freeproc;
 
         public ReferenceHolder(bool Free = true)
         {
             if (Free)
-                _freeproc = Callback; 
+                _freeproc = Callback;
         }
 
-        public void Add(int Handle, object SpecificHandle, object proc)
+        public void Add(int Handle, int SpecificHandle, object proc)
         {
-            var key = new Tuple<int, object>(Handle, SpecificHandle);
+            var key = new Tuple<int, int>(Handle, SpecificHandle);
 
             var contains = _procedures.ContainsKey(key);
 
@@ -38,18 +38,16 @@ namespace ManagedBass
 
             if (_procedures.Any(pair => pair.Key.Item1 == Handle))
                 return;
-            
+
             Bass.ChannelSetSync(Handle, SyncFlags.Free, 0, _freeproc);
         }
 
-        public void Remove<T>(int Handle, object SpecialHandle)
+        public void Remove<T>(int Handle, int SpecialHandle)
         {
-            foreach (var pair in _procedures.Where(Pair => Pair.Key.Item1 == Handle
-                                                          && Pair.Key.Item2 == SpecialHandle
-                                                          && Pair.Value.GetType() == typeof(T)))
+            var key = Tuple.Create<int, int>(Handle, SpecialHandle);
+            if (_procedures.ContainsKey(key) && _procedures[key].GetType() == typeof(T))
             {
-                _procedures.Remove(pair.Key);
-                break;
+                _procedures.Remove(key);
             }
         }
 
