@@ -61,33 +61,33 @@ namespace ManagedBass.Mix
         /// <exception cref="Errors.Unknown">Some other mystery problem!</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamCreate")]
         public static extern int CreateSplitStream(int Channel, BassFlags Flags, int[] ChannelMap);
-        
-		/// <summary>
-		/// Retrieves the amount of buffered data available to a splitter stream, or the amount of data in a splitter source buffer.
-		/// </summary>
-		/// <param name="Handle">The splitter (as obtained by <see cref="CreateSplitStream" />) or the source channel handle.</param>
-		/// <returns>If successful, then the amount of buffered data (in bytes) is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// With a splitter source, this function reports how much data is in the buffer that is shared by all of its splitter streams.
+
+        /// <summary>
+        /// Retrieves the amount of buffered data available to a splitter stream, or the amount of data in a splitter source buffer.
+        /// </summary>
+        /// <param name="Handle">The splitter (as obtained by <see cref="CreateSplitStream" />) or the source channel handle.</param>
+        /// <returns>If successful, then the amount of buffered data (in bytes) is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// With a splitter source, this function reports how much data is in the buffer that is shared by all of its splitter streams.
         /// With a splitter stream, this function reports how much data is ahead of it in the buffer, before it will receive any new data from the source.
-		/// A splitter stream can be repositioned within the buffer via the <see cref="SplitStreamReset(int, int)" /> function.
-		/// <para>The amount of data that can be buffered is limited by the buffer size, which is determined by the <see cref="SplitBufferLength" /> config option.</para>
-		/// <para>The returned buffered byte count is always based on the source's sample format, even with splitter streams that were created with a different channel count.</para>
-		/// </remarks>
+        /// A splitter stream can be repositioned within the buffer via the <see cref="SplitStreamReset(int, int)" /> function.
+        /// <para>The amount of data that can be buffered is limited by the buffer size, which is determined by the <see cref="SplitBufferLength" /> config option.</para>
+        /// <para>The returned buffered byte count is always based on the source's sample format, even with splitter streams that were created with a different channel count.</para>
+        /// </remarks>
         /// <exception cref="Errors.Handle">The <paramref name="Handle" /> is neither a splitter stream or source.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamGetAvailable")]
         public static extern int SplitStreamGetAvailable(int Handle);
-        
-		/// <summary>
-		/// Resets a splitter stream or all splitter streams of a source.
-		/// </summary>
-		/// <param name="Handle">The splitter (as obtained by <see cref="CreateSplitStream" />) or the source channel handle.</param>
-		/// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>
+
+        /// <summary>
+        /// Resets a splitter stream or all splitter streams of a source.
+        /// </summary>
+        /// <param name="Handle">The splitter (as obtained by <see cref="CreateSplitStream" />) or the source channel handle.</param>
+        /// <returns>If successful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
         /// This function resets the splitter stream's buffer state, so that the next sample data it receives will be from the source's current position. 
-		/// If the stream has ended, that is reset too, so that it can be played again.
+        /// If the stream has ended, that is reset too, so that it can be played again.
         /// Unless called from within a mixtime sync callback, the stream's output buffer (if it has one) is also flushed.
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle">The <paramref name="Handle" /> is neither a splitter stream or source.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamReset")]
         public static extern bool SplitStreamReset(int Handle);
@@ -114,29 +114,29 @@ namespace ManagedBass.Mix
         /// <exception cref="Errors.Handle">The <paramref name="Handle" /> is neither a splitter stream or source.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamResetEx")]
         public static extern bool SplitStreamReset(int Handle, int Offset);
-        
-		/// <summary>
-		/// Retrieves the source of a splitter stream.
-		/// </summary>
-		/// <param name="Handle">The splitter stream handle (which was add via <see cref="CreateSplitStream" /> beforehand).</param>
-		/// <returns>If successful, the source stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+
+        /// <summary>
+        /// Retrieves the source of a splitter stream.
+        /// </summary>
+        /// <param name="Handle">The splitter stream handle (which was add via <see cref="CreateSplitStream" /> beforehand).</param>
+        /// <returns>If successful, the source stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <exception cref="Errors.Handle">The <paramref name="Handle" /> is not a splitter stream.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Split_StreamGetSource")]
         public static extern int SplitStreamGetSource(int Handle);
 
         [DllImport(DllName)]
         static extern int BASS_Split_StreamGetSplits(int handle, [In, Out] int[] array, int length);
-        		
+
         /// <summary>
-		/// Retrieves the channel's splitters.
-		/// </summary>
-		/// <param name="Handle">The handle to check.</param>
-		/// <returns>The array of splitter handles (<see langword="null" /> on error, use <see cref="Bass.LastError" /> to get the error code).</returns>
+        /// Retrieves the channel's splitters.
+        /// </summary>
+        /// <param name="Handle">The handle to check.</param>
+        /// <returns>The array of splitter handles (<see langword="null" /> on error, use <see cref="Bass.LastError" /> to get the error code).</returns>
         public static int[] SplitStreamGetSplits(int Handle)
         {
             var num = BASS_Split_StreamGetSplits(Handle, null, 0);
 
-            if (num <= 0) 
+            if (num <= 0)
                 return null;
 
             var numArray = new int[num];
@@ -259,12 +259,12 @@ namespace ManagedBass.Mix
         /// <exception cref="Errors.Speaker">The mixer does not support the requested speaker(s), or you're attempting to assign a stereo stream to a mono speaker.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_StreamAddChannelEx")]
         public static extern bool MixerAddChannel(int Handle, int Channel, BassFlags Flags, long Start, long Length);
-        
-		/// <summary>
-		/// Unplugs a channel from a mixer.
-		/// </summary>
-		/// <param name="Handle">The handle of the mixer source channel to unplug (which was addded via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
-		/// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+
+        /// <summary>
+        /// Unplugs a channel from a mixer.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel to unplug (which was addded via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
+        /// <returns>If successful, then <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
         /// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelRemove")]
         public static extern bool MixerRemoveChannel(int Handle);
@@ -518,30 +518,30 @@ namespace ManagedBass.Mix
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetData")]
         public static extern int ChannelGetData(int Handle, [In, Out] float[] Buffer, int Length);
         #endregion
-        
-		/// <summary>
-		/// Retrieves the level (peak amplitude) of a mixer source channel.
-		/// </summary>
-		/// <param name="Handle">The handle of the mixer source channel (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
-		/// <returns>
+
+        /// <summary>
+        /// Retrieves the level (peak amplitude) of a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The handle of the mixer source channel (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
+        /// <returns>
         /// If an error occurs, -1 is returned, use <see cref="Bass.LastError" /> to get the error code.
-		/// <para>
+        /// <para>
         /// If successful, the level of the left channel is returned in the low word (low 16-bits), and the level of the right channel is returned in the high word (high 16-bits).
         /// If the channel is mono, then the low word is duplicated in the high word. 
-		/// The level ranges linearly from 0 (silent) to 32768 (max). 0 will be returned when a channel is stalled.
+        /// The level ranges linearly from 0 (silent) to 32768 (max). 0 will be returned when a channel is stalled.
         /// </para>
-		/// </returns>
-		/// <remarks>
-		/// <para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
         /// This function is like the standard <see cref="Bass.ChannelGetLevel(int)" />, but it gets the level from the channel's buffer instead of decoding data from the channel, which means that the mixer doesn't miss out on any data. 
-		/// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
+        /// In order to do this, the source channel must have buffering enabled, via the <see cref="BassFlags.MixerBuffer"/> flag.
         /// </para>
-		/// <para>
+        /// <para>
         /// If the mixer is a decoding channel, then the channel's most recent data will be used to get the level.
         /// Otherwise, the level will be in sync with what is currently being heard from the mixer, unless the buffer is too small so that the currently heard data isn't in it. 
-		/// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
+        /// The <see cref="MixerBufferLength"/> config option can be used to set the buffer size.
         /// </para>
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
         /// <exception cref="Errors.NotAvailable">The channel does not have buffering (<see cref="BassFlags.MixerBuffer"/>) enabled.</exception>
         /// <exception cref="Errors.NotPlaying">The mixer is not playing.</exception>
@@ -574,28 +574,28 @@ namespace ManagedBass.Mix
         /// <exception cref="Errors.NotPlaying">The mixer is not playing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetLevelEx")]
         public static extern int ChannelGetLevel(int Handle, [In, Out] float[] Levels, float Length, LevelRetrievalFlags Flags);
-        
-		/// <summary>
-		/// Retrieves a channel's mixing matrix, if it has one.
-		/// </summary>
-		/// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
-		/// <param name="Matrix">The 2-dimentional array (float[,]) where to write the matrix.</param>
-		/// <returns>If successful, a <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>
-		/// For more details see <see cref="ChannelSetMatrix(int, float[,])" />.
+
+        /// <summary>
+        /// Retrieves a channel's mixing matrix, if it has one.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
+        /// <param name="Matrix">The 2-dimentional array (float[,]) where to write the matrix.</param>
+        /// <returns>If successful, a <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>
+        /// For more details see <see cref="ChannelSetMatrix(int, float[,])" />.
         /// The array must be big enough to get the matrix.
-		/// </remarks>
+        /// </remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
         /// <exception cref="Errors.NotAvailable">The channel is not using matrix mixing.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetMatrix")]
         public static extern bool ChannelGetMatrix(int Handle, [In, Out] float[,] Matrix);
-        
-		/// <summary>
-		/// Retrieves the mixer that a channel is plugged into.
-		/// </summary>
-		/// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" /> beforehand).</param>
-		/// <returns>If successful, the mixer stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
+
+        /// <summary>
+        /// Retrieves the mixer that a channel is plugged into.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" /> beforehand).</param>
+        /// <returns>If successful, the mixer stream's handle is returned, else 0 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <exception cref="Errors.Handle">The channel is not plugged into a mixer.</exception>
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelGetMixer")]
         public static extern int ChannelGetMixer(int Handle);
 
@@ -788,32 +788,41 @@ namespace ManagedBass.Mix
         public static int ChannelSetSync(int Handle, SyncFlags Type, long Parameter, SyncProcedureEx Procedure, IntPtr User = default(IntPtr))
         {
             var h = BASS_Mixer_ChannelSetSync(Handle, (int)Type | 0x1000000, Parameter, Procedure, User);
-            
+
             if (h != 0)
                 Extensions.ChannelReferences.Add(Handle, h, Procedure);
 
             return h;
         }
-        
-		/// <summary>
-		/// Removes a synchronizer from a mixer source channel.
-		/// </summary>
-		/// <param name="Handle">The mixer source channel handle (as returned by <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />).</param>
-		/// <param name="Sync">Handle of the synchronizer to remove (return value of a previous <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" /> call).</param>
-		/// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>This function can only remove syncs that were set via <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />, not those that were set via <see cref="Bass.ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />.</remarks>
-        /// <exception cref="Errors.Handle">At least one of <paramref name="Handle" /> and <paramref name="Sync" /> is not valid.</exception>
+
         [DllImport(DllName, EntryPoint = "BASS_Mixer_ChannelRemoveSync")]
-        public static extern bool ChannelRemoveSync(int Handle, int Sync);
-        
-		/// <summary>
-		/// Retrieves the current position and value of an envelope on a channel.
-		/// </summary>
-		/// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
-		/// <param name="Type">The envelope to get the position/value of.</param>
-		/// <param name="Value">A reference to a variable to receive the envelope value at the current position.</param>
-		/// <returns>If successful, the current position of the envelope is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
-		/// <remarks>The envelope's current position is not necessarily what is currently being heard, due to buffering.</remarks>
+        static extern bool BASS_Mixer_ChannelRemoveSync(int Handle, int Sync);
+        /// <summary>
+        /// Removes a synchronizer from a mixer source channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (as returned by <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />).</param>
+        /// <param name="Sync">Handle of the synchronizer to remove (return value of a previous <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" /> call).</param>
+        /// <returns>If succesful, <see langword="true" /> is returned, else <see langword="false" /> is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>This function can only remove syncs that were set via <see cref="ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />, not those that were set via <see cref="Bass.ChannelSetSync(int, SyncFlags, long, SyncProcedure, IntPtr)" />.</remarks>
+        /// <exception cref="Errors.Handle">At least one of <paramref name="Handle" /> and <paramref name="Sync" /> is not valid.</exception>        
+        public static bool ChannelRemoveSync(int Handle, int Sync)
+        {
+            var b = BASS_Mixer_ChannelRemoveSync(Handle, Sync);
+
+            if (b)
+                Extensions.ChannelReferences.Remove<SyncProcedure>(Handle, Sync);
+
+            return b;
+        }
+
+        /// <summary>
+        /// Retrieves the current position and value of an envelope on a channel.
+        /// </summary>
+        /// <param name="Handle">The mixer source channel handle (which was add via <see cref="MixerAddChannel(int, int, BassFlags)" /> or <see cref="MixerAddChannel(int, int, BassFlags, long, long)" />) beforehand).</param>
+        /// <param name="Type">The envelope to get the position/value of.</param>
+        /// <param name="Value">A reference to a variable to receive the envelope value at the current position.</param>
+        /// <returns>If successful, the current position of the envelope is returned, else -1 is returned. Use <see cref="Bass.LastError" /> to get the error code.</returns>
+        /// <remarks>The envelope's current position is not necessarily what is currently being heard, due to buffering.</remarks>
         /// <exception cref="Errors.Handle"><paramref name="Handle" /> is not plugged into a mixer.</exception>
         /// <exception cref="Errors.Type"><paramref name="Type" /> is not valid.</exception>
         /// <exception cref="Errors.NotAvailable">There is no envelope of the requested type on the channel.</exception>
