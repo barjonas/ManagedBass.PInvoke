@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,9 +17,10 @@ namespace ManagedBass
 
         public void Add(int Handle, int SpecificHandle, object proc)
         {
-            if (proc.Equals(_freeproc)) return;
+            if (proc.Equals(_freeproc))
+                return;
 
-            var key = new Tuple<int, int>(Handle, SpecificHandle);
+            var key = Tuple.Create(Handle, SpecificHandle);
 
             var contains = _procedures.ContainsKey(key);
 
@@ -32,9 +33,7 @@ namespace ManagedBass
             }
 
             if (_freeproc != null && !_procedures.Any(pair => pair.Key.Item1 == Handle))
-            { 
-                Bass.ChannelSetSync(Handle, SyncFlags.Free | SyncFlags.Onetime, 0, _freeproc);
-            }
+                Bass.ChannelSetSync(Handle, SyncFlags.Free, 0, _freeproc);
 
             if (contains)
                 _procedures[key] = proc;
@@ -43,25 +42,21 @@ namespace ManagedBass
 
         public void Remove<T>(int Handle, int SpecialHandle)
         {
-            var key = Tuple.Create<int, int>(Handle, SpecialHandle);
+            var key = Tuple.Create(Handle, SpecialHandle);
+            
             if (_procedures.ContainsKey(key) && _procedures[key].GetType() == typeof(T))
-            {
                 _procedures.Remove(key);
-            }
         }
 
         void Callback(int Handle, int Channel, int Data, IntPtr User)
         {
             var toRemove = new List<Tuple<int, int>>();
+            
             foreach (var pair in _procedures.Where(Pair => Pair.Key.Item1 == Channel))
-            { 
                 toRemove.Add(pair.Key);
-            }
-
+            
             foreach (var key in toRemove)
-            {
                 _procedures.Remove(key);
-            }
         }
     }
 }
